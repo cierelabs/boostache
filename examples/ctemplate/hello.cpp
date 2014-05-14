@@ -1,4 +1,5 @@
 //user.cpp
+
 #include <cstdlib>
 #include <iostream>  
 #include <string>
@@ -9,7 +10,7 @@ int main() {
   ctemplate::TemplateDictionary dict("example");
   dict["NAME"] = user;
   std::string output;
-  ctemplate::ExpandTemplate("example.tpl", ctemplate::DO_NOT_STRIP, &dict, &output);
+  ctemplate::ExpandTemplate("hello.tpl", ctemplate::DO_NOT_STRIP, &dict, &output);
   std::cout << output;
   return 0;
 }
