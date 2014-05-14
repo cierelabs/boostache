@@ -1,4 +1,4 @@
-//user.cpp
+//hello.cpp
 
 #include <cstdlib>
 #include <iostream>  
