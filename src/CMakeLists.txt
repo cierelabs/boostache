@@ -25,7 +25,7 @@ add_executable(test_liaw
   #test_nested_sections_plustache.cpp
   #test_partials_plustache.cpp
   #test_sections_plustache.cpp
-  #test_simple_plustache.cpp
+  test_simple_plustache.cpp
 )
 add_dependencies(test_liaw liaw)
 target_include_directories(test_liaw PRIVATE ${Boost_INCLUDE_DIRS})
