@@ -5,21 +5,35 @@
 
 using namespace liaw2014;
 
-BOOST_AUTO_TEST_CASE(test_render_empty_is_empty)
+struct fixture
 {
 	RenderAST render_template;
 	RenderData data;
-	Renderer renderer(render_template);
+	std::string expected_output;
 
-	BOOST_CHECK_EQUAL(std::string(), renderer.render(data));
+	void verify_render()
+	{
+		BOOST_CHECK_EQUAL(expected_output, Renderer(render_template).render(data));
+	}
+};
+
+BOOST_FIXTURE_TEST_CASE(test_render_empty_is_empty, fixture)
+{
+	expected_output = std::string();
+	verify_render();
 }
 
-BOOST_AUTO_TEST_CASE(test_render_of_plain_text)
+BOOST_FIXTURE_TEST_CASE(test_render_of_plain_text, fixture)
 {
-	RenderAST render_template;
-	render_template.set_template_text("This is plain text.");
-	RenderData data;
-	Renderer renderer(render_template);
+	render_template.add_literal("This is plain text.");
+	expected_output = "This is plain text.";
+	verify_render();
+}
 
-	BOOST_CHECK_EQUAL("This is plain text.", renderer.render(data));
+BOOST_FIXTURE_TEST_CASE(test_render_of_multiple_literals, fixture)
+{
+	render_template.add_literal("Text 1\n");
+	render_template.add_literal("Text 2\n");
+	expected_output = "Text 1\nText 2\n";
+	verify_render();
 }

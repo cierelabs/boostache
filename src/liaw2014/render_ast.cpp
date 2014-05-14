@@ -6,6 +6,10 @@ namespace liaw2014
 	{
 		m_template_text = std::move(template_text);
 	}
+	void RenderAST::add_literal(const std::string& text)
+	{
+		m_template_text += text;
+	}
 	std::string RenderAST::template_text()
 	{
 		return m_template_text;

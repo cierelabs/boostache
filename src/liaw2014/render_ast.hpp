@@ -21,6 +21,8 @@ namespace liaw2014
 		}
 
 		void set_template_text(std::string template_text);
+
+		void add_literal(const std::string& text);
 		std::string template_text();
 	private:
 		std::string m_template_text;
