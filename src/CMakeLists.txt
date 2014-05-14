@@ -14,22 +14,27 @@ add_library(liaw STATIC
   liaw2014/render_data.hpp
 )
 
-add_executable(test_liaw
-  test_liaw.cpp
-  test_change_delimiter.cpp
-  test_collections_plustache.cpp
+macro(add_liaw_test name source)
+add_executable(${name} ${source})
+add_dependencies(${name} liaw)
+target_include_directories(${name} PRIVATE ${Boost_INCLUDE_DIRS})
+target_link_libraries(${name} liaw boost_unit_test_framework)
+add_test(${name} ${name})
+endmacro(add_liaw_test)
+
+add_liaw_test(test_liaw test_liaw.cpp)
+add_liaw_test(test_change_delimiter test_change_delimiter.cpp)
+add_liaw_test(test_collections_plustache test_collections_plustache.cpp)
+add_liaw_test(test_sections_plustache test_sections_plustache.cpp)
+add_liaw_test(test_simple_plustache test_simple_plustache.cpp)
+
+#add_executable(other_tests
   #  test_html_escape_plustache.cpp
   #test_inverted_sections.cpp
   #test_multiple_plustache.cpp
   #test_nested_sections_plustache.cpp
   #test_partials_plustache.cpp
-  test_sections_plustache.cpp
-  test_simple_plustache.cpp
-)
-add_dependencies(test_liaw liaw)
-target_include_directories(test_liaw PRIVATE ${Boost_INCLUDE_DIRS})
-target_link_libraries(test_liaw liaw boost_unit_test_framework)
-add_test(test_liaw test_liaw)
+#)
 
 cmake_policy(SET CMP0002 OLD)
 add_custom_target(check COMMAND cd ${CMAKE_SOURCE_DIR}/src && CTEST_OUTPUT_ON_FAILURE=on make all test)

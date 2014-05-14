@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
 #include "gmock_to_boost.hpp"
