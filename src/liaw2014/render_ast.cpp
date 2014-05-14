@@ -2,12 +2,12 @@
 
 namespace liaw2014
 {
-	void RenderAST::set_text(std::string text)
+	void RenderAST::set_template_text(std::string template_text)
 	{
-		m_text = std::move(text);
+		m_template_text = std::move(template_text);
 	}
-	std::string RenderAST::text()
+	std::string RenderAST::template_text()
 	{
-		return m_text;
+		return m_template_text;
 	}
 }

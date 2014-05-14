@@ -9,6 +9,6 @@ namespace liaw2014
 
 	std::string Renderer::render(const RenderData& data)
 	{
-		return m_ast.text();
+		return m_ast.template_text();
 	}
 }

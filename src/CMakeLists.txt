@@ -17,6 +17,15 @@ add_library(liaw STATIC
 
 add_executable(test_liaw
   test_liaw.cpp
+  test_change_delimiter.cpp
+  test_collections_plustache.cpp
+  #  test_html_escape_plustache.cpp
+  #test_inverted_sections.cpp
+  #test_multiple_plustache.cpp
+  #test_nested_sections_plustache.cpp
+  #test_partials_plustache.cpp
+  #test_sections_plustache.cpp
+  #test_simple_plustache.cpp
 )
 add_dependencies(test_liaw liaw)
 target_include_directories(test_liaw PRIVATE ${Boost_INCLUDE_DIRS})
