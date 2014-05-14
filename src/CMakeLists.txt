@@ -4,7 +4,6 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost 1.53)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-SET(CMAKE_VERBOSE_MAKEFILES ON)
 include_directories(.)
 
 add_library(liaw STATIC
@@ -31,5 +30,8 @@ add_dependencies(test_liaw liaw)
 target_include_directories(test_liaw PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(test_liaw liaw boost_unit_test_framework)
 add_test(test_liaw test_liaw)
+
+cmake_policy(SET CMP0002 OLD)
+add_custom_target(check COMMAND cd ${CMAKE_SOURCE_DIR}/src && CTEST_OUTPUT_ON_FAILURE=on make all test)
 
 add_subdirectory(liaw2014)
