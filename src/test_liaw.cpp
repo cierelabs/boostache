@@ -13,3 +13,13 @@ BOOST_AUTO_TEST_CASE(test_render_empty_is_empty)
 
 	BOOST_CHECK_EQUAL(std::string(), renderer.render(data));
 }
+
+BOOST_AUTO_TEST_CASE(test_render_of_plain_text)
+{
+	RenderAST render_template;
+	render_template.set_text("This is plain text.");
+	RenderData data;
+	Renderer renderer(render_template);
+
+	BOOST_CHECK_EQUAL("This is plain text.", renderer.render(data));
+}

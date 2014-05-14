@@ -3,11 +3,12 @@
 namespace liaw2014
 {
 	Renderer::Renderer(RenderAST ast)
+		: m_ast(std::move(ast))
 	{
 	}
 
 	std::string Renderer::render(const RenderData& data)
 	{
-		return std::string();
+		return m_ast.text();
 	}
 }

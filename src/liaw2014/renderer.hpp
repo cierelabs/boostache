@@ -10,5 +10,7 @@ namespace liaw2014
 	public:
 		Renderer(RenderAST ast);
 		std::string render(const RenderData& data);
+	private:
+		RenderAST m_ast;
 	};
 }
