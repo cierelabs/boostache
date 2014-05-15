@@ -1,6 +1,7 @@
 #include <boost/spirit/include/qi.hpp>
 #include <boost/cppte/front_end/stache_ast.hpp>
 #include <boost/cppte/front_end/stache_grammar_def.hpp>
+#include <boost/cppte/front_end/stache_printer.hpp>
 #include <iostream>
 
 
@@ -17,8 +18,12 @@ int main()
    fe::ast::stache_root ast;
    grammar_t grammar;
 
-   std::string input( "Hello world "
-                      "{{name}} is here." );
+   std::string input( "Hello world \n"
+                      "{{name}} is here.\n" 
+                      "{{#foo}}\n"
+                      "Some cool section {{whoot}} is here.\n" 
+                      "{{/foo}} done." 
+      );
 
    iterator_t iter = input.begin();
    iterator_t iter_end = input.end();
@@ -26,13 +31,17 @@ int main()
    if( qi::phrase_parse( iter, iter_end
                        , grammar
                        , stache_skipper<iterator_t>()
-                       , ast) )
+                       , ast
+          ) )
    {
       std::cout << "parse succeeded" << std::endl;
+      fe::ast::print(std::cout, ast);
    }
    else
    {
       std::cout << "parse failed" << std::endl;
    }
+
+   return -1;
 }
 

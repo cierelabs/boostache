@@ -44,7 +44,7 @@ namespace boost { namespace cppte { namespace front_end
          variable
          ;
 
-      qi::rule<Iterator, ast::section(), stache_skipper<Iterator>>
+      qi::rule<Iterator, ast::section(), qi::locals<ast::identifier>, stache_skipper<Iterator>>
          section
          ;
 
@@ -52,7 +52,7 @@ namespace boost { namespace cppte { namespace front_end
          section_begin
          ;
 
-      qi::rule<Iterator, stache_skipper<Iterator>>
+      qi::rule<Iterator, void(ast::identifier), stache_skipper<Iterator>>
          section_end
          ;
    };
