@@ -78,7 +78,7 @@ namespace boost { namespace cppte { namespace front_end
       section_end =
             lit("{{")
          >> '/'
-         >> qi::omit[string(_r1)]
+         >> omit[string(_r1)]
          >> "}}"
          ;
 
