@@ -2,7 +2,8 @@
  *  \file stache_ast.hpp
  * 
  *
- *  Copyright 2014 Michael Caisse
+ *  Copyright 2014 Michael Caisse : ciere.com
+ *  Copyright 2014 Jeroen Habraken
  *
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -29,17 +30,13 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
       std::string value;
    };
 
-   struct section
-   {
-      bool is_inverted;
-      stache_root node;
-   };
+   struct section;
 
    struct stache_root : boost::spirit::extended_variant<
         undefined
       , symbol
       , variable
-      , section
+      , boost::recursive_wrapper<section>
       >
    {
       stache_root() : base_type() {}
@@ -47,6 +44,13 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
       stache_root(variable const & rhs) : base_type(rhs) {}
       stache_root(section const & rhs) : base_type(rhs) {}
    };
+
+   struct section
+   {
+      bool is_inverted;
+      stache_root node;
+   };
+
 }}}}
 
 #endif
