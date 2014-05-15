@@ -31,6 +31,10 @@ struct TemplateFixture
 		{
 		}
 
+		void register_partial_template(const std::string& name, const std::string& template_string)
+		{
+		}
+
 		std::string result;
 		std::string template_string;
 
