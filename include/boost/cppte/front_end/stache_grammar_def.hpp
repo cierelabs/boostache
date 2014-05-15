@@ -36,6 +36,7 @@ namespace boost { namespace cppte { namespace front_end
       qi::lit_type lit;
       qi::eps_type eps;
       qi::matches_type matches;
+      qi::no_skip_type no_skip;
 
 
       stache_root =
@@ -46,7 +47,7 @@ namespace boost { namespace cppte { namespace front_end
       stache_node =
            section
          | variable
-         | literal_text
+         | no_skip[literal_text]
          ;
 
       identifier =
@@ -82,7 +83,7 @@ namespace boost { namespace cppte { namespace front_end
          ;
 
       literal_text =
-         lexeme[+(char_ - "{{")]
+         +(char_ - "{{")
          ;
    };
 }}}
