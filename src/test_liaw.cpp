@@ -37,3 +37,15 @@ BOOST_FIXTURE_TEST_CASE(test_render_of_multiple_literals, fixture)
 	expected_output = "Text 1\nText 2\n";
 	verify_render();
 }
+
+BOOST_FIXTURE_TEST_CASE(test_basic_substitution, fixture)
+{
+	render_template.add_literal("Hello ");
+	render_template.add_substitution("NAME");
+	render_template.add_literal("!");
+
+	BOOST_CHECK_EQUAL("Hello {{NAME}}!", render_template.template_text());
+	data["NAME"] = "Bob";
+	expected_output = "Hello Bob!";
+	verify_render();
+}
