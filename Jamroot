@@ -1,0 +1,26 @@
+#
+#   Copyright (C) 2014 Michael Caisse
+#
+#   Distributed under the Boost Software License, Version 1.0. (See accompanying
+#   file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+
+import os ;
+local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
+
+if $(BOOST_ROOT)
+{
+   use-project /boost : $(BOOST_ROOT) ;
+}
+
+
+project
+   : requirements
+      <toolset>gcc:<cxxflags>-ftemplate-depth=300
+      <toolset>gcc:<cxxflags>-Wno-unused-local-typedefs
+      <toolset>gcc:<cxxflags>-std=c++0x
+      <toolset>clang:<cxxflags>-std=c++11
+      <toolset>clang:<cxxflags>-stdlib=libc++
+      <define>BOOST_SPIRIT_USE_PHOENIX_V3=1
+      <source>/boost//headers
+   ;
