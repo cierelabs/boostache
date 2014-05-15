@@ -20,7 +20,7 @@ int main()
 
    std::string input( "Hello world \n"
                       "{{name}} is here.\n"
-                      "{{& escaped}} is here\n"
+                      "{{& escaped_name}} is here\n"
                       "{{#foo}}\n"
                       "Some cool section {{whoot}} is here.\n"
                       "{{/foo}} done.\n"

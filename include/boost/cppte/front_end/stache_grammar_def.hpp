@@ -50,7 +50,7 @@ namespace boost { namespace cppte { namespace front_end
          ;
 
       identifier =
-         lexeme[ alpha >> *(alnum | '_') ]
+         lexeme[ alpha >> *(alnum | char_('_')) ]
          ;
 
       variable =
