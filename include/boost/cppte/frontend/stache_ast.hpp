@@ -1,10 +1,8 @@
 /**
  *  \file stache_ast.hpp
  *
- *
  *  Copyright 2014 Michael Caisse : ciere.com
  *  Copyright 2014 Jeroen Habraken
- *
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -22,6 +20,8 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 
    struct undefined {};
 
+   struct comment {};
+
    struct identifier : std::string
    {};
 
@@ -38,12 +38,14 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 
    struct stache_node : boost::spirit::extended_variant<
         undefined
+      , comment
       , literal_text
       , variable
       , boost::recursive_wrapper<section>
       >
    {
       stache_node() : base_type() {}
+      stache_node(comment const & rhs) : base_type(rhs) {}
       stache_node(literal_text const & rhs) : base_type(rhs) {}
       stache_node(variable const & rhs) : base_type(rhs) {}
       stache_node(section const & rhs) : base_type(rhs) {}

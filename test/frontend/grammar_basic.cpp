@@ -1,9 +1,12 @@
-#define BOOST_SPIRIT_DEBUG
+#define BOOST_SPIRIT_NO_PREDEFINED_TERMINALS
 
-#include <boost/spirit/include/qi.hpp>
 #include <boost/cppte/frontend/stache_ast.hpp>
 #include <boost/cppte/frontend/stache_grammar_def.hpp>
 #include <boost/cppte/frontend/stache_printer.hpp>
+
+#include <boost/spirit/include/qi_char_class.hpp>
+#include <boost/spirit/include/qi_parse.hpp>
+
 #include <iostream>
 
 namespace fe = boost::cppte::front_end;
@@ -11,8 +14,6 @@ namespace qi = boost::spirit::qi;
 
 int main()
 {
-   using fe::stache_skipper;
-
    typedef std::string::iterator iterator_t;
    typedef fe::stache_grammar<iterator_t> grammar_t;
 
@@ -25,6 +26,7 @@ int main()
                       "{{ # foo}}\n"
                       "Some cool section {{whoot}} is here.\n"
                       "{{/foo}} done.\n"
+                      "{{! no comment }}"
                       "{{^ bar}}\n"
                       "Some cool empty section {{ whoot }} is here.\n"
                       "{{ /bar}} done.\n"
@@ -35,7 +37,7 @@ int main()
 
    if( qi::phrase_parse( iter, iter_end
                        , grammar
-                       , stache_skipper<iterator_t>()
+                       , qi::space_type()
                        , ast
           ) )
    {
