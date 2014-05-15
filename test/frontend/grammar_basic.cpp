@@ -28,7 +28,7 @@ int main()
                       "{{/foo}} done.\n"
                       "{{! no comment }}"
                       "{{^ bar}}\n"
-                      "Some cool empty section {{ whoot }} is here.\n"
+                      "Some cool empty section {{{ whoot }}} is here.\n"
                       "{{ /bar}} done.\n"
       );
 

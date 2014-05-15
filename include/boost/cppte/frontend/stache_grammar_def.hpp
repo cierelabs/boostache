@@ -65,6 +65,7 @@ namespace boost { namespace cppte { namespace front_end
             comment
          |  section
          |  variable
+         |  variable_unescaped
          |  no_skip[literal_text]
          ;
 
@@ -84,6 +85,13 @@ namespace boost { namespace cppte { namespace front_end
          >> matches['&']
          >> identifier
          >> "}}"
+         ;
+
+      variable_unescaped =
+            lit("{{{")
+         >> attr(true)
+         >> identifier
+         >> "}}}"
          ;
 
       section %=

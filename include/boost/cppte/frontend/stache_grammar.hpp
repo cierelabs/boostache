@@ -50,6 +50,10 @@ namespace boost { namespace cppte { namespace front_end
          variable
          ;
 
+      qi::rule<Iterator, ast::variable(), qi::space_type>
+         variable_unescaped
+         ;
+
       qi::rule<Iterator, ast::section(), qi::locals<std::string>, qi::space_type>
          section
          ;
