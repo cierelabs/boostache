@@ -1,6 +1,6 @@
 /**
  *  \file stache_ast.hpp
- * 
+ *
  *
  *  Copyright 2014 Michael Caisse : ciere.com
  *  Copyright 2014 Jeroen Habraken
@@ -30,7 +30,7 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 
    struct variable
    {
-      bool is_escaped;
+      bool is_unescaped;
       identifier value;
    };
 

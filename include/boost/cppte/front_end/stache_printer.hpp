@@ -1,6 +1,6 @@
 /**
  *  \file stache_printer.hpp
- * 
+ *
  *
  *  Copyright 2014 Michael Caisse : ciere.com
  *
@@ -23,7 +23,7 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
          typedef void result_type;
 
          stache_printer(std::ostream& out)
-            : out(out) 
+            : out(out)
          {}
 
          void operator()(undefined) const
@@ -39,7 +39,7 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
          void operator()(variable const & v) const
          {
             out << "{{";
-            if(!v.is_escaped)
+            if(v.is_unescaped)
             {
                out << "&";
             }
