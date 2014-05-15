@@ -1,6 +1,6 @@
 /**
  *  \file stache_grammar.hpp
- * 
+ *
  *  Copyright 2014 Michael Caisse : ciere.com
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -19,7 +19,7 @@ namespace boost { namespace cppte { namespace front_end
    namespace ascii = boost::spirit::ascii;
 
    template <typename Iterator>
-   struct stache_grammar 
+   struct stache_grammar
       : qi::grammar<Iterator, ast::stache_root(), stache_skipper<Iterator>>
    {
       stache_grammar();
@@ -44,7 +44,7 @@ namespace boost { namespace cppte { namespace front_end
          variable
          ;
 
-      qi::rule<Iterator, ast::section(), qi::locals<ast::identifier>, stache_skipper<Iterator>>
+      qi::rule<Iterator, ast::section(), qi::locals<std::string>, stache_skipper<Iterator>>
          section
          ;
 
@@ -52,7 +52,7 @@ namespace boost { namespace cppte { namespace front_end
          section_begin
          ;
 
-      qi::rule<Iterator, void(ast::identifier), stache_skipper<Iterator>>
+      qi::rule<Iterator, qi::unused_type(std::string), stache_skipper<Iterator>>
          section_end
          ;
    };
