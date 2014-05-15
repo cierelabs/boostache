@@ -1,7 +1,7 @@
 /**
  *  \file parse.hpp
  *
- *  Copyright 2014 Michael Caisse
+ *  Copyright 2014 Michael Caisse : ciere.com
  *
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
