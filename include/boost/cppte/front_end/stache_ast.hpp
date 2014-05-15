@@ -14,41 +14,50 @@
 
 #include <boost/spirit/include/support_extended_variant.hpp>
 #include <string>
+#include <vector>
 
 namespace boost { namespace cppte { namespace front_end { namespace ast
 {
-   struct stache_root;
+   struct stache_node;
 
    struct undefined {};
 
-   struct symbol : std::string
+   struct identifier : std::string
+   {};
+
+   struct literal_text : std::string
    {};
 
    struct variable
    {
       bool is_escaped;
-      std::string value;
+      identifier value;
    };
 
    struct section;
 
-   struct stache_root : boost::spirit::extended_variant<
+   struct stache_node : boost::spirit::extended_variant<
         undefined
-      , symbol
+      , literal_text
       , variable
       , boost::recursive_wrapper<section>
       >
    {
-      stache_root() : base_type() {}
-      stache_root(symbol const & rhs) : base_type(rhs) {}
-      stache_root(variable const & rhs) : base_type(rhs) {}
-      stache_root(section const & rhs) : base_type(rhs) {}
+      stache_node() : base_type() {}
+      stache_node(literal_text const & rhs) : base_type(rhs) {}
+      stache_node(variable const & rhs) : base_type(rhs) {}
+      stache_node(section const & rhs) : base_type(rhs) {}
    };
 
    struct section
    {
       bool is_inverted;
-      stache_root node;
+      std::vector<stache_node> nodes;
+   };
+
+   struct stache_root
+   {
+      std::vector<stache_node> nodes;
    };
 
 }}}}

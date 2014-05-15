@@ -32,6 +32,7 @@ project spirit_test
    test-suite cppte/front_end :
 
     [ run adapt_test.cpp ]
+    [ run grammar_basic.cpp ]
 
    ;
 }
