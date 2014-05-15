@@ -1,6 +1,6 @@
 /**
  *  \file stache_grammar.hpp
- * 
+ *
  *  Copyright 2014 Michael Caisse : ciere.com
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -35,6 +35,7 @@ namespace boost { namespace cppte { namespace front_end
       qi::omit_type omit;
       qi::lit_type lit;
       qi::eps_type eps;
+      qi::matches_type matches;
 
 
       stache_root =
@@ -54,7 +55,7 @@ namespace boost { namespace cppte { namespace front_end
 
       variable =
             lit("{{")
-         >> attr(true)
+         >> matches[lit("&")]
          >> identifier
          >> "}}"
          ;
@@ -87,4 +88,3 @@ namespace boost { namespace cppte { namespace front_end
 }}}
 
 #endif
-

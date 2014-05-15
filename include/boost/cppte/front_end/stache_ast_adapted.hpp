@@ -17,7 +17,7 @@
 
 BOOST_FUSION_ADAPT_STRUCT(
    boost::cppte::front_end::ast::variable,
-   (bool, is_escaped)
+   (bool, is_unescaped)
    (boost::cppte::front_end::ast::identifier, value)
 )
 

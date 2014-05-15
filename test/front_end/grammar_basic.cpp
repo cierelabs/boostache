@@ -19,10 +19,11 @@ int main()
    grammar_t grammar;
 
    std::string input( "Hello world \n"
-                      "{{name}} is here.\n" 
+                      "{{name}} is here.\n"
+                      "{{& escaped}} is here\n"
                       "{{#foo}}\n"
-                      "Some cool section {{whoot}} is here.\n" 
-                      "{{/foo}} done." 
+                      "Some cool section {{whoot}} is here.\n"
+                      "{{/foo}} done.\n"
       );
 
    iterator_t iter = input.begin();
