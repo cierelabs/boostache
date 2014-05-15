@@ -1,7 +1,7 @@
 #ifndef _SIMPLE_PARSER_HPP_
 #define _SIMPLE_PARSER_HPP_ 0x100
 
-#include <boost/cppte/front_end/stache_ast.hpp>
+#include <boost/cppte/frontend/stache_ast.hpp>
 #include <iosfwd>
 
 namespace boost {

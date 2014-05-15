@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-add_subdirectory(front_end)
+add_subdirectory(frontend)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 add_boost_test(test_simple_parser test_simple_parser.cpp)

@@ -1,7 +1,7 @@
 #include <boost/cppte/simple_parser.hpp>
 #include <boost/spirit/include/qi.hpp>
-#include <boost/cppte/front_end/stache_grammar_def.hpp>
-#include <boost/cppte/front_end/stache_printer.hpp>
+#include <boost/cppte/frontend/stache_grammar_def.hpp>
+#include <boost/cppte/frontend/stache_printer.hpp>
 #include <iostream>
 
 namespace boost { namespace cppte { namespace front_end {
