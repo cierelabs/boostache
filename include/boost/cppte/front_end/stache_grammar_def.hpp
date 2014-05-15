@@ -30,7 +30,7 @@ namespace boost { namespace cppte { namespace front_end
       qi::lexeme_type lexeme;
       qi::alpha_type alpha;
       qi::alnum_type alnum;
-      qi::alnum_type string;
+      qi::string_type string;
       qi::attr_type attr;
       qi::omit_type omit;
       qi::lit_type lit;
@@ -77,7 +77,7 @@ namespace boost { namespace cppte { namespace front_end
       section_end =
             lit("{{")
          >> '/'
-         >> identifier //string(_r1)
+         >> qi::omit[string(_r1)]
          >> "}}"
          ;
 
