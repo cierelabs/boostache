@@ -5,3 +5,7 @@ test_collections_plustache
 test_liaw
 test_sections_plustache
 test_simple_plustache
+test_multiple_plustache
+test_nested_sections_plustach
+test_partials_plustache
+test_nested_sections_plustache
