@@ -5,83 +5,26 @@
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
-#include "template.hpp"
-#include "plustache_types.hpp"
 #include "gmock_to_boost.hpp"
-
-// The fixture for testing class Foo.
-class PartialsTest : public ::testing::Test
-{
- public:
-    std::string result_string;
-    std::string result_file;
-    std::string template_string;
-    std::string partial_string;
-    PlustacheTypes::ObjectType ctx;
-    std::string file;
-    std::string partial_file;
-
-    PartialsTest()
-    {
-		 SetUp();
-    }
-
-    virtual ~PartialsTest()
-    {
-		 TearDown();
-    }
-
-    virtual void SetUp()
-    {
-        template_string = "Hi I am {{name}}.\n";
-        template_string += "{{> next_more}}\n";
-        template_string += "What do I like? {{lpet}}!!";
-
-        partial_string = "I like {{pet}}.";
-
-        file = "sections.mustache";
-        partial_file = "next_more.mustache";
-
-        std::ofstream myfile;
-        // write template to file
-        myfile.open (file.c_str());
-        myfile << template_string;
-        myfile.close();
-        // write partial to file
-        myfile.open (partial_file.c_str());
-        myfile << partial_string;
-        myfile.close();
-
-        ctx["name"] = "Daniel";
-        ctx["pet"] = "turtles";
-        ctx["lpet"] = "Turtles";
-
-        Plustache::template_t t;
-        result_string = t.render(template_string, ctx);
-        result_file = t.render(file, ctx);
-    }
-
-    virtual void TearDown()
-    {
-        remove(file.c_str());
-        remove(partial_file.c_str());
-    }
-
-};
+#include "test_template_fixture.hpp"
 
 // Tests that a simple mustache tag is replaced
-TEST_F(PartialsTest, TestPartialsFromString)
+TEST_F(TemplateFixture, TestPartialsFromString)
 {
-    std::string expected = "Hi I am Daniel.\n";
-          expected += "I like turtles.\n";
-          expected += "What do I like? Turtles!!";
-    EXPECT_EQ(expected, result_string);
-}
+	template_string = "Hi I am {{name}}.\n";
+	template_string += "{{> next_more}}\n";
+	template_string += "What do I like? {{lpet}}!!";
 
-TEST_F(PartialsTest, TestPartialsMustacheFromFile)
-{
-    std::string expected = "Hi I am Daniel.\n";
-          expected += "I like turtles.\n";
-          expected += "What do I like? Turtles!!";
-    EXPECT_EQ(expected, result_file);
+	register_partial_template("next_more", "I like {{pet}}.");
+
+	set_tag_value("name", "Daniel");
+	set_tag_value("pet", "turtles");
+	set_tag_value("lpet", "Turtles");
+
+	generate_template();
+
+	std::string expected = "Hi I am Daniel.\n";
+	expected += "I like turtles.\n";
+	expected += "What do I like? Turtles!!";
+	// TODO: EXPECT_EQ(expected, result);
 }
