@@ -1,8 +1,8 @@
 #include <boost/cppte/simple_parser.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/cppte/frontend/stache_grammar_def.hpp>
-#include <boost/cppte/frontend/stache_printer.hpp>
 #include <iostream>
+#include <sstream>
 
 namespace boost { namespace cppte { namespace front_end {
 	namespace fe = boost::cppte::front_end;
@@ -13,11 +13,17 @@ namespace boost { namespace cppte { namespace front_end {
 	{
 		fe::stache_grammar<Iterator> grammar;
 
-		return qi::phrase_parse( first, last
+		bool result = qi::phrase_parse( first, last
 			, grammar
 			, fe::stache_skipper<Iterator>()
 			, ast
 		);
+
+		if( first != last )
+		{
+			return false;
+		}
+		return result;
 	}
 
 	bool simple_parse(std::istream& input, ast::stache_root& ast)
@@ -27,6 +33,7 @@ namespace boost { namespace cppte { namespace front_end {
 
 	bool simple_parse(const std::string& input, ast::stache_root& ast)
 	{
-		return simple_parse(input.begin(), input.end(), ast);
+		std::istringstream i(input);
+		return simple_parse(i, ast);
 	}
 }}}

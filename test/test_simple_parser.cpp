@@ -1,30 +1,34 @@
-#include <string>
-#include <map>
-#include <iostream>
-#include <fstream>
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
+#include <boost/cppte/simple_parser.hpp>
 
-#include "test_template_fixture.hpp"
-
-// Tests that a simple mustache tag is replaced
-BOOST_FIXTURE_TEST_CASE(TestSimpleMustacheFromString, TemplateFixture)
+BOOST_AUTO_TEST_CASE(parse_empty_input)
 {
-	template_string = "text {{title}} text";
-	set_tag_value("title", "replaced");
-	generate_template();
-
-	const std::string expected = "text replaced text";
-	// TODO: BOOST_CHECK_EQUAL(expected, result);
+	boost::stache_root ast;
+	BOOST_CHECK(boost::simple_parse_template("", ast));
+	BOOST_CHECK(ast.nodes.empty());
 }
 
-BOOST_FIXTURE_TEST_CASE(TestSimpleNotFoundMustacheFromString, TemplateFixture)
+BOOST_AUTO_TEST_CASE(parse_simple_tag)
 {
-	template_string = "text {{fitle}} text";
-	set_tag_value("title", "replaced");
-	generate_template();
+	using namespace boost::cppte::front_end::ast;
+	boost::stache_root ast;
+	BOOST_CHECK(boost::simple_parse_template("{{TAGNAME}}", ast));
+	BOOST_REQUIRE_EQUAL(1u, ast.nodes.size());
+	variable* tag = boost::get<variable>(&ast.nodes[0]);
+	BOOST_REQUIRE(tag != nullptr);
+	BOOST_CHECK_EQUAL("TAGNAME", tag->value);
+}
 
-	const std::string expected = "text  text";
-	// TODO: BOOST_CHECK_EQUAL(expected, result);
+BOOST_AUTO_TEST_CASE(parse_tag_and_text)
+{
+	boost::stache_root ast;
+	BOOST_CHECK(boost::simple_parse_template("Hello {{NAME}}!", ast));
+}
+
+BOOST_AUTO_TEST_CASE(parse_incomplete_tag)
+{
+	boost::stache_root ast;
+	BOOST_CHECK(!boost::simple_parse_template("{{TAGNAME", ast));
 }
