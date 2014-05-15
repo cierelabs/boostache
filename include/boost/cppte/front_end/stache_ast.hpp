@@ -52,6 +52,7 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
    struct section
    {
       bool is_inverted;
+      identifier name;
       std::vector<stache_node> nodes;
    };
 

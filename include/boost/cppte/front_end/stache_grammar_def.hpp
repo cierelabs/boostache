@@ -12,7 +12,7 @@
 #include <boost/cppte/front_end/stache_ast_adapted.hpp>
 #include <boost/cppte/front_end/stache_skipper_def.hpp>
 #include <boost/cppte/front_end/stache_grammar.hpp>
-#include <boost/spirit/include/qi.hpp>
+#include <boost/spirit/include/phoenix_operator.hpp>
 
 namespace boost { namespace cppte { namespace front_end
 {
@@ -23,17 +23,23 @@ namespace boost { namespace cppte { namespace front_end
    stache_grammar<Iterator>::stache_grammar()
       : stache_grammar::base_type(stache_root)
    {
+      qi::_1_type _1;
+      qi::_a_type _a;
+      qi::_r1_type _r1;
       qi::char_type char_;
       qi::lexeme_type lexeme;
       qi::alpha_type alpha;
       qi::alnum_type alnum;
+      qi::alnum_type string;
       qi::attr_type attr;
       qi::omit_type omit;
       qi::lit_type lit;
+      qi::eps_type eps;
 
 
       stache_root =
-           *stache_node
+            eps
+         >> *stache_node
          ;
 
       stache_node =
@@ -53,10 +59,11 @@ namespace boost { namespace cppte { namespace front_end
          >> "}}"
          ;
 
-      section =
-            omit[section_begin]
+      section %=
+            omit[section_begin [_a = _1] ]
+         >> attr(false)
          >> *stache_node
-//         >> section_end
+         >> section_end(_a)
          ;
 
       section_begin =
@@ -66,15 +73,15 @@ namespace boost { namespace cppte { namespace front_end
          >> "}}"
          ;
 
-      // section_end =
-      //       lit("{{"}
-      //    >> '^'
-      //    >> string(id)
-      //    >> "}}"
-      //    ;
+      section_end =
+            lit("{{")
+         >> '/'
+         >> identifier //string(_r1)
+         >> "}}"
+         ;
 
       literal_text =
-         *(char_ - "{{")
+         lexeme[+(char_ - "{{")]
          ;
    };
 }}}
