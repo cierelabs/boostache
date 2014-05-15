@@ -1,6 +1,9 @@
 #pragma once
 
-#include "liaw2014/renderer.hpp"
+#include <boost/cppte/front_end/stache_ast.hpp>
+
+#include <map>
+#include <string>
 
 struct TemplateFixture
 {
@@ -14,15 +17,16 @@ struct TemplateFixture
 
 		std::string generate_template()
 		{
-			liaw2014::RenderAST t(template_string);
-			liaw2014::Renderer renderer(t);
-			result = renderer.render(ctx);
-			return result;
+			//liaw2014::RenderAST t(template_string);
+			//liaw2014::Renderer renderer(t);
+			//result = renderer.render(ctx);
+			//return result;
+			return "";
 		}
 
 		void set_tag_value(const std::string& tag, const std::string& value)
 		{
-			ctx[tag] = value;
+			//ctx[tag] = value;
 		}
 
 		typedef std::map<std::string, std::string> object_t;
@@ -39,6 +43,6 @@ struct TemplateFixture
 		std::string template_string;
 
 	private:
-		liaw2014::RenderData ctx;
+		//liaw2014::RenderData ctx;
 };
 

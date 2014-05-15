@@ -5,12 +5,11 @@
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
-#include "gmock_to_boost.hpp"
 #include "test_template_fixture.hpp"
 
 
 // Tests that a simple mustache tag is replaced
-TEST_F(TemplateFixture, TestCollectionsSingle)
+BOOST_FIXTURE_TEST_CASE(TestCollectionsSingle, TemplateFixture)
 {
 	template_string = "Hi I am {{me}}.\n";
 	template_string += "{{# people}}";
@@ -26,10 +25,10 @@ TEST_F(TemplateFixture, TestCollectionsSingle)
 
 	std::string expected = "Hi I am Daniel.\n";
 	expected += "Hi Tom!";
-	// TODO: EXPECT_EQ(expected, result);
+	// TODO: BOOST_CHECK_EQUAL(expected, result);
 }
 
-TEST_F(TemplateFixture, TestCollectionsMultiple)
+BOOST_FIXTURE_TEST_CASE(TestCollectionsMultiple, TemplateFixture)
 {
 	template_string = "Hi I am {{me}}.\n";
 	template_string += "{{# people}}";
@@ -49,10 +48,10 @@ TEST_F(TemplateFixture, TestCollectionsMultiple)
 	std::string expected = "Hi I am Daniel.\n";
 	expected += "Hi Tom!";
 	expected += "Hi Jerry!";
-	// TODO: EXPECT_EQ(expected, result);
+	// TODO: BOOST_CHECK_EQUAL(expected, result);
 }
 
-TEST_F(TemplateFixture, TestCollectionMultipleWithMultipleFields)
+BOOST_FIXTURE_TEST_CASE(TestCollectionMultipleWithMultipleFields, TemplateFixture)
 {
 	template_string = "Hi I am {{me}}.\n";
 	template_string += "{{# people}}";
@@ -74,5 +73,5 @@ TEST_F(TemplateFixture, TestCollectionMultipleWithMultipleFields)
 	std::string expected = "Hi I am Daniel.\n";
 	expected += "Hi Daniel, I am Tom, I do Accounting.";
 	expected += "Hi Daniel, I am Jerry, I do Magic.";
-	// TODO: EXPECT_EQ(expected, result);
+	// TODO: BOOST_CHECK_EQUAL(expected, result);
 }

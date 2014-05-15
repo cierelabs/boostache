@@ -5,29 +5,28 @@
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
-#include "gmock_to_boost.hpp"
 #include "test_template_fixture.hpp"
 
 // Tests that a simple mustache tag is replaced
-TEST_F(TemplateFixture, TestSectionsMustacheFromString)
+BOOST_FIXTURE_TEST_CASE(TestSectionMustacheFromString, TemplateFixture)
 {
 	template_string = "Hi I am {{name}}.\n";
 	template_string += "{{# showme}}";
-	template_string += "I like {{pet}}.";
+	template_string += "I like {{pet}}.\n";
+	template_string += "{{# showme2}}";
+	template_string += "If you don't see this, something went wrong.";
+	template_string += "{{/ showme2}}";
 	template_string += "{{/ showme}}";
-	template_string += "{{# dontshowme}}";
-	template_string += "If you see this, something went wrong.";
-	template_string += "{{/ dontshowme}}";
 
 	set_tag_value("name", "Daniel");
 	set_tag_value("pet", "turtles");
 	set_tag_value("showme", "true");
-	set_tag_value("dontshowme", "false");
+	set_tag_value("showme2", "true");
 
 	generate_template();
 
 	std::string expected = "Hi I am Daniel.\n";
-	expected += "I like turtles.";
-	// TODO: EXPECT_EQ(expected, result);
+	expected += "I like turtles.\n";
+	expected += "If you don't see this, something went wrong.";
+	// TODO: BOOST_CHECK_EQUAL(expected, result);
 }
-

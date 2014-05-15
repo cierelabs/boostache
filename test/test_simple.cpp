@@ -6,26 +6,25 @@
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
-#include "gmock_to_boost.hpp"
 #include "test_template_fixture.hpp"
 
 // Tests that a simple mustache tag is replaced
-TEST_F(TemplateFixture, TestSimpleMustacheFromString)
+BOOST_FIXTURE_TEST_CASE(TestSimpleMustacheFromString, TemplateFixture)
 {
 	template_string = "text {{title}} text";
 	set_tag_value("title", "replaced");
 	generate_template();
 
 	const std::string expected = "text replaced text";
-	// TODO: EXPECT_EQ(expected, result);
+	// TODO: BOOST_CHECK_EQUAL(expected, result);
 }
 
-TEST_F(TemplateFixture, TestSimpleNotFoundMustacheFromString)
+BOOST_FIXTURE_TEST_CASE(TestSimpleNotFoundMustacheFromString, TemplateFixture)
 {
 	template_string = "text {{fitle}} text";
 	set_tag_value("title", "replaced");
 	generate_template();
 
 	const std::string expected = "text  text";
-	// TODO: EXPECT_EQ(expected, result);
+	// TODO: BOOST_CHECK_EQUAL(expected, result);
 }

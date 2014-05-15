@@ -5,11 +5,10 @@
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
-#include "gmock_to_boost.hpp"
 #include "test_template_fixture.hpp"
 
 // Tests that multiple mustache tags are replaced
-TEST_F(TemplateFixture, TestMultipleMustacheFromString)
+BOOST_FIXTURE_TEST_CASE(TestMultipleMustacheFromString, TemplateFixture)
 {
 	template_string = "<title>{{title}}</title>\n";
 	template_string += "Hi I am {{name}}{{lastname}}.\n";
@@ -24,5 +23,5 @@ TEST_F(TemplateFixture, TestMultipleMustacheFromString)
 	std::string expected = "<title>Multiple Mustaches</title>\n";
 	expected += "Hi I am Daniel.\n";
 	expected += "I like turtles.\n";
-	// TODO: EXPECT_EQ(expected, result);
+	// TODO: BOOST_CHECK_EQUAL(expected, result);
 }
