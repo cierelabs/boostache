@@ -28,10 +28,5 @@ BOOST_FUSION_ADAPT_STRUCT(
    (std::vector<boost::cppte::front_end::ast::stache_node>, nodes)
 )
 
-BOOST_FUSION_ADAPT_STRUCT(
-   boost::cppte::front_end::ast::stache_root,
-   (std::vector<boost::cppte::front_end::ast::stache_node>, nodes)
-)
-
 #endif
 

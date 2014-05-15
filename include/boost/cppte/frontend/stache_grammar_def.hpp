@@ -40,8 +40,7 @@ namespace boost { namespace cppte { namespace front_end
 
 
       stache_root =
-            eps
-         >> *stache_node
+         *stache_node
          ;
 
       stache_node =
