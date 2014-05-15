@@ -55,7 +55,7 @@ namespace boost { namespace cppte { namespace front_end
 
       variable =
             lit("{{")
-         >> matches[lit("&")]
+         >> matches["&"]
          >> identifier
          >> "}}"
          ;
