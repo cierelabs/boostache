@@ -61,15 +61,14 @@ namespace boost { namespace cppte { namespace front_end
          ;
 
       section %=
-            attr(false)
+            matches[&lit("{{^")]
          >> section_begin[_a = _1]
          >> *stache_node
          >> section_end(_a)
          ;
 
       section_begin =
-            lit("{{")
-         >> '#'
+            lexeme[lit("{{") >> (lit('#') | '^')]
          >> identifier
          >> "}}"
          ;

@@ -24,6 +24,9 @@ int main()
                       "{{#foo}}\n"
                       "Some cool section {{whoot}} is here.\n"
                       "{{/foo}} done.\n"
+                      "{{^bar}}\n"
+                      "Some cool empty section {{whoot}} is here.\n"
+                      "{{/bar}} done.\n"
       );
 
    iterator_t iter = input.begin();
