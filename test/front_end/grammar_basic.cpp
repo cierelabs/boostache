@@ -46,6 +46,6 @@ int main()
       std::cout << "parse failed" << std::endl;
    }
 
-   return -1;
+   return 0;
 }
 
