@@ -36,7 +36,7 @@ namespace boost { namespace cppte { namespace front_end
          identifier
          ;
 
-      qi::rule<Iterator, ast::literal_text(), stache_skipper<Iterator>>
+      qi::rule<Iterator, ast::literal_text()>
          literal_text
          ;
 
