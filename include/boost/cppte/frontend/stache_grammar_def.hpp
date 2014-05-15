@@ -54,20 +54,22 @@ namespace boost { namespace cppte { namespace front_end
          ;
 
       variable =
-         lexeme[lit("{{") >> matches['&']]
+            lit("{{")
+         >> matches['&']
          >> identifier
          >> "}}"
          ;
 
       section %=
-            matches[&lit("{{^")]
+            matches[&(lit("{{") >> '^')]
          >> section_begin[_a = _1]
          >> *stache_node
          >> section_end(_a)
          ;
 
       section_begin =
-            lexeme[lit("{{") >> (lit('#') | '^')]
+            lit("{{")
+         >> (lit('#') | '^')
          >> identifier
          >> "}}"
          ;

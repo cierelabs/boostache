@@ -1,9 +1,10 @@
+#define BOOST_SPIRIT_DEBUG
+
 #include <boost/spirit/include/qi.hpp>
 #include <boost/cppte/frontend/stache_ast.hpp>
 #include <boost/cppte/frontend/stache_grammar_def.hpp>
 #include <boost/cppte/frontend/stache_printer.hpp>
 #include <iostream>
-
 
 namespace fe = boost::cppte::front_end;
 namespace qi = boost::spirit::qi;
@@ -21,12 +22,12 @@ int main()
    std::string input( "Hello world \n"
                       "{{name}} is here.\n"
                       "{{& escaped_name}} is here\n"
-                      "{{#foo}}\n"
+                      "{{ # foo}}\n"
                       "Some cool section {{whoot}} is here.\n"
                       "{{/foo}} done.\n"
-                      "{{^bar}}\n"
-                      "Some cool empty section {{whoot}} is here.\n"
-                      "{{/bar}} done.\n"
+                      "{{^ bar}}\n"
+                      "Some cool empty section {{ whoot }} is here.\n"
+                      "{{ /bar}} done.\n"
       );
 
    iterator_t iter = input.begin();
