@@ -1,7 +1,7 @@
 #include <boost/spirit/include/qi.hpp>
-#include <boost/cppte/front_end/stache_ast.hpp>
-#include <boost/cppte/front_end/stache_grammar_def.hpp>
-#include <boost/cppte/front_end/stache_printer.hpp>
+#include <boost/cppte/frontend/stache_ast.hpp>
+#include <boost/cppte/frontend/stache_grammar_def.hpp>
+#include <boost/cppte/frontend/stache_printer.hpp>
 #include <iostream>
 
 

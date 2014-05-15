@@ -11,7 +11,7 @@
 #define BOOST_CPPTE_FRONT_END_STACHE_PRINTER_HPP
 
 #include <boost/variant/apply_visitor.hpp>
-#include <boost/cppte/front_end/stache_ast.hpp>
+#include <boost/cppte/frontend/stache_ast.hpp>
 
 namespace boost { namespace cppte { namespace front_end { namespace ast
 {

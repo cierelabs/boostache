@@ -9,9 +9,9 @@
 #ifndef BOOST_CPPTE_FRONT_END_STACHE_GRAMMAR_DEF_HPP
 #define BOOST_CPPTE_FRONT_END_STACHE_GRAMMAR_DEF_HPP
 
-#include <boost/cppte/front_end/stache_ast_adapted.hpp>
-#include <boost/cppte/front_end/stache_skipper_def.hpp>
-#include <boost/cppte/front_end/stache_grammar.hpp>
+#include <boost/cppte/frontend/stache_ast_adapted.hpp>
+#include <boost/cppte/frontend/stache_skipper_def.hpp>
+#include <boost/cppte/frontend/stache_grammar.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
 
 namespace boost { namespace cppte { namespace front_end

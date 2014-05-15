@@ -12,7 +12,7 @@
 #ifndef BOOST_CPPTE_FRONT_END_STACHE_AST_ADAPTED_HPP
 #define BOOST_CPPTE_FRONT_END_STACHE_AST_ADAPTED_HPP
 
-#include <boost/cppte/front_end/stache_ast.hpp>
+#include <boost/cppte/frontend/stache_ast.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 
 BOOST_FUSION_ADAPT_STRUCT(
