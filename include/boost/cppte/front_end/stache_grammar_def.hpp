@@ -51,19 +51,18 @@ namespace boost { namespace cppte { namespace front_end
          ;
 
       identifier =
-         lexeme[ alpha >> *(alnum | char_('_')) ]
+         lexeme[alpha >> *(alnum | char_('_'))]
          ;
 
       variable =
-            lit("{{")
-         >> matches['&']
+         lexeme[lit("{{") >> matches['&']]
          >> identifier
          >> "}}"
          ;
 
       section %=
-            omit[section_begin [_a = _1] ]
-         >> attr(false)
+            attr(false)
+         >> section_begin[_a = _1]
          >> *stache_node
          >> section_end(_a)
          ;
