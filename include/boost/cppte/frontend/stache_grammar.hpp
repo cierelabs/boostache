@@ -9,8 +9,8 @@
 #ifndef BOOST_CPPTE_FRONT_END_STACHE_GRAMMAR_HPP
 #define BOOST_CPPTE_FRONT_END_STACHE_GRAMMAR_HPP
 
-#include <boost/cppte/front_end/stache_ast.hpp>
-#include <boost/cppte/front_end/stache_skipper.hpp>
+#include <boost/cppte/frontend/stache_ast.hpp>
+#include <boost/cppte/frontend/stache_skipper.hpp>
 #include <boost/spirit/include/qi.hpp>
 
 namespace boost { namespace cppte { namespace front_end

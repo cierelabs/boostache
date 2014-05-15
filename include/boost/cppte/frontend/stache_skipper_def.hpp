@@ -9,7 +9,7 @@
 #ifndef BOOST_CPPTE_FRONT_END_STACHE_SKIPPER_DEF_HPP
 #define BOOST_CPPTE_FRONT_END_STACHE_SKIPPER_DEF_HPP
 
-#include <boost/cppte/front_end/stache_skipper.hpp>
+#include <boost/cppte/frontend/stache_skipper.hpp>
 
 namespace boost { namespace cppte { namespace front_end
 {
