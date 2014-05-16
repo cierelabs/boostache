@@ -10,3 +10,4 @@ test_nested_sections
 test_html_escape
 test_inverted_sections
 test_simple_parser
+test_model
