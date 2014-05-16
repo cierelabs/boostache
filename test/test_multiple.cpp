@@ -23,5 +23,5 @@ BOOST_FIXTURE_TEST_CASE(TestMultipleMustacheFromString, TemplateFixture)
 	std::string expected = "<title>Multiple Mustaches</title>\n";
 	expected += "Hi I am Daniel.\n";
 	expected += "I like turtles.\n";
-	// TODO: BOOST_CHECK_EQUAL(expected, result);
+	BOOST_CHECK_EQUAL(expected, result);
 }

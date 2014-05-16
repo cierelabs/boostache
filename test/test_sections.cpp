@@ -8,7 +8,7 @@
 #include "test_template_fixture.hpp"
 
 // Tests that a simple mustache tag is replaced
-BOOST_FIXTURE_TEST_CASE(TestSectionsMustacheFromString, TemplateFixture)
+BOOST_FIXTURE_TEST_CASE(TestSectionsMustache, TemplateFixture)
 {
 	template_string = "Hi I am {{name}}.\n";
 	template_string += "{{# showme}}";
@@ -27,6 +27,6 @@ BOOST_FIXTURE_TEST_CASE(TestSectionsMustacheFromString, TemplateFixture)
 
 	std::string expected = "Hi I am Daniel.\n";
 	expected += "I like turtles.";
-	// TODO: BOOST_CHECK_EQUAL(expected, result);
+	BOOST_CHECK_EQUAL(expected, result);
 }
 

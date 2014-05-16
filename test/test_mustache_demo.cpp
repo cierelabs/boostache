@@ -52,5 +52,5 @@ R"(<h1>{{header}}</h1>
 <li><strong>red : Colors</strong></li>
 <li><a href="#Green">green</a></li>
 <li><a href="#Blue">blue</a></li>)";
-	// TODO: BOOST_CHECK_EQUAL(expected, result);
+	BOOST_CHECK_EQUAL(expected, result);
 }
