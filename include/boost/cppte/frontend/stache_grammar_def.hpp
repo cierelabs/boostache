@@ -61,16 +61,16 @@ namespace boost { namespace cppte { namespace front_end
          ;
 
       stache_node =
-            comment
+            no_skip[literal_text]
+         |  comment
          |  variable
          |  variable_unescaped
          |  section
          |  partial
-         |  no_skip[literal_text]
          ;
 
-      identifier =
-         lexeme[alpha >> *(alnum | char_('_'))]
+      literal_text =
+         +(char_ - "{{")
          ;
 
       comment =
@@ -78,6 +78,10 @@ namespace boost { namespace cppte { namespace front_end
          >> '!'
          >> omit[*(char_ - "}}")]
          >> "}}"
+         ;
+
+      identifier =
+         lexeme[alpha >> *(alnum | char_('_'))]
          ;
 
       variable =
@@ -120,10 +124,6 @@ namespace boost { namespace cppte { namespace front_end
          >> '>'
          >> identifier
          >> "}}"
-         ;
-
-      literal_text =
-         +(char_ - "{{")
          ;
    };
 }}}

@@ -27,7 +27,7 @@ int main()
                       "{{name}} is here.\n"
                       "{{& escaped_name}} is here\n"
                       "{{ # foo}}\n"
-                      "Some cool section {{whoot}} is here.\n"
+                      "Some cool section {{whoot}} is {{foo}} {{bar}} here.\n"
                       "{{/foo}} done.\n"
                       "{{! no comment }}"
                       "{{^ bar}}\n"
