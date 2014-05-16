@@ -18,6 +18,15 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 {
    namespace detail
    {
+		template <typename visitor, typename root_type>
+		void apply_visitor_to_root(const visitor& v, const root_type& root)
+		{
+			for( const auto& node : root.nodes )
+			{
+				boost::apply_visitor(v, node);
+			}
+		}
+
 		struct stache_model_visitor
 		{
 			typedef std::string result_type;
@@ -78,7 +87,6 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
          void operator()(section const & v) const
          {
 				// TODO: Inverted
-				// FIXME! Refactor/cleanup.
 				auto location = model.find(v.name);
 				if( location != model.end() )
 				{
@@ -91,27 +99,18 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 							if( m )
 							{
 								stache_model_printer section_printer(out, *m);
-								for( const auto& node : v.nodes )
-								{
-									boost::apply_visitor(section_printer, node);
-								}
+								apply_visitor_to_root(section_printer, v);
 							}
 							else
 							{
-								for( const auto& node : v.nodes )
-								{
-									boost::apply_visitor(*this, node);
-								}
+								apply_visitor_to_root(*this, v);
 							}
 						}
 					}
 					else
 					{
 						stache_model_printer section_printer(out, boost::get<stache_model>(location->second));
-						for( const auto& node : v.nodes )
-						{
-							boost::apply_visitor(section_printer, node);
-						}
+						apply_visitor_to_root(section_printer, v);
 					}
 				}
          }
@@ -125,10 +124,7 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
    inline void print(std::ostream& out, stache_root const& root, const stache_model& model)
    {
       detail::stache_model_printer p(out, model);
-      for(const auto& node : root.nodes)
-      {
-         boost::apply_visitor(p, node);
-      }
+		apply_visitor_to_root(p, root);
    }
 }}}}
 
