@@ -69,4 +69,3 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 }}}}
 
 #endif
-
