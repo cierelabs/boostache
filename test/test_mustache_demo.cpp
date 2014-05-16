@@ -41,9 +41,9 @@ R"(<h1>{{header}}</h1>
 */
 	set_tag_value("header", "Colors");
 	set_tag_value("empty", "false");
-	add_section_item("items", { { "name", "red" }, { "first" : "true" }, { "url", "#Red" } });
-	add_section_item("items", { { "name", "green" }, { "link" : "true" }, { "url", "#Green" } });
-	add_section_item("items", { { "name", "blue" }, { "link" : "true" }, { "url", "#Blue" } });
+	add_section_item("items", { { "name", "red" }, { "first", "true" }, { "url", "#Red" } });
+	add_section_item("items", { { "name", "green" }, { "link", "true" }, { "url", "#Green" } });
+	add_section_item("items", { { "name", "blue" }, { "link", "true" }, { "url", "#Blue" } });
 
 
 	generate_template();
@@ -51,6 +51,6 @@ R"(<h1>{{header}}</h1>
 	std::string expected = R"(<h1>Colors</h1>
 <li><strong>red : Colors</strong></li>
 <li><a href="#Green">green</a></li>
-<li><a href="#Blue">blue</a></li>");
+<li><a href="#Blue">blue</a></li>)";
 	// TODO: BOOST_CHECK_EQUAL(expected, result);
 }
