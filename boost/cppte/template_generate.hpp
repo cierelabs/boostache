@@ -1,7 +1,6 @@
 #ifndef _TEMPLATE_GENERATE_HPP_
 #define _TEMPLATE_GENERATE_HPP_ 0x100
 
-#include "template_context.hpp"
 #include "template_object_interface.hpp"
 #include "template_parser.hpp"
 #include <ostream>
@@ -10,7 +9,7 @@ namespace template_engine
 {
 
 template<typename T, typename Iterator>
-std::ostream& render_helper(std::ostream& os, const T& data, Iterator begin, Iterator end)
+std::ostream& render(std::ostream& os, const T& data, Iterator begin, Iterator end)
 {
 	using namespace template_engine::details;
 
@@ -37,13 +36,13 @@ std::ostream& render_helper(std::ostream& os, const T& data, Iterator begin, Ite
 						{
 							while( section_begin != section_end )
 							{
-								render_helper(os, *section_begin, begin, end);
+								render(os, *section_begin, begin, end);
 								++section_begin;
 							}
 						}
 						else if ((*tag_begin == '^') && (section_begin == section_end))
 						{
-							render_helper(os, data, begin, end);
+							render(os, data, begin, end);
 						}
 						// move past section end;
 						begin = section_end_ptr;
@@ -66,13 +65,6 @@ std::ostream& render_helper(std::ostream& os, const T& data, Iterator begin, Ite
 		}
 	}
 	return os;
-}
-
-template<typename T, typename Iterator>
-std::ostream& render(std::ostream& os, const T& model, Iterator begin, Iterator end)
-{
-	Context_list_t data{model};
-	return render_helper(os, data, begin, end);
 }
 
 } // namespace template_engine

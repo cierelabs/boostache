@@ -1,4 +1,5 @@
 #include "template_engine.hpp"
+#include "template_context.hpp"
 
 #include <iostream>
 #include <cstdio>
@@ -22,7 +23,7 @@ int main(int argc, char* argv[])
 	e.addVariable("NAME", "World");
 	cout<<"before:\n"<<ctemplate<<"\n";
 	cout<<"after:\n";
-	render(std::cout, e, ctemplate.data(), ctemplate.data() + ctemplate.size());
+	render(std::cout, Context_list_t(e), ctemplate.data(), ctemplate.data() + ctemplate.size());
 	cout<<"\n";
 	}
 
@@ -33,7 +34,7 @@ int main(int argc, char* argv[])
 	e.addVariable("NAME", "Richard");
 	cout<<"before:\n"<<ctemplate<<"\n";
 	cout<<"after:\n";
-	render(std::cout, e, ctemplate.data(), ctemplate.data() + ctemplate.size());
+	render(std::cout, Context_list_t(e), ctemplate.data(), ctemplate.data() + ctemplate.size());
 	cout<<"\n";
 	}
 
@@ -44,7 +45,7 @@ int main(int argc, char* argv[])
 	e.addSubContext("person", {});
 	cout<<"before:>>>\n"<<ctemplate<<"<<<\n";
 	cout<<"after:>>>\n";
-	render(std::cout, e, ctemplate.data(), ctemplate.data() + ctemplate.size());
+	render(std::cout, Context_list_t(e), ctemplate.data(), ctemplate.data() + ctemplate.size());
 	cout<<"<<<\n";
 	}
 
@@ -55,7 +56,7 @@ int main(int argc, char* argv[])
 	e.addSubContext("person", {});
 	cout<<"before:>>>\n"<<ctemplate<<"<<<\n";
 	cout<<"after:>>>\n";
-	render(std::cout, e, ctemplate.data(), ctemplate.data() + ctemplate.size());
+	render(std::cout, Context_list_t(e), ctemplate.data(), ctemplate.data() + ctemplate.size());
 	cout<<"<<<\n";
 	}
 
@@ -65,7 +66,7 @@ int main(int argc, char* argv[])
 	Context e;
 	cout<<"before:>>>\n"<<ctemplate<<"<<<\n";
 	cout<<"after:>>>\n";
-	render(std::cout, e, ctemplate.data(), ctemplate.data() + ctemplate.size());
+	render(std::cout, Context_list_t(e), ctemplate.data(), ctemplate.data() + ctemplate.size());
 	cout<<"<<<\n";
 	}
 
@@ -75,7 +76,7 @@ int main(int argc, char* argv[])
 	Context e;
 	cout<<"before:>>>\n"<<ctemplate<<"<<<\n";
 	cout<<"after:>>>\n";
-	render(std::cout, e, ctemplate.data(), ctemplate.data() + ctemplate.size());
+	render(std::cout, Context_list_t(e), ctemplate.data(), ctemplate.data() + ctemplate.size());
 	cout<<"<<<\n";
 	}
 
@@ -108,7 +109,7 @@ int main(int argc, char* argv[])
 
 	cout<<"before:\n"<<ctemplate<<"\n";
 	cout<<"after:\n";
-	render(std::cout, e, ctemplate.data(), ctemplate.data() + ctemplate.size());
+	render(std::cout, Context_list_t(e), ctemplate.data(), ctemplate.data() + ctemplate.size());
 	cout<<"\n";
 	}
 
