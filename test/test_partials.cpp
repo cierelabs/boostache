@@ -25,5 +25,5 @@ BOOST_FIXTURE_TEST_CASE(TestPartialsFromString, TemplateFixture)
 	std::string expected = "Hi I am Daniel.\n";
 	expected += "I like turtles.\n";
 	expected += "What do I like? Turtles!!";
-	// TODO: BOOST_CHECK_EQUAL(expected, result);
+	BOOST_CHECK_EQUAL(expected, result);
 }

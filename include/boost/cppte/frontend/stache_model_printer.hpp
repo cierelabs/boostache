@@ -96,9 +96,9 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 
          void operator()(section const & v) const
          {
-				// TODO: Inverted
 				auto location = model.find(v.name);
-				if( location != model.end() )
+				bool have_value = (location != model.end());
+				if( have_value && !v.is_inverted )
 				{
 					const stache_model_vector* vec = boost::get<stache_model_vector>(&(location->second));
 					if( vec )
@@ -122,6 +122,10 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 						stache_model_printer section_printer(out, boost::get<stache_model>(location->second));
 						apply_visitor_to_root(section_printer, v.nodes);
 					}
+				}
+				else if( !have_value && v.is_inverted )
+				{
+					apply_visitor_to_root(stache_model_printer(out, stache_model()), v.nodes);
 				}
          }
 
