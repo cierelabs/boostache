@@ -34,6 +34,10 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 				// TODO: Do something useful
 				return "Oops.  Don't know how to format a stache model.\n";
 			}
+			std::string operator()(const stache_model_vector& v) const
+			{
+				return "Oops.  Don't know how to format a stache model vector.\n";
+			}
 		};
 
       class stache_model_printer
@@ -74,13 +78,40 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
          void operator()(section const & v) const
          {
 				// TODO: Inverted
+				// FIXME! Refactor/cleanup.
 				auto location = model.find(v.name);
 				if( location != model.end() )
 				{
-					stache_model_printer section_printer(out, boost::get<stache_model>(location->second));
-					for( const auto& node : v.nodes )
+					const stache_model_vector* vec = boost::get<stache_model_vector>(&(location->second));
+					if( vec )
 					{
-						boost::apply_visitor(section_printer, node);
+						for( const auto& entry : *vec )
+						{
+							const stache_model* m = boost::get<stache_model>(&entry);
+							if( m )
+							{
+								stache_model_printer section_printer(out, *m);
+								for( const auto& node : v.nodes )
+								{
+									boost::apply_visitor(section_printer, node);
+								}
+							}
+							else
+							{
+								for( const auto& node : v.nodes )
+								{
+									boost::apply_visitor(*this, node);
+								}
+							}
+						}
+					}
+					else
+					{
+						stache_model_printer section_printer(out, boost::get<stache_model>(location->second));
+						for( const auto& node : v.nodes )
+						{
+							boost::apply_visitor(section_printer, node);
+						}
 					}
 				}
          }
