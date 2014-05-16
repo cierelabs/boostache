@@ -20,7 +20,7 @@ BOOST_FIXTURE_TEST_CASE(TestHtmlEscapeMustacheFromString, TemplateFixture)
 	std::string expected = "text &lt;pre&gt;&quot;&#92;&amp;foo&#92;&lt;\
 									/pre&gt; text\n";
 	expected += "text &lt;pre&gt;&quot;&#92;&#92;&amp;&lt;/pre&gt; text";
-	// TODO: BOOST_CHECK_EQUAL(expected, result_escaped_string);
+	BOOST_CHECK_EQUAL(expected, result);
 }
 
 BOOST_FIXTURE_TEST_CASE(TestHtmlUnEscapeMustacheFromString, TemplateFixture)
@@ -34,6 +34,6 @@ BOOST_FIXTURE_TEST_CASE(TestHtmlUnEscapeMustacheFromString, TemplateFixture)
 
 	std::string expected = "text <pre>\"\\&foo\\</pre> text\n";
 	expected += "text <pre>\"\\\\&</pre> text";
-	// TODO: BOOST_CHECK_EQUAL(expected, result_unescaped_string);
+	BOOST_CHECK_EQUAL(expected, result);
 }
 
