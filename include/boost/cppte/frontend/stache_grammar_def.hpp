@@ -30,7 +30,6 @@
 #include <boost/spirit/include/qi_omit.hpp>
 #include <boost/spirit/include/qi_plus.hpp>
 #include <boost/spirit/include/qi_sequence.hpp>
-#include <boost/spirit/include/qi_string.hpp>
 #include <boost/spirit/include/support_argument.hpp>
 
 namespace boost { namespace cppte { namespace front_end
@@ -54,7 +53,6 @@ namespace boost { namespace cppte { namespace front_end
       qi::matches_type matches;
       qi::no_skip_type no_skip;
       qi::omit_type omit;
-      qi::string_type string;
 
 
       stache_root =
@@ -112,7 +110,7 @@ namespace boost { namespace cppte { namespace front_end
       section_end =
             lit("{{")
          >> '/'
-         >> omit[string(_r1)]
+         >> lit(_r1)
          >> "}}"
          ;
 
