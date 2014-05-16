@@ -17,3 +17,4 @@ endmacro(add_boost_test)
 
 add_subdirectory(boost)
 add_subdirectory(test)
+add_subdirectory(examples)
