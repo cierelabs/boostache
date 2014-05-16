@@ -18,6 +18,15 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 {
    namespace detail
    {
+		template <typename visitor, typename root_type>
+		void apply_visitor_to_root(const visitor& v, const root_type& root)
+		{
+			for( const auto& node : root.nodes )
+			{
+				boost::apply_visitor(v, node);
+			}
+		}
+
 		struct stache_model_visitor
 		{
 			typedef std::string result_type;
@@ -33,6 +42,10 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 			{
 				// TODO: Do something useful
 				return "Oops.  Don't know how to format a stache model.\n";
+			}
+			std::string operator()(const stache_model_vector& v) const
+			{
+				return "Oops.  Don't know how to format a stache model vector.\n";
 			}
 		};
 
@@ -77,10 +90,27 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 				auto location = model.find(v.name);
 				if( location != model.end() )
 				{
-					stache_model_printer section_printer(out, boost::get<stache_model>(location->second));
-					for( const auto& node : v.nodes )
+					const stache_model_vector* vec = boost::get<stache_model_vector>(&(location->second));
+					if( vec )
 					{
-						boost::apply_visitor(section_printer, node);
+						for( const auto& entry : *vec )
+						{
+							const stache_model* m = boost::get<stache_model>(&entry);
+							if( m )
+							{
+								stache_model_printer section_printer(out, *m);
+								apply_visitor_to_root(section_printer, v);
+							}
+							else
+							{
+								apply_visitor_to_root(*this, v);
+							}
+						}
+					}
+					else
+					{
+						stache_model_printer section_printer(out, boost::get<stache_model>(location->second));
+						apply_visitor_to_root(section_printer, v);
 					}
 				}
          }
@@ -94,10 +124,7 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
    inline void print(std::ostream& out, stache_root const& root, const stache_model& model)
    {
       detail::stache_model_printer p(out, model);
-      for(const auto& node : root.nodes)
-      {
-         boost::apply_visitor(p, node);
-      }
+		apply_visitor_to_root(p, root);
    }
 }}}}
 

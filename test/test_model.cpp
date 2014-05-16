@@ -52,12 +52,23 @@ BOOST_AUTO_TEST_CASE(test_simple_model_formatting)
 BOOST_AUTO_TEST_CASE(test_section_printing)
 {
 	stache_model model;
-	model["USER"] = stache_model {
-		{ "NAME", "Bob" },
-		{ "LOCATION", "Earth" },
-		{ "FAVORITES", stache_model {
-				{ "FOOD", "Pizza" },
-				{ "MUSIC", "Classical" }
+	model["USER"] = stache_model_vector {
+		stache_model {
+			{ "NAME", "Bob" },
+			{ "LOCATION", "Earth" },
+			{ "FAVORITES", stache_model {
+					{ "FOOD", "Pizza" },
+					{ "MUSIC", "Classical" }
+				}
+			}
+		},
+		stache_model {
+			{ "NAME", "George" },
+			{ "LOCATION", "Mars" },
+			{ "FAVORITES", stache_model {
+					{ "FOOD", "Red sand" },
+					{ "MUSIC", "Wind" }
+				}
 			}
 		}
 	};
@@ -75,6 +86,10 @@ BOOST_AUTO_TEST_CASE(test_section_printing)
 		"user.name=Bob\n"
 		"user.location=Earth\n"
 		"user.favorite.food=Pizza\n"
-		"user.favorite.music=Classical\n",
+		"user.favorite.music=Classical\n"
+		"user.name=George\n"
+		"user.location=Mars\n"
+		"user.favorite.food=Red sand\n"
+		"user.favorite.music=Wind\n",
 		print(ast, model));
 }
