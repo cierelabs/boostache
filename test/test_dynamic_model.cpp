@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <boost/test/unit_test.hpp>
 #include <boost/cppte/frontend/stache_model.hpp>
-#include <boost/cppte/frontend/stache_dynamic_model_printer.hpp>
+#include <boost/cppte/model/stache_dynamic_model_printer.hpp>
 #include <boost/cppte/simple_parser.hpp>
 
 #include <fstream>
