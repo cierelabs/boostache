@@ -1,0 +1,25 @@
+{
+  "NAME": "BigCorp",
+  "YEAR FOUNDED": "1999",
+  "DIVISIONS": [
+    { "NAME": "R&D", "BUDGET":100000,
+      "EMPLOYEES": [
+	{ "NAME": "JOE", "EMPLOYEE ID":1, "SALARY":10000 },
+	{ "NAME": "Sally", "EMPLOYEE ID":2, "SALARY":12000 }
+      ]
+    },
+    { "NAME": "Finance", "BUDGET":200000,
+      "EMPLOYEES": [
+	{ "NAME": "Betty", "EMPLOYEE ID":5, "SALARY":8000 },
+	{ "NAME": "Jim", "EMPLOYEE ID":8, "SALARY":12000 }
+      ]
+    }
+    { "NAME": "HiddenDivision",
+      "EMPLOYEES": [
+      ]
+    }
+
+  ]
+
+}
+
