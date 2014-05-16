@@ -54,9 +54,10 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
       public:
          typedef void result_type;
 
-         stache_model_printer(std::ostream& out, const stache_model& model)
+         stache_model_printer(std::ostream& out, const stache_model& model, const stache_model_printer* parent = nullptr)
             : out(out)
 				, model(model)
+				, parent(parent)
          {}
 
          void operator()(undefined) const
@@ -80,7 +81,14 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 				}
 				else
 				{
-					out << "<<<<Undefined variable \"" << v.value << "\">>>>";
+					if (parent)
+					{
+						(*parent)(v);
+					}
+					else
+					{
+						out << "<<<<Undefined variable \"" << v.value << "\">>>>";
+					}
 				}
          }
 
@@ -100,15 +108,14 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 				bool have_value = (location != model.end());
 				if( have_value && !v.is_inverted )
 				{
-					const stache_model_vector* vec = boost::get<stache_model_vector>(&(location->second));
-					if( vec )
+					if (const stache_model_vector* vec = boost::get<stache_model_vector>(&(location->second)))
 					{
 						for( const auto& entry : *vec )
 						{
 							const stache_model* m = boost::get<stache_model>(&entry);
 							if( m )
 							{
-								stache_model_printer section_printer(out, *m);
+								stache_model_printer section_printer(out, *m, this);
 								apply_visitor_to_root(section_printer, v.nodes);
 							}
 							else
@@ -117,21 +124,30 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 							}
 						}
 					}
+					else if (const stache_model* model = boost::get<stache_model>(&location->second))
+					{
+						stache_model_printer section_printer(out, *model, this);
+						apply_visitor_to_root(section_printer, v.nodes);
+					}
+					else if (const std::string* str = boost::get<std::string>(&location->second))
+					{
+						out << *str;
+					}
 					else
 					{
-						stache_model_printer section_printer(out, boost::get<stache_model>(location->second));
-						apply_visitor_to_root(section_printer, v.nodes);
+						out << "<<<<Unhandled type of stache_model variant>>>>";
 					}
 				}
 				else if( !have_value && v.is_inverted )
 				{
-					apply_visitor_to_root(stache_model_printer(out, stache_model()), v.nodes);
+					apply_visitor_to_root(stache_model_printer(out, stache_model(), this), v.nodes);
 				}
          }
 
       private:
          std::ostream& out;
 			const stache_model& model;
+			const stache_model_printer* parent;
       };
    }
 

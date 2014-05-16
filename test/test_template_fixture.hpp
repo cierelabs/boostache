@@ -8,6 +8,8 @@
 #include <map>
 #include <string>
 
+using namespace boost::cppte::front_end;
+
 struct TemplateFixture
 {
 	public:
@@ -45,7 +47,11 @@ struct TemplateFixture
 			{
 				model_item[x.first] = x.second;
 			}
-			model[section_tag] = model_item;
+			if (model.find(section_tag) == model.end())
+			{
+				model[section_tag] = stache_model_vector { };
+			}
+			boost::get<stache_model_vector>(model[section_tag]).push_back(model_item);
 		}
 
 		void register_partial_template(const std::string& name, const std::string& template_string)
