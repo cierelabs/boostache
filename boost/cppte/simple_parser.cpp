@@ -34,6 +34,7 @@ namespace boost { namespace cppte { namespace front_end {
 	bool simple_parse(const std::string& input, ast::stache_root& ast)
 	{
 		std::istringstream i(input);
+		i.unsetf(std::ios::skipws);
 		return simple_parse(i, ast);
 	}
 }}}

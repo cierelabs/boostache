@@ -46,10 +46,7 @@ BOOST_AUTO_TEST_CASE(test_simple_model_formatting)
 	model["NAME"] = "Boosties";
 	ast::stache_root ast = parse("Hello, {{NAME}}!");
 	std::string result = print(ast, model);
-	// FIXME! This should have whitespace, but it looks like the parser is stripping it.
-	BOOST_CHECK_EQUAL("Hello,"
-		"" // <- This should be a space!
-		"Boosties!", result);
+	BOOST_CHECK_EQUAL("Hello, Boosties!", result);
 }
 
 BOOST_AUTO_TEST_CASE(test_section_printing)
@@ -74,12 +71,10 @@ BOOST_AUTO_TEST_CASE(test_section_printing)
 		"{{/FAVORITES}}"
 		"{{/USER}}");
 
-	// FIXME! Whitespace!
-	// Should have a trailing newline on all of these lines.
 	BOOST_CHECK_EQUAL(
-		"user.name=Bob"
-		"user.location=Earth"
-		"user.favorite.food=Pizza"
-		"user.favorite.music=Classical",
+		"user.name=Bob\n"
+		"user.location=Earth\n"
+		"user.favorite.food=Pizza\n"
+		"user.favorite.music=Classical\n",
 		print(ast, model));
 }

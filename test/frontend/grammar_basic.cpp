@@ -36,7 +36,7 @@ int main()
                        , grammar
                        , stache_skipper<iterator_t>()
                        , ast
-          ) )
+		) && (iter == iter_end) )
    {
       std::cout << "parse succeeded" << std::endl;
       fe::ast::print(std::cout, ast);
