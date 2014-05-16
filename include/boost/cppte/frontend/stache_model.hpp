@@ -4,6 +4,7 @@
 #include <boost/variant/recursive_variant.hpp>
 #include <string>
 #include <map>
+#include <functional>
 
 namespace boost
 {
@@ -11,8 +12,11 @@ namespace boost
 	{
 		namespace front_end
 		{
+			typedef std::function<std::string()> stache_function;
+
 			typedef boost::make_recursive_variant<
 				std::string,
+				stache_function,
 				std::map<std::string, boost::recursive_variant_>
 				>::type stache_variant;
 
