@@ -93,3 +93,56 @@ BOOST_AUTO_TEST_CASE(test_section_printing)
 		"user.favorite.music=Wind\n",
 		print(ast, model));
 }
+
+BOOST_AUTO_TEST_CASE(test_inversion_on_empty_model_simple)
+{
+	ast::stache_root ast = parse("{{^entries}}No entries found!\n{{/entries}}");
+	BOOST_CHECK_EQUAL("No entries found!\n", print(ast, stache_model()));
+}
+
+BOOST_AUTO_TEST_CASE(test_mixed_inversion_on_empty_model)
+{
+	ast::stache_root ast = parse(
+		"{{#entries}}Have entry with value {{value}}\n{{/entries}}"
+		"{{^entries}}No entries found!\n{{/entries}}");
+
+	BOOST_CHECK_EQUAL("No entries found!\n", print(ast, stache_model()));
+}
+
+BOOST_AUTO_TEST_CASE(test_non_empty_model_simple)
+{
+	ast::stache_root ast = parse("{{#entries}}Have entry with value {{value}}\n{{/entries}}");
+
+	stache_model model = {
+		{ "entries", stache_model_vector {
+				stache_model { { "value", "abc"} },
+				stache_model { { "value", "def"} }
+			}
+		}
+	};
+
+	BOOST_CHECK_EQUAL(
+		"Have entry with value abc\n"
+		"Have entry with value def\n",
+		print(ast, model) );
+}
+
+BOOST_AUTO_TEST_CASE(test_mixed_inversion_on_non_empty_model)
+{
+	ast::stache_root ast = parse(
+		"{{#entries}}Have entry with value {{value}}\n{{/entries}}"
+		"{{^entries}}No entries found!\n{{/entries}}");
+
+	stache_model model = {
+		{ "entries", stache_model_vector {
+				stache_model { { "value", "abc"} },
+				stache_model { { "value", "def"} }
+			}
+		}
+	};
+
+	BOOST_CHECK_EQUAL(
+		"Have entry with value abc\n"
+		"Have entry with value def\n",
+		print(ast, model) );
+}
