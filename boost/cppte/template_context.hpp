@@ -6,11 +6,10 @@
 #include <string>
 #include <vector>
 
+
 #include "template_object_interface.hpp"
 
-namespace template_engine
-{
-
+// Context is an example of how we could create a class that can be used by boostache
 class Context;
 
 class Context
@@ -52,7 +51,6 @@ public:
 		return (v != mSubContext.end());
 	}
 
-	// NOTE! Should this just return {}?
 	std::pair<std::vector<Context>::const_iterator, std::vector<Context>::const_iterator>
 	getSubContext(std::string key) const
 	{
@@ -104,21 +102,23 @@ struct Context_list_iterator_t
 	const Context_list_t& parent_context;
 };
 
-template <typename T>
-std::pair<typename T::Iterator, typename T::Iterator> GetRange(const T& data, const std::string& key)
+// NOTE!  putting this in the other namespace?
+namespace template_engine {
+
+template<>
+std::pair<Context_list_iterator_t, Context_list_iterator_t> GetRange<Context_list_t>(const Context_list_t& data, const std::string& key)
 {
 	for (const auto& i : data.mData)
 	{
 		if (i.hasSubContext(key))
 		{
 			auto result = i.getSubContext(key);
-			typename T::Iterator begin(result.first, data);
-			typename T::Iterator end(result.second, data);
+			typename Context_list_t::Iterator begin(result.first, data);
+			typename Context_list_t::Iterator end(result.second, data);
 			return { begin, end };
 		}
 	}
 	throw std::runtime_error("section not found");
-	// NOTE! return empty instead?
 }
 
 
