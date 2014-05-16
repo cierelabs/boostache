@@ -21,6 +21,10 @@ struct TemplateFixture
 		std::string generate_template()
 		{
 			boost::cppte::front_end::ast::stache_root ast;
+			if( !boost::simple_parse_template(template_string, ast) )
+			{
+				throw std::runtime_error("Parse failed");
+			}
 			std::ostringstream out;
 			boost::cppte::front_end::ast::print(out, ast, model);
 			result = out.str();
