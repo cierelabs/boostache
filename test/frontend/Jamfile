@@ -13,7 +13,7 @@ import modules ;
 import feature ;
 
 ###############################################################################
-project spirit_test
+project boostache_test
     : requirements
         <include>.
         <include>../../include
@@ -29,10 +29,11 @@ project spirit_test
 
 
 {
-   test-suite cppte/front_end :
+    test-suite boostache/front_end :
 
     [ run adapt_test.cpp ]
     [ run grammar_basic.cpp ]
+    [ run compiler_basic.cpp ]
 
    ;
 }

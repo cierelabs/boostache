@@ -1,18 +1,17 @@
-// file used during initial development
+// file used during initial dev
 // will be removed
-
-#define BOOST_SPIRIT_NO_PREDEFINED_TERMINALS
-
+//
+#include <boost/spirit/include/qi.hpp>
 #include <boost/cppte/frontend/stache_ast.hpp>
 #include <boost/cppte/frontend/stache_grammar_def.hpp>
 #include <boost/cppte/frontend/stache_printer.hpp>
-
-#include <boost/spirit/include/qi_char_class.hpp>
-#include <boost/spirit/include/qi_parse.hpp>
-
+#include <boost/cppte/backend/stache_compiler.hpp>
+#include <boost/cppte/vm/printer.hpp>
 #include <iostream>
 
+
 namespace fe = boost::cppte::front_end;
+namespace vm = boost::cppte::vm;
 namespace qi = boost::spirit::qi;
 
 int main()
@@ -26,14 +25,12 @@ int main()
    std::string input( "Hello world \n"
                       "{{name}} is here.\n"
                       "{{& escaped_name}} is here\n"
-                      "{{ # foo}}\n"
+                      "{{#foo}}\n"
                       "Some cool section {{whoot}} is here.\n"
+                      "{{^bar}}\n"
+                      "Some cool empty section {{whoot}} is here.\n"
+                      "{{/bar}} done.\n"
                       "{{/foo}} done.\n"
-                      "{{! no comment }}"
-                      "{{^ bar}}\n"
-                      "Some cool empty section {{{ whoot }}} is here.\n"
-                      "{{ /bar}} done.\n"
-                      "{{> partial}}\n"
       );
 
    iterator_t iter = input.begin();
@@ -46,7 +43,18 @@ int main()
           ) )
    {
       std::cout << "parse succeeded" << std::endl;
+      std::cout << "------------------------------" << std::endl;
       fe::ast::print(std::cout, ast);
+      std::cout << "------------------------------" << std::endl;
+      std::cout << std::endl;
+      std::cout << "compile" << std::endl;
+      std::cout << "------------------------------" << std::endl;
+      auto engine_ast = boost::cppte::backend::compile(ast);
+      std::cout << "------------------------------" << std::endl;
+      std::cout << std::endl;
+      std::cout << "print engine_ast" << std::endl;
+      vm::ast::print(std::cout,engine_ast);
+      std::cout << "------------------------------" << std::endl;
    }
    else
    {
