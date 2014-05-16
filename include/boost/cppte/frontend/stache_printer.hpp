@@ -65,6 +65,11 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
             out << "{{/" << v.name << "}}";
          }
 
+         void operator()(partial const & v) const
+         {
+            out << "{{>" << v << "}}";
+         }
+
       private:
          std::ostream& out;
       };

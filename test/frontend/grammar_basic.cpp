@@ -30,6 +30,7 @@ int main()
                       "{{^ bar}}\n"
                       "Some cool empty section {{{ whoot }}} is here.\n"
                       "{{ /bar}} done.\n"
+                      "{{> partial}}\n"
       );
 
    iterator_t iter = input.begin();

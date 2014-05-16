@@ -65,6 +65,10 @@ namespace boost { namespace cppte { namespace front_end
       qi::rule<Iterator, qi::unused_type(std::string), qi::space_type>
          section_end
          ;
+
+      qi::rule<Iterator, ast::partial(), qi::space_type>
+         partial
+         ;
    };
 }}}
 

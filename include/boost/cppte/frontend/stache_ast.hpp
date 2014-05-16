@@ -36,12 +36,16 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 
    struct section;
 
+   struct partial : identifier
+   {};
+
    struct stache_node : boost::spirit::extended_variant<
         undefined
       , comment
       , literal_text
       , variable
       , boost::recursive_wrapper<section>
+      , partial
       >
    {
       stache_node() : base_type() {}
@@ -49,6 +53,7 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
       stache_node(literal_text const & rhs) : base_type(rhs) {}
       stache_node(variable const & rhs) : base_type(rhs) {}
       stache_node(section const & rhs) : base_type(rhs) {}
+      stache_node(partial const & rhs) : base_type(rhs) {}
    };
 
    struct section

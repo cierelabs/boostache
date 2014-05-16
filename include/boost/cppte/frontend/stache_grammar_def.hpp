@@ -63,9 +63,10 @@ namespace boost { namespace cppte { namespace front_end
 
       stache_node =
             comment
-         |  section
          |  variable
          |  variable_unescaped
+         |  section
+         |  partial
          |  no_skip[literal_text]
          ;
 
@@ -112,6 +113,13 @@ namespace boost { namespace cppte { namespace front_end
             lit("{{")
          >> '/'
          >> omit[string(_r1)]
+         >> "}}"
+         ;
+
+      partial =
+            lit("{{")
+         >> '>'
+         >> identifier
          >> "}}"
          ;
 
