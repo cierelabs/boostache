@@ -2,13 +2,15 @@
 #define _TEMPLATE_GENERATE_HPP_ 0x100
 
 #include "template_context.hpp"
+#include "template_object_interface.hpp"
+#include "template_parser.hpp"
 #include <ostream>
 
 namespace template_engine
 {
 
-template<typename Iterator>
-std::ostream& render_helper(std::ostream& os, const Context_list_t& data, Iterator begin, Iterator end)
+template<typename T, typename Iterator>
+std::ostream& render_helper(std::ostream& os, const T& data, Iterator begin, Iterator end)
 {
 	using namespace template_engine::details;
 
@@ -25,24 +27,27 @@ std::ostream& render_helper(std::ostream& os, const Context_list_t& data, Iterat
 				case '#': case '^':
 				{
 					std::string sectionName(tag.first+1, tag.second);
-					auto section_end_ptr = getSectionEnd(begin, end, sectionName);
-					auto theSections = getSection(data, sectionName);
-					if (*tag_begin == '#')
+					if (HasKey(data, sectionName))
 					{
-						for (auto& section : theSections)
+						auto section_end_ptr = getSectionEnd(begin, end, sectionName);
+						auto theSections = GetRange(data, sectionName);
+						auto section_begin = theSections.first;
+						auto section_end = theSections.second;
+						if (*tag_begin == '#')
 						{
-							// have new state
-							auto new_data = data;
-							new_data.push_front(section);
-							render_helper(os, new_data, begin, end);
+							while( section_begin != section_end )
+							{
+								render_helper(os, *section_begin, begin, end);
+								++section_begin;
+							}
 						}
+						else if ((*tag_begin == '^') && (section_begin == section_end))
+						{
+							render_helper(os, data, begin, end);
+						}
+						// move past section end;
+						begin = section_end_ptr;
 					}
-					else if ((*tag_begin == '^') && theSections.empty())
-					{
-						render_helper(os, data, begin, end);
-					}
-					// move past section end;
-					begin = section_end_ptr;
 				}
 					break;
 				case '!':
@@ -51,8 +56,7 @@ std::ostream& render_helper(std::ostream& os, const Context_list_t& data, Iterat
 					break;
 				default:
 				{
-					std::string variableName(tag.first, tag.second);
-					os << getVariable(data, variableName);
+					Render(data, os, {tag.first, tag.second});
 				}
 			}
 		}
@@ -64,8 +68,8 @@ std::ostream& render_helper(std::ostream& os, const Context_list_t& data, Iterat
 	return os;
 }
 
-template<typename Iterator>
-std::ostream& render(std::ostream& os, const Context& model, Iterator begin, Iterator end)
+template<typename T, typename Iterator>
+std::ostream& render(std::ostream& os, const T& model, Iterator begin, Iterator end)
 {
 	Context_list_t data{model};
 	return render_helper(os, data, begin, end);

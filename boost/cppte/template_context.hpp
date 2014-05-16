@@ -6,12 +6,12 @@
 #include <string>
 #include <vector>
 
+#include "template_object_interface.hpp"
+
 namespace template_engine
 {
 
 class Context;
-
-using Context_list_t = std::list<Context>;
 
 class Context
 {
@@ -27,26 +27,16 @@ public:
 		mVariables[key] = value;
 	}
 
-	// Should we have this?
-	void removeVariable(std::string key)
-	{
-		mVariables.erase(key);
-	}
-
 	void addSubContext(std::string key, std::vector<Context> value)
 	{
 		mSubContext[key] = value;
 	}
-	// NOTE! Now what? do we allow you to remove some of the context?
-	void removeSubContext(std::string key)
-	{
-		mSubContext.erase(key);
-	}
-private:
+
 	bool hasVariable(std::string key) const
 	{
 		return mVariables.find(key) != mVariables.end();
 	}
+
 	// NOTE! Should this just return ""?
 	std::string getVariable(std::string key) const
 	{
@@ -61,47 +51,105 @@ private:
 		auto v = mSubContext.find(key);
 		return (v != mSubContext.end());
 	}
+
 	// NOTE! Should this just return {}?
-	std::vector<Context> getSubContext(std::string key) const
+	std::pair<std::vector<Context>::const_iterator, std::vector<Context>::const_iterator>
+	getSubContext(std::string key) const
 	{
 		auto v = mSubContext.find(key);
 		if (v == mSubContext.end())
 			throw std::runtime_error("variable not found");
-		return v->second;
+		return { v->second.begin(), v->second.end() };
 	}
 
-	friend std::string getVariable(const Context_list_t& data, const std::string& variableName);
-	friend std::vector<Context> getSection(const Context_list_t& data, const std::string& sectionName);
 };
 
 
-std::vector<Context> getSection(const Context_list_t& data, const std::string& sectionName)
+struct Context_list_iterator_t;
+
+struct Context_list_t
 {
-	for (const auto& i : data)
+	Context_list_t(const Context& c) { mData.push_front(c); }
+	std::list<Context> mData;
+	typedef Context_list_iterator_t Iterator;
+};
+
+struct Context_list_iterator_t
+{
+	Context_list_iterator_t(std::vector<Context>::const_iterator i, const Context_list_t& p) : iter(i), parent_context(p) {}
+	bool operator==(const Context_list_iterator_t& rhs) const
 	{
-		if (i.hasSubContext(sectionName))
+		return iter == rhs.iter;
+	}
+
+	bool operator!=(const Context_list_iterator_t& rhs) const
+	{
+		return iter != rhs.iter;
+	}
+
+	Context_list_iterator_t& operator++()
+	{
+		++iter;
+		return *this;
+	}
+
+	Context_list_t operator*() const
+	{
+		auto result = parent_context;
+		result.mData.push_front(*iter);
+		return result;
+	}
+
+	std::vector<Context>::const_iterator iter;
+	const Context_list_t& parent_context;
+};
+
+template <typename T>
+std::pair<typename T::Iterator, typename T::Iterator> GetRange(const T& data, const std::string& key)
+{
+	for (const auto& i : data.mData)
+	{
+		if (i.hasSubContext(key))
 		{
-			return i.getSubContext(sectionName);
+			auto result = i.getSubContext(key);
+			typename T::Iterator begin(result.first, data);
+			typename T::Iterator end(result.second, data);
+			return { begin, end };
 		}
 	}
-	//throw std::runtime_error("section not found");
-	// NOTE! return empty instead
-	return {};
+	throw std::runtime_error("section not found");
+	// NOTE! return empty instead?
 }
 
-std::string getVariable(const Context_list_t& data, const std::string& variableName)
+
+template <>
+void Render<Context_list_t>(const Context_list_t& data, std::ostream& os, const std::string& key)
 {
-	for (const auto& i : data)
+	for (const auto& i : data.mData)
 	{
-		if (i.hasVariable(variableName))
+		if (i.hasVariable(key))
 		{
-			return i.getVariable(variableName);
+			os<<i.getVariable(key);
+			return;
 		}
 	}
-	//throw std::runtime_error("variable not found");
-	// NOTE! print something instead
-	return "";
+	return ;
 }
+
+template <>
+bool HasKey<Context_list_t>(const Context_list_t& data, const std::string& key)
+{
+	for (const auto& i : data.mData)
+	{
+		if (i.hasVariable(key) || i.hasSubContext(key))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+
 
 } // namespace template_engine
 
