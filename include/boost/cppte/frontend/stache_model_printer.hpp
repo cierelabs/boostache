@@ -18,10 +18,10 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 {
    namespace detail
    {
-		template <typename visitor, typename root_type>
-		void apply_visitor_to_root(const visitor& v, const root_type& root)
+		template <typename visitor>
+		void apply_visitor_to_root(const visitor& v, const std::vector<stache_node>& root)
 		{
-			for( const auto& node : root.nodes )
+			for( const auto& node : root )
 			{
 				boost::apply_visitor(v, node);
 			}
@@ -84,6 +84,16 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 				}
          }
 
+			void operator()(const comment& c) const
+			{
+				// Nothing to do.
+			}
+
+			void operator()(const partial& p) const
+			{
+				// TODO:  Something.
+			}
+
          void operator()(section const & v) const
          {
 				// TODO: Inverted
@@ -99,18 +109,18 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 							if( m )
 							{
 								stache_model_printer section_printer(out, *m);
-								apply_visitor_to_root(section_printer, v);
+								apply_visitor_to_root(section_printer, v.nodes);
 							}
 							else
 							{
-								apply_visitor_to_root(*this, v);
+								apply_visitor_to_root(*this, v.nodes);
 							}
 						}
 					}
 					else
 					{
 						stache_model_printer section_printer(out, boost::get<stache_model>(location->second));
-						apply_visitor_to_root(section_printer, v);
+						apply_visitor_to_root(section_printer, v.nodes);
 					}
 				}
          }
