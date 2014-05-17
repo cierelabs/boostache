@@ -36,7 +36,7 @@ void get_variable_value(const boost::property_tree::ptree &model,
 template <>
 void get_section_value(const boost::property_tree::ptree &model,
                        const std::string &key,
-                       section_range_sink<boost::property_tree::ptree> &sink)
+                       section_range_sink &sink)
 {
     auto isubmodel = model.find(key);
     if (isubmodel != model.not_found())
@@ -44,9 +44,9 @@ void get_section_value(const boost::property_tree::ptree &model,
         auto &submodel = isubmodel->second;
         if (!submodel.empty())
         {
-            // in terms of property tree nodes with empty key are array entries
-            // so pass them directly into printer otherwise create temporary
-            // array
+            // in terms of property tree nodes with empty key are array
+            // entries so pass them directly into printer otherwise create
+            // temporary array
             if (submodel.front().first.empty()) sink(submodel);
             else sink(std::array<decltype(&submodel), 1>{{&submodel}});
         }
@@ -88,6 +88,25 @@ BOOST_AUTO_TEST_CASE(test_json_simple_int_value)
     // render and check
     BOOST_CHECK_EQUAL(
             "3 is three",
+            print(ast, model));
+}
+
+BOOST_AUTO_TEST_CASE(test_json_parent_variable)
+{
+    // prepare model
+    namespace bpt = boost::property_tree;
+    namespace bfe = boost::cppte::front_end;
+    bpt::ptree model;
+    model.put("EXCLAMATION", "!");
+    model.put("MUSHROOMS.NAME", "Muchomurka Zelena");
+
+    // parse template
+    bfe::ast::stache_root ast = parse(
+            "{{#MUSHROOMS}}{{NAME}}{{EXCLAMATION}}\n{{/MUSHROOMS}}");
+
+    // render and check
+    BOOST_CHECK_EQUAL(
+            "Muchomurka Zelena!\n",
             print(ast, model));
 }
 

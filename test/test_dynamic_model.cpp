@@ -72,7 +72,7 @@ void get_variable_value(const user &model,
 template <>
 void get_section_value(const user &model,
                        const std::string &key,
-                       section_range_sink<user> &sink)
+                       section_range_sink &sink)
 {
     if (key == "FAVORITES") sink(model.favorites);
     else if (key == "UNLOVED") sink(model.unloved);
@@ -81,7 +81,7 @@ void get_section_value(const user &model,
 template <>
 void get_section_value(const map_of_users &model,
                        const std::string &key,
-                       section_range_sink<map_of_users> &sink)
+                       section_range_sink &sink)
 {
     if (key == "USER") sink(model);
 }
