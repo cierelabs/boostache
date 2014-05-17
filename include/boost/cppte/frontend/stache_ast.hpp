@@ -34,10 +34,10 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
       identifier value;
    };
 
-   struct section;
-
    struct partial : identifier
    {};
+
+   struct section;
 
    struct stache_node : boost::spirit::extended_variant<
         undefined

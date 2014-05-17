@@ -22,4 +22,3 @@ namespace boost { namespace cppte { namespace backend
 }}}
 
 #endif
-

@@ -35,14 +35,22 @@ namespace boost { namespace cppte { namespace vm { namespace ast
    struct variable
    {
       variable(){}
-      variable(std::string const & v) : id(v) {}
-      std::string id;
+      variable(std::string const & v) : name(v) {}
+      std::string name;
+   };
+
+   struct render
+   {
+      render(){}
+      render(std::string const & v) : name(v) {}
+      std::string name;
    };
 
    struct node : boost::spirit::extended_variant<
         undefined
       , literal
       , variable
+      , render
       , boost::recursive_wrapper<for_each>
       , boost::recursive_wrapper<if_then_else>
       , boost::recursive_wrapper<node_list> >
@@ -50,6 +58,7 @@ namespace boost { namespace cppte { namespace vm { namespace ast
       node() : base_type() {}
       node(literal const & rhs) : base_type(rhs) {}
       node(variable const & rhs) : base_type(rhs) {}
+      node(render const & rhs) : base_type(rhs) {}
       node(for_each const & rhs) : base_type(rhs) {}
       node(if_then_else const & rhs) : base_type(rhs) {}
       node(node_list const & rhs) : base_type(rhs) {}
@@ -57,11 +66,14 @@ namespace boost { namespace cppte { namespace vm { namespace ast
 
    struct for_each
    {
+      std::string name;
       node value;
    };
 
    struct condition
    {
+      // hack for now until proper conditionals
+      std::string name;
       // lhs
       // rhs
       // op
@@ -70,7 +82,7 @@ namespace boost { namespace cppte { namespace vm { namespace ast
    struct if_then_else
    {
       condition condition_;
-      node if_;
+      node then_;
       node else_;
    };
 

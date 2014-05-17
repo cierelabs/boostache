@@ -35,28 +35,29 @@ namespace boost { namespace cppte { namespace backend { namespace stache_compile
 
          vm::ast::node operator()(front_end::ast::literal_text const & v) const
          {
-            out << "literal" << std::endl;
             return vm::ast::literal{v};
          }
 
          vm::ast::node operator()(front_end::ast::variable const & v) const
          {
-            out << "make variable" << std::endl;
-            return vm::ast::variable{v.value};
+            return vm::ast::render{v.value};
          }
 
          vm::ast::node operator()(front_end::ast::section const & v) const
          {
-            out << ">>> make section" << std::endl;
-
             vm::ast::node_list vm_ast;
             for(auto const & node : v.nodes)
             {
                vm_ast.nodes.push_back(boost::apply_visitor(*this, node));
             }
 
-            out << "<<< close section" << std::endl;
-            return vm_ast;
+            vm::ast::if_then_else if_block;
+            if_block.condition_.name = v.name;
+
+            if(v.is_inverted)  { if_block.else_ = vm_ast; }
+            else               { if_block.then_ = vm_ast; }
+
+            return if_block;
          }
 
          vm::ast::node operator()(front_end::ast::comment const & v) const
