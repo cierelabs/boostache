@@ -26,9 +26,9 @@ BOOST_FIXTURE_TEST_CASE(TestInvertedSectionMustacheFromString, TemplateFixture)
 
 	set_tag_value("name", "Daniel");
 	set_tag_value("pet", "turtles");
-	set_tag_value("showme", "true");
-	set_tag_value("stealth", "true");
-	set_tag_value("inverted", "false");
+	set_tag_value("showme", true);
+	set_tag_value("stealth", true);
+	set_tag_value("inverted", false);
 
 	generate_template();
 
@@ -36,6 +36,6 @@ BOOST_FIXTURE_TEST_CASE(TestInvertedSectionMustacheFromString, TemplateFixture)
 	expected += "I like turtles.";
 	expected += "Hope you can see me.";
 	expected += "me too.";
-	//BOOST_CHECK_EQUAL(expected, result);
+	BOOST_CHECK_EQUAL(expected, result);
 }
 

@@ -43,7 +43,7 @@ int main()
                        , grammar
                        , qi::space_type()
                        , ast
-          ) )
+		)  && (iter == iter_end))
    {
       std::cout << "parse succeeded" << std::endl;
       fe::ast::print(std::cout, ast);
@@ -53,6 +53,6 @@ int main()
       std::cout << "parse failed" << std::endl;
    }
 
-   return -1;
+   return 0;
 }
 

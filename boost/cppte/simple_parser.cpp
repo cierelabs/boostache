@@ -15,8 +15,8 @@ namespace boost { namespace cppte { namespace front_end {
 
 		bool result = qi::phrase_parse( first, last
 			, grammar
-			, fe::stache_skipper<Iterator>()
-			, ast
+			, qi::space_type()
+			, ast.nodes
 		);
 
 		if( first != last )

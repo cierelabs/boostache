@@ -25,7 +25,7 @@ BOOST_FIXTURE_TEST_CASE(TestCollectionsSingle, TemplateFixture)
 
 	std::string expected = "Hi I am Daniel.\n";
 	expected += "Hi Tom!";
-	// TODO: BOOST_CHECK_EQUAL(expected, result);
+	BOOST_CHECK_EQUAL(expected, result);
 }
 
 BOOST_FIXTURE_TEST_CASE(TestCollectionsMultiple, TemplateFixture)
@@ -48,7 +48,7 @@ BOOST_FIXTURE_TEST_CASE(TestCollectionsMultiple, TemplateFixture)
 	std::string expected = "Hi I am Daniel.\n";
 	expected += "Hi Tom!";
 	expected += "Hi Jerry!";
-	// TODO: BOOST_CHECK_EQUAL(expected, result);
+	BOOST_CHECK_EQUAL(expected, result);
 }
 
 BOOST_FIXTURE_TEST_CASE(TestCollectionMultipleWithMultipleFields, TemplateFixture)
@@ -69,9 +69,10 @@ BOOST_FIXTURE_TEST_CASE(TestCollectionMultipleWithMultipleFields, TemplateFixtur
 	jerry["work"] = "Magic";
 	add_section_item("people", jerry);
 
+	generate_template();
 
 	std::string expected = "Hi I am Daniel.\n";
 	expected += "Hi Daniel, I am Tom, I do Accounting.";
 	expected += "Hi Daniel, I am Jerry, I do Magic.";
-	// TODO: BOOST_CHECK_EQUAL(expected, result);
+	BOOST_CHECK_EQUAL(expected, result);
 }

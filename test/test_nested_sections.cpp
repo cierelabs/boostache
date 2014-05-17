@@ -28,5 +28,5 @@ BOOST_FIXTURE_TEST_CASE(TestSectionMustacheFromString, TemplateFixture)
 	std::string expected = "Hi I am Daniel.\n";
 	expected += "I like turtles.\n";
 	expected += "If you don't see this, something went wrong.";
-	// TODO: BOOST_CHECK_EQUAL(expected, result);
+	BOOST_CHECK_EQUAL(expected, result);
 }

@@ -11,3 +11,6 @@ test_html_escape
 test_inverted_sections
 test_simple_parser
 test_model
+test_dynamic_model
+test_mustache_demo
+test_json_model
