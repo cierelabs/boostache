@@ -154,7 +154,7 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
    inline void print(std::ostream& out, stache_root const& root, const stache_model& model)
    {
       detail::stache_model_printer p(out, model);
-		apply_visitor_to_root(p, root);
+		apply_visitor_to_root(p, root.nodes);
    }
 }}}}
 

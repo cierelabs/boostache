@@ -12,6 +12,7 @@
 #ifndef BOOST_CPPTE_MODEL_DYNAMIC_MODEL_PRINTER_HPP
 #define BOOST_CPPTE_MODEL_DYNAMIC_MODEL_PRINTER_HPP
 
+#include <array>
 #include <boost/range/empty.hpp>
 
 #include <boost/variant/apply_visitor.hpp>
@@ -24,8 +25,6 @@ namespace detail
 {
 
 struct empty_model {};
-empty_model *begin(std::pair<empty_model *, empty_model *> p) { return p.first;}
-empty_model *end(std::pair<empty_model *, empty_model *> p) { return p.second;}
 
 } // namespace detail
 
@@ -160,8 +159,7 @@ void dynamic_model_printer<model_type>::operator()
     {
         // if user don't call sink it means that no section exist
         section_range_sink<model_type> sink(out, v);
-        sink(std::pair<detail::empty_model *,
-                       detail::empty_model *>(nullptr, nullptr));
+        sink(std::array<detail::empty_model, 0>());
     }
 }
 
@@ -170,11 +168,8 @@ void print(std::ostream &out,
            const front_end::ast::stache_root &root,
            const model_type &model)
 {
-    dynamic_model_printer<model_type> printer(out, model);
-    for (const auto &node: root)
-    {
-        boost::apply_visitor(printer, node);
-    }
+    section_range_sink<detail::empty_model> root_printer(out, root);
+    root_printer(model);
 }
 
 }}}
