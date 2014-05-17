@@ -1,22 +1,32 @@
+/**
+ *  \file test_dynamic_model.cpp
+ *
+ *  Copyright 2014 Michael Caisse : ciere.com
+ *  Copyright 2014 Kevin Harris
+ *  Copyright 2014 Michal Bukovsky
+ *
+ *  Distributed under the Boost Software License, Version 1.0. (See accompanying
+ *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MAIN
+
 #include <map>
 #include <unordered_map>
+
 #include <boost/test/unit_test.hpp>
 #include <boost/cppte/frontend/stache_model.hpp>
-#include <boost/cppte/model/stache_dynamic_model_printer.hpp>
-#include <boost/cppte/simple_parser.hpp>
+#include <boost/cppte/model/dynamic_model_printer.hpp>
 
-#include <fstream>
-
-using namespace boost::cppte::front_end;
+#include "test_utils.hpp"
 
 namespace
 {
 
+    // just some user types
     typedef std::map<std::string, std::string> map_of_strings;
     typedef std::unordered_map<std::string, std::string> umap_of_strings;
-
     struct user {
         std::string name;
         std::string location;
@@ -25,27 +35,9 @@ namespace
     };
     typedef std::map<std::string, user> map_of_users;
 
-    template <typename model_type>
-    std::string print(const ast::stache_root& ast, const model_type& model)
-    {
-        std::ostringstream out;
-        boost::cppte::front_end::ast::print(out, ast, model);
-        return out.str();
-    }
+} // namespace
 
-    ast::stache_root parse(const std::string& text)
-    {
-        ast::stache_root ast;
-        if( !boost::simple_parse_template(text, ast) )
-        {
-            throw std::runtime_error("Parse failed");
-        }
-        return ast;
-    }
-
-}
-
-namespace boost { namespace cppte { namespace front_end { namespace ast
+namespace boost { namespace cppte { namespace model
 {
 
     template <>
@@ -67,31 +59,36 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
     }
 
     template <>
-    std::string get_variable_value(const std::pair<const std::string, user> &model,
+    std::string get_variable_value(const user &model,
                                    const std::string &key)
     {
         if (key == "NAME") {
-            return model.second.name;
+            return model.name;
 
         } else if (key == "LOCATION") {
-            return model.second.location;
+            return model.location;
         }
         return "undefined:" + key;
     }
 
     template <template <typename> class model_printer_type>
-    struct call_me_back_please<model_printer_type, std::pair<const std::string, user>>
+    struct pass_section_value_to_callback<
+        model_printer_type,
+        user
+    >
     {
-        void operator()(const std::pair<const std::string, user> &model,
+        void operator()(const user &model,
                         const std::string &key,
                         std::ostream &out,
-                        const section &v) const
+                        const boost::cppte::front_end::ast::section &v) const
         {
             if (key == "FAVORITES") {
-                model_printer_type<decltype(model.second.favorites)>()(out, model.second.favorites, v);
+                model_printer_type<decltype(model.favorites)>()
+                    (out, model.favorites, v);
 
             } else if (key == "UNLOVED") {
-                model_printer_type<decltype(model.second.unloved)>()(out, model.second.unloved, v);
+                model_printer_type<decltype(model.unloved)>()
+                    (out, model.unloved, v);
 
             } else {
                 // TODO(burlog): what to do?
@@ -100,12 +97,15 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
     };
 
     template <template <typename> class model_printer_type>
-    struct call_me_back_please<model_printer_type, map_of_users>
+    struct pass_section_value_to_callback<
+        model_printer_type,
+        map_of_users
+    >
     {
         void operator()(const map_of_users &model,
                         const std::string &key,
                         std::ostream &out,
-                        const section &v) const
+                        const boost::cppte::front_end::ast::section &v) const
         {
             if (key == "USER") {
                 model_printer_type<map_of_users>()(out, model, v);
@@ -115,16 +115,16 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
             }
         }
     };
-}}}}
 
+}}}
 
-BOOST_AUTO_TEST_CASE(test_simple_dynamic_model_formatting)
+BOOST_AUTO_TEST_CASE(test_simple_value)
 {
+    namespace bfe = boost::cppte::front_end;
     map_of_strings model;
     model["NAME"] = "Boosties";
-    ast::stache_root ast = parse("Hello, {{NAME}}!");
+    bfe::ast::stache_root ast = parse("Hello, {{NAME}}!");
     std::string result = print(ast, model);
-    // FIXME! This should have whitespace, but it looks like the parser is stripping it.
     BOOST_CHECK_EQUAL("Hello,"
             " "
             "Boosties!", result);
@@ -132,6 +132,7 @@ BOOST_AUTO_TEST_CASE(test_simple_dynamic_model_formatting)
 
 BOOST_AUTO_TEST_CASE(test_section_printing)
 {
+    namespace bfe = boost::cppte::front_end;
     user bob;
     bob.name = "Bob";
     bob.location = "Earth";
@@ -140,7 +141,7 @@ BOOST_AUTO_TEST_CASE(test_section_printing)
     bob.favorites.back()["MUSIC"] = "Classical";
     map_of_users model;
     model["USER"] = bob;
-    ast::stache_root ast = parse(
+    bfe::ast::stache_root ast = parse(
             "{{#USER}}"
             "user.name={{NAME}}\n"
             "user.location={{LOCATION}}\n"
