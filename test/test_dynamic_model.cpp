@@ -24,97 +24,75 @@
 namespace
 {
 
-    // just some user types
-    typedef std::map<std::string, std::string> map_of_strings;
-    typedef std::unordered_map<std::string, std::string> umap_of_strings;
-    struct user {
-        std::string name;
-        std::string location;
-        std::vector<map_of_strings> favorites;
-        std::vector<umap_of_strings> unloved;
-    };
-    typedef std::map<std::string, user> map_of_users;
+// just some user types
+typedef std::map<std::string, std::string> map_of_strings;
+typedef std::unordered_map<std::string, std::string> umap_of_strings;
+struct user {
+    std::string name;
+    std::string location;
+    std::vector<map_of_strings> favorites;
+    std::vector<umap_of_strings> unloved;
+};
+typedef std::map<std::string, user> map_of_users;
 
 } // namespace
 
 namespace boost { namespace cppte { namespace model
 {
 
-    template <>
-    std::string get_variable_value(const map_of_strings &model,
-                                   const std::string &key)
-    {
-        auto ivalue = model.find(key);
-        if (ivalue != model.end()) return ivalue->second;
-        return "undefined:" + key;
+template <>
+std::string get_variable_value(const map_of_strings &model,
+                               const std::string &key)
+{
+    auto ivalue = model.find(key);
+    if (ivalue != model.end()) return ivalue->second;
+    return "undefined:" + key;
+}
+
+template <>
+std::string get_variable_value(const umap_of_strings &model,
+                               const std::string &key)
+{
+    auto ivalue = model.find(key);
+    if (ivalue != model.end()) return ivalue->second;
+    return "undefined:" + key;
+}
+
+template <>
+std::string get_variable_value(const user &model,
+                               const std::string &key)
+{
+    if (key == "NAME") {
+        return model.name;
+
+    } else if (key == "LOCATION") {
+        return model.location;
     }
+    return "undefined:" + key;
+}
 
-    template <>
-    std::string get_variable_value(const umap_of_strings &model,
-                                   const std::string &key)
-    {
-        auto ivalue = model.find(key);
-        if (ivalue != model.end()) return ivalue->second;
-        return "undefined:" + key;
+template <>
+void get_section_value(const user &model,
+                       const std::string &key,
+                       section_range_sink<user> &sink)
+{
+    if (key == "FAVORITES") {
+        sink(model.favorites);
+
+    } else if (key == "UNLOVED") {
+        sink(model.unloved);
     }
+}
 
-    template <>
-    std::string get_variable_value(const user &model,
-                                   const std::string &key)
-    {
-        if (key == "NAME") {
-            return model.name;
-
-        } else if (key == "LOCATION") {
-            return model.location;
-        }
-        return "undefined:" + key;
+template <>
+void get_section_value(const map_of_users &model,
+                       const std::string &key,
+                       section_range_sink<map_of_users> &sink)
+{
+    if (key == "USER") {
+        sink(model);
     }
-
-    template <template <typename> class model_printer_type>
-    struct pass_section_value_to_callback<
-        model_printer_type,
-        user
-    >
-    {
-        void operator()(const user &model,
-                        const std::string &key,
-                        std::ostream &out,
-                        const boost::cppte::front_end::ast::section &v) const
-        {
-            if (key == "FAVORITES") {
-                model_printer_type<decltype(model.favorites)>()
-                    (out, model.favorites, v);
-
-            } else if (key == "UNLOVED") {
-                model_printer_type<decltype(model.unloved)>()
-                    (out, model.unloved, v);
-
-            } else {
-                // TODO(burlog): what to do?
-            }
-        }
-    };
-
-    template <template <typename> class model_printer_type>
-    struct pass_section_value_to_callback<
-        model_printer_type,
-        map_of_users
-    >
-    {
-        void operator()(const map_of_users &model,
-                        const std::string &key,
-                        std::ostream &out,
-                        const boost::cppte::front_end::ast::section &v) const
-        {
-            if (key == "USER") {
-                model_printer_type<map_of_users>()(out, model, v);
-
-            } else {
-                // TODO(burlog): what to do?
-            }
-        }
-    };
+}
 
 }}}
 

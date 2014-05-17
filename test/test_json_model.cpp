@@ -21,39 +21,54 @@
 
 #include "test_utils.hpp"
 
+namespace boost { namespace property_tree {
+
+const boost::property_tree::ptree *
+begin(std::pair<const boost::property_tree::ptree *,
+                const boost::property_tree::ptree *> p)
+{ return p.first;}
+
+const boost::property_tree::ptree *
+end(std::pair<const boost::property_tree::ptree *,
+              const boost::property_tree::ptree *> p)
+{ return p.second;}
+
+}}
+
 namespace boost { namespace cppte { namespace model
 {
-    template <>
-    std::string get_variable_value(const boost::property_tree::ptree &model,
-                                   const std::string &key)
-    {
-        return model.get(key, "json:undefined:" + key);
-    }
 
-    template <template <typename> class model_printer_type>
-    struct pass_section_value_to_callback<
-        model_printer_type,
-        boost::property_tree::ptree
-    >
+template <>
+std::string get_variable_value(const boost::property_tree::ptree &model,
+                               const std::string &key)
+{
+    return model.get(key, "json:undefined:" + key);
+}
+
+template <>
+void get_section_value(const boost::property_tree::ptree &model,
+                       const std::string &key,
+                       section_range_sink<boost::property_tree::ptree> &sink)
+{
+    //// call default printer if key does not exist
+    auto isubmodel = model.find(key);
+    if (isubmodel != model.not_found())
     {
-        void operator()(const boost::property_tree::ptree &model,
-                        const std::string &key,
-                        std::ostream &out,
-                        const boost::cppte::front_end::ast::section &v) const
+        // in terms of property tree are nodes with empty key array entries
+        auto &submodel = isubmodel->second;
+        if (!submodel.empty())
         {
-            // in terms of property tree are nodes with empty key array entries
-            const boost::property_tree::ptree &submodel = model.get_child(key);
-            if (submodel.empty() || !submodel.front().first.empty())
+            if (submodel.front().first.empty())
             {
-                // wrap single node into array wrapper
-                auto fake_array = make_single_obj_as_array(submodel);
-                model_printer_type<decltype(fake_array)>()(out, fake_array, v);
-
-            } else {
-                model_printer_type<decltype(submodel)>()(out, submodel, v);
+                sink(submodel);
+            }
+            else
+            {
+                sink(std::make_pair(&submodel, &submodel + 1));
             }
         }
-    };
+    }
+}
 
 }}}
 
@@ -108,7 +123,7 @@ BOOST_AUTO_TEST_CASE(test_json_single_empty_obj_as_section)
 
     // render and check
     BOOST_CHECK_EQUAL(
-            "json:undefined:NAME\n", // TODO(burlog): something better?
+            "", // TODO(burlog): something better?
             print(ast, model));
 }
 
@@ -139,6 +154,46 @@ BOOST_AUTO_TEST_CASE(test_json_array_as_section)
     BOOST_CHECK_EQUAL(
             "Muchomurka Zelena\n"
             "Hrib Hnedy\n",
+            print(ast, model));
+}
+
+BOOST_AUTO_TEST_CASE(test_json_single_obj_as_inv_section)
+{
+    // prepare model
+    namespace bpt = boost::property_tree;
+    namespace bfe = boost::cppte::front_end;
+    bpt::ptree model;
+
+    // parse template
+    bfe::ast::stache_root ast = parse(
+            "{{#MUSHROOMS}}{{NAME}}\n{{/MUSHROOMS}}"
+            "{{^MUSHROOMS}}No mushrooms\n{{/MUSHROOMS}}"
+            );
+
+    // render and check
+    BOOST_CHECK_EQUAL(
+            "No mushrooms\n",
+            print(ast, model));
+}
+
+BOOST_AUTO_TEST_CASE(test_json_single_obj_as_inv_empty_section)
+{
+    // prepare model
+    namespace bpt = boost::property_tree;
+    namespace bfe = boost::cppte::front_end;
+    bpt::ptree model;
+    bpt::ptree empty;
+    model.add_child("MUSHROOMS", empty);
+
+    // parse template
+    bfe::ast::stache_root ast = parse(
+            "{{#MUSHROOMS}}{{NAME}}\n{{/MUSHROOMS}}"
+            "{{^MUSHROOMS}}No mushrooms\n{{/MUSHROOMS}}"
+            );
+
+    // render and check
+    BOOST_CHECK_EQUAL(
+            "No mushrooms\n",
             print(ast, model));
 }
 
