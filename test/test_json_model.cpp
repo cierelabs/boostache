@@ -252,7 +252,7 @@ BOOST_AUTO_TEST_CASE(test_json_section_printing)
     // Should have a trailing newline on all of these lines.
     BOOST_CHECK_EQUAL(
             "user.name=Bob\n"
-            "user.location=Earth" // FIXME: there should be \n !
+            "user.location=Earth\n"
             "user.favorite.food=Pizza\n"
             "user.favorite.music=Classical\n"
             "user.favorite.food=Knedlik\n"
