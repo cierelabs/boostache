@@ -77,7 +77,7 @@ namespace boost { namespace cppte { namespace backend { namespace stache_compile
    inline vm::ast::node_list compile(front_end::ast::stache_root const & ast)
    {
       vm::ast::node_list vm_root;
-      for(auto const & node : ast)
+      for(auto const & node : ast.nodes)
       {
          detail::stache_visit visit(std::cout);
          vm_root.nodes.push_back( boost::apply_visitor(visit, node) );

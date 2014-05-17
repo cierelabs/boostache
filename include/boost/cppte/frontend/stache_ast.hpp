@@ -63,8 +63,11 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
       std::vector<stache_node> nodes;
    };
 
-   struct stache_root : std::vector<stache_node>
-   {};
+   typedef std::vector<stache_node> stache_nodes;
+
+   struct stache_root : section
+   {
+   };
 
 }}}}
 

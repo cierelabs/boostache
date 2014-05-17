@@ -21,51 +21,34 @@
 
 #include "test_utils.hpp"
 
-namespace boost { namespace property_tree {
-
-const boost::property_tree::ptree *
-begin(std::pair<const boost::property_tree::ptree *,
-                const boost::property_tree::ptree *> p)
-{ return p.first;}
-
-const boost::property_tree::ptree *
-end(std::pair<const boost::property_tree::ptree *,
-              const boost::property_tree::ptree *> p)
-{ return p.second;}
-
-}}
-
 namespace boost { namespace cppte { namespace model
 {
 
 template <>
-std::string get_variable_value(const boost::property_tree::ptree &model,
-                               const std::string &key)
+void get_variable_value(const boost::property_tree::ptree &model,
+                        const std::string &key,
+                        variable_sink &sink)
 {
-    return model.get(key, "json:undefined:" + key);
+    auto ivar = model.find(key);
+    if (ivar != model.not_found()) sink(ivar->second.data());
 }
 
 template <>
 void get_section_value(const boost::property_tree::ptree &model,
                        const std::string &key,
-                       section_range_sink<boost::property_tree::ptree> &sink)
+                       section_range_sink &sink)
 {
-    //// call default printer if key does not exist
     auto isubmodel = model.find(key);
     if (isubmodel != model.not_found())
     {
-        // in terms of property tree are nodes with empty key array entries
         auto &submodel = isubmodel->second;
         if (!submodel.empty())
         {
-            if (submodel.front().first.empty())
-            {
-                sink(submodel);
-            }
-            else
-            {
-                sink(std::make_pair(&submodel, &submodel + 1));
-            }
+            // in terms of property tree nodes with empty key are array
+            // entries so pass them directly into printer otherwise create
+            // temporary array
+            if (submodel.front().first.empty()) sink(submodel);
+            else sink(std::array<decltype(&submodel), 1>{{&submodel}});
         }
     }
 }
@@ -87,6 +70,43 @@ BOOST_AUTO_TEST_CASE(test_json_simple_value)
     // render and check
     BOOST_CHECK_EQUAL(
             "Amanita in czech is Muchomurka",
+            print(ast, model));
+}
+
+BOOST_AUTO_TEST_CASE(test_json_simple_int_value)
+{
+    // prepare model
+    namespace bpt = boost::property_tree;
+    namespace bfe = boost::cppte::front_end;
+    bpt::ptree model;
+    model.put("NUMBER", 3);
+
+    // parse template
+    bfe::ast::stache_root ast = parse(
+            "{{NUMBER}} is three");
+
+    // render and check
+    BOOST_CHECK_EQUAL(
+            "3 is three",
+            print(ast, model));
+}
+
+BOOST_AUTO_TEST_CASE(test_json_parent_variable)
+{
+    // prepare model
+    namespace bpt = boost::property_tree;
+    namespace bfe = boost::cppte::front_end;
+    bpt::ptree model;
+    model.put("EXCLAMATION", "!");
+    model.put("MUSHROOMS.NAME", "Muchomurka Zelena");
+
+    // parse template
+    bfe::ast::stache_root ast = parse(
+            "{{#MUSHROOMS}}{{NAME}}{{EXCLAMATION}}\n{{/MUSHROOMS}}");
+
+    // render and check
+    BOOST_CHECK_EQUAL(
+            "Muchomurka Zelena!\n",
             print(ast, model));
 }
 
@@ -232,7 +252,7 @@ BOOST_AUTO_TEST_CASE(test_json_section_printing)
     // Should have a trailing newline on all of these lines.
     BOOST_CHECK_EQUAL(
             "user.name=Bob\n"
-            "user.location=Earth" // FIXME: there should be \n !
+            "user.location=Earth\n"
             "user.favorite.food=Pizza\n"
             "user.favorite.music=Classical\n"
             "user.favorite.food=Knedlik\n"

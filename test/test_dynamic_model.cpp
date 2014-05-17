@@ -30,6 +30,7 @@ typedef std::unordered_map<std::string, std::string> umap_of_strings;
 struct user {
     std::string name;
     std::string location;
+    int age;
     std::vector<map_of_strings> favorites;
     std::vector<umap_of_strings> unloved;
 };
@@ -41,57 +42,48 @@ namespace boost { namespace cppte { namespace model
 {
 
 template <>
-std::string get_variable_value(const map_of_strings &model,
-                               const std::string &key)
+void get_variable_value(const map_of_strings &model,
+                        const std::string &key,
+                        variable_sink &sink)
 {
     auto ivalue = model.find(key);
-    if (ivalue != model.end()) return ivalue->second;
-    return "undefined:" + key;
+    if (ivalue != model.end()) sink(ivalue->second);
 }
 
 template <>
-std::string get_variable_value(const umap_of_strings &model,
-                               const std::string &key)
+void get_variable_value(const umap_of_strings &model,
+                        const std::string &key,
+                        variable_sink &sink)
 {
     auto ivalue = model.find(key);
-    if (ivalue != model.end()) return ivalue->second;
-    return "undefined:" + key;
+    if (ivalue != model.end()) sink(ivalue->second);
 }
 
 template <>
-std::string get_variable_value(const user &model,
-                               const std::string &key)
+void get_variable_value(const user &model,
+                        const std::string &key,
+                        variable_sink &sink)
 {
-    if (key == "NAME") {
-        return model.name;
-
-    } else if (key == "LOCATION") {
-        return model.location;
-    }
-    return "undefined:" + key;
+    if (key == "NAME") sink(model.name);
+    else if (key == "LOCATION") sink(model.location);
+    else if (key == "AGE") sink(model.age);
 }
 
 template <>
 void get_section_value(const user &model,
                        const std::string &key,
-                       section_range_sink<user> &sink)
+                       section_range_sink &sink)
 {
-    if (key == "FAVORITES") {
-        sink(model.favorites);
-
-    } else if (key == "UNLOVED") {
-        sink(model.unloved);
-    }
+    if (key == "FAVORITES") sink(model.favorites);
+    else if (key == "UNLOVED") sink(model.unloved);
 }
 
 template <>
 void get_section_value(const map_of_users &model,
                        const std::string &key,
-                       section_range_sink<map_of_users> &sink)
+                       section_range_sink &sink)
 {
-    if (key == "USER") {
-        sink(model);
-    }
+    if (key == "USER") sink(model);
 }
 
 }}}
@@ -114,6 +106,7 @@ BOOST_AUTO_TEST_CASE(test_section_printing)
     user bob;
     bob.name = "Bob";
     bob.location = "Earth";
+    bob.age = 33;
     bob.favorites.push_back(map_of_strings());
     bob.favorites.back()["FOOD"] = "Pizza";
     bob.favorites.back()["MUSIC"] = "Classical";
@@ -123,17 +116,17 @@ BOOST_AUTO_TEST_CASE(test_section_printing)
             "{{#USER}}"
             "user.name={{NAME}}\n"
             "user.location={{LOCATION}}\n"
+            "user.age={{AGE}}"
             "{{#FAVORITES}}"
             "user.favorite.food={{FOOD}}\n"
             "user.favorite.music={{MUSIC}}\n"
             "{{/FAVORITES}}"
             "{{/USER}}");
 
-    // FIXME! Whitespace!
-    // Should have a trailing newline on all of these lines.
     BOOST_CHECK_EQUAL(
             "user.name=Bob\n"
-            "user.location=Earth" // FIXME: there should be \n !
+            "user.location=Earth\n"
+            "user.age=33" // FIXME: there should be \n !
             "user.favorite.food=Pizza\n"
             "user.favorite.music=Classical\n",
             print(ast, model));
