@@ -25,10 +25,12 @@ namespace boost { namespace cppte { namespace model
 {
 
 template <>
-std::string get_variable_value(const boost::property_tree::ptree &model,
-                               const std::string &key)
+void get_variable_value(const boost::property_tree::ptree &model,
+                        const std::string &key,
+                        variable_sink &sink)
 {
-    return model.get(key, "json:undefined:" + key);
+    auto ivar = model.find(key);
+    if (ivar != model.not_found()) sink(ivar->second.data());
 }
 
 template <>
@@ -68,6 +70,24 @@ BOOST_AUTO_TEST_CASE(test_json_simple_value)
     // render and check
     BOOST_CHECK_EQUAL(
             "Amanita in czech is Muchomurka",
+            print(ast, model));
+}
+
+BOOST_AUTO_TEST_CASE(test_json_simple_int_value)
+{
+    // prepare model
+    namespace bpt = boost::property_tree;
+    namespace bfe = boost::cppte::front_end;
+    bpt::ptree model;
+    model.put("NUMBER", 3);
+
+    // parse template
+    bfe::ast::stache_root ast = parse(
+            "{{NUMBER}} is three");
+
+    // render and check
+    BOOST_CHECK_EQUAL(
+            "3 is three",
             print(ast, model));
 }
 

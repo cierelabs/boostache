@@ -41,34 +41,30 @@ namespace boost { namespace cppte { namespace model
 {
 
 template <>
-std::string get_variable_value(const map_of_strings &model,
-                               const std::string &key)
+void get_variable_value(const map_of_strings &model,
+                        const std::string &key,
+                        variable_sink &sink)
 {
     auto ivalue = model.find(key);
-    if (ivalue != model.end()) return ivalue->second;
-    return "undefined:" + key;
+    if (ivalue != model.end()) sink(ivalue->second);
 }
 
 template <>
-std::string get_variable_value(const umap_of_strings &model,
-                               const std::string &key)
+void get_variable_value(const umap_of_strings &model,
+                        const std::string &key,
+                        variable_sink &sink)
 {
     auto ivalue = model.find(key);
-    if (ivalue != model.end()) return ivalue->second;
-    return "undefined:" + key;
+    if (ivalue != model.end()) sink(ivalue->second);
 }
 
 template <>
-std::string get_variable_value(const user &model,
-                               const std::string &key)
+void get_variable_value(const user &model,
+                        const std::string &key,
+                        variable_sink &sink)
 {
-    if (key == "NAME") {
-        return model.name;
-
-    } else if (key == "LOCATION") {
-        return model.location;
-    }
-    return "undefined:" + key;
+    if (key == "NAME") sink(model.name);
+    else if (key == "LOCATION") sink(model.location);
 }
 
 template <>

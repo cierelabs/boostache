@@ -13,6 +13,7 @@
 #define BOOST_CPPTE_MODEL_DYNAMIC_MODEL_PRINTER_HPP
 
 #include <array>
+#include <typeinfo>
 #include <boost/range/empty.hpp>
 
 #include <boost/variant/apply_visitor.hpp>
@@ -67,8 +68,30 @@ private:
     const model_type &model;
 };
 
+struct variable_sink: public boost::noncopyable
+{
+    variable_sink(std::ostream &out, front_end::ast::variable const &v)
+        : out(out), v(v), printed(false)
+    {}
+
+    template <typename variable_value_type>
+    void operator()(const variable_value_type &value)
+    {
+        printed = true;
+        out << value;
+    }
+
+    bool isprinted() const { return printed;}
+
+private:
+    std::ostream &out;
+    const front_end::ast::variable &v;
+    bool printed;
+};
+
 template <typename parent_model_type>
-struct section_range_sink: public boost::noncopyable {
+struct section_range_sink: public boost::noncopyable
+{
     section_range_sink(std::ostream &out, front_end::ast::section const &v)
         : out(out), v(v), printed(false)
     {}
@@ -131,10 +154,13 @@ private:
  * types and should return variable for given key.
  */
 template <typename model_type>
-std::string get_variable_value(const model_type &, const std::string &key)
+void get_variable_value(const model_type &,
+                        const std::string &key,
+                        variable_sink &)
 {
-    // TODO(burlog): do something better
-    return "undefined:" + key + "|" + __PRETTY_FUNCTION__;
+    throw std::runtime_error("you should write specialization for "
+                             "get_variable_value for type: "
+                             + std::string(typeid(model_type).name()));
 }
 
 template <typename model_type>
@@ -142,18 +168,22 @@ void get_section_value(const model_type &,
                        const std::string &key,
                        section_range_sink<model_type> &)
 {
-    // TODO(burlog): do something better
-    throw std::runtime_error("undefined:" + key + "|" + __PRETTY_FUNCTION__);
+    throw std::runtime_error("you should write specialization for "
+                             "get_section_value for type: "
+                             + std::string(typeid(model_type).name()));
 }
 
 template <typename model_type>
 void dynamic_model_printer<model_type>::operator()
     (front_end::ast::variable const &v) const
 {
-    // TODO(burlog): What is better? If variable does not exist then rended
-    // TODO(burlog): something like "undefined" or leave it up to the user
-    // TODO(burlog): to let it do what he wants? (empty string, exp, ...)
-    out << get_variable_value(model, v.value);
+    variable_sink sink(out, v);
+    get_variable_value(model, v.value, sink);
+    if (!sink.isprinted())
+    {
+        // if user don't call sink it means that no variable exist
+        // TODO(burlog): lookup parent
+    }
 }
 
 template <typename model_type>
