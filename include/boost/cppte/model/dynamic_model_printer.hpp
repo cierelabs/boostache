@@ -100,6 +100,13 @@ struct section_range_sink: public boost::noncopyable {
 
     template <typename submodel_type>
     dynamic_model_printer<submodel_type>
+    make_printer(const submodel_type *submodel) const
+    {
+        return make_printer(*submodel);
+    }
+
+    template <typename submodel_type>
+    dynamic_model_printer<submodel_type>
     make_printer(const submodel_type &submodel) const
     {
         return dynamic_model_printer<submodel_type>(out, submodel);
@@ -169,7 +176,7 @@ void print(std::ostream &out,
            const model_type &model)
 {
     section_range_sink<detail::empty_model> root_printer(out, root);
-    root_printer(model);
+    root_printer(std::array<const model_type *, 1>{{&model}});
 }
 
 }}}

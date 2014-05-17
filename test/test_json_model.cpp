@@ -21,20 +21,6 @@
 
 #include "test_utils.hpp"
 
-namespace boost { namespace property_tree {
-
-const boost::property_tree::ptree *
-begin(std::pair<const boost::property_tree::ptree *,
-                const boost::property_tree::ptree *> p)
-{ return p.first;}
-
-const boost::property_tree::ptree *
-end(std::pair<const boost::property_tree::ptree *,
-              const boost::property_tree::ptree *> p)
-{ return p.second;}
-
-}}
-
 namespace boost { namespace cppte { namespace model
 {
 
@@ -50,22 +36,17 @@ void get_section_value(const boost::property_tree::ptree &model,
                        const std::string &key,
                        section_range_sink<boost::property_tree::ptree> &sink)
 {
-    //// call default printer if key does not exist
     auto isubmodel = model.find(key);
     if (isubmodel != model.not_found())
     {
-        // in terms of property tree are nodes with empty key array entries
         auto &submodel = isubmodel->second;
         if (!submodel.empty())
         {
-            if (submodel.front().first.empty())
-            {
-                sink(submodel);
-            }
-            else
-            {
-                sink(std::make_pair(&submodel, &submodel + 1));
-            }
+            // in terms of property tree nodes with empty key are array entries
+            // so pass them directly into printer otherwise create temporary
+            // array
+            if (submodel.front().first.empty()) sink(submodel);
+            else sink(std::array<decltype(&submodel), 1>{{&submodel}});
         }
     }
 }
