@@ -1,0 +1,57 @@
+#==============================================================================
+#   Copyright (c) 2014 Michael Caisse, Jeff Garland
+#
+#   Use, modification and distribution is subject to the Boost Software
+#   License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+#==============================================================================
+
+# bring in rules for testing
+import testing ;
+import modules ;
+import feature ;
+
+###############################################################################
+project boostache_test
+    : requirements
+        <include>.
+        <include>../../include
+        <toolset>gcc:<cxxflags>-std=c++0x
+        <toolset>gcc:<cxxflags>-ftemplate-depth-512
+        <toolset>clang:<cxxflags>-std=c++1y
+        <toolset>clang:<cxxflags>-ftemplate-depth-512
+        <toolset>darwin:<cxxflags>-std=c++1y
+        <toolset>darwin:<cxxflags>-ftemplate-depth-512
+    :
+    :
+    ;
+
+
+{
+
+    test-suite boostache/front_end :
+       [ run frontend/adapt_test.cpp ]
+       [ run frontend/grammar_basic.cpp ]
+       [ run frontend/compiler_basic.cpp ]
+
+   ;
+
+    test-suite boostache/core :
+      [ run test_simple_parser.cpp ]
+      [ run test_model.cpp ]
+      [ run test_dynamic_model.cpp ]
+      [ run test_json_model.cpp ]
+      [ run test_collections.cpp ]
+      [ run test_html_escape.cpp ]
+      [ run test_multiple.cpp ]
+      [ run test_nested_sections.cpp ]
+      [ run test_partials.cpp ]
+      [ run test_sections.cpp ]
+      [ run test_change_delimiter.cpp ]
+      [ run test_inverted_sections.cpp ]
+      [ run test_mustache_demo.cpp ]
+
+   ;
+
+
+}

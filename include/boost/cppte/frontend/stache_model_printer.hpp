@@ -30,9 +30,13 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 		struct stache_model_visitor
 		{
 			typedef std::string result_type;
-			std::string operator()(const stache_function& f) const
+			std::string operator()(const stache_string_function& f) const
 			{
-				return f();
+				return operator()(f());
+			}
+			std::string operator()(const stache_bool_function& f) const
+			{
+				return f() ? "true" : "false";
 			}
 			std::string operator()(const std::string& s) const
 			{
@@ -72,23 +76,11 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 
          void operator()(variable const & v) const
          {
-				stache_model_visitor visitor;
 				// TODO: Escaping.
-				auto location = model.find(v.value);
-				if( location != model.end() )
+				if( auto location = lookup(v.value) )
 				{
-					out << boost::apply_visitor(visitor, location->second);
-				}
-				else
-				{
-					if (parent)
-					{
-						(*parent)(v);
-					}
-					else
-					{
-						out << "<<<<Undefined variable \"" << v.value << "\">>>>";
-					}
+					stache_model_visitor visitor;
+					out << boost::apply_visitor(visitor, *location);
 				}
          }
 
@@ -104,11 +96,11 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 
          void operator()(section const & v) const
          {
-				auto location = model.find(v.name);
-				bool have_value = (location != model.end());
-				if( have_value && !v.is_inverted )
+				const stache_variant* location = lookup(v.name);
+				bool positive = have_value(location);
+				if( positive && !v.is_inverted )
 				{
-					if (const stache_model_vector* vec = boost::get<stache_model_vector>(&(location->second)))
+					if (auto vec = get<stache_model_vector>(location))
 					{
 						for( const auto& entry : *vec )
 						{
@@ -124,27 +116,62 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
 							}
 						}
 					}
-					else if (const stache_model* model = boost::get<stache_model>(&location->second))
+					else if (auto model = get<stache_model>(location))
 					{
 						stache_model_printer section_printer(out, *model, this);
 						apply_visitor_to_root(section_printer, v.nodes);
 					}
-					else if (const std::string* str = boost::get<std::string>(&location->second))
-					{
-						out << *str;
-					}
 					else
 					{
-						out << "<<<<Unhandled type of stache_model variant>>>>";
+						// This is the odd case that they requested a section, but it was
+						// some non-mapped type.  We can handle this by recursively calling
+						// the printer with the nodes of the section.  Dynamic lookup can
+						// still find the section tag for proper display within the
+						// section.
+						apply_visitor_to_root(*this, v.nodes);
 					}
 				}
-				else if( !have_value && v.is_inverted )
+				else if( !positive && v.is_inverted )
 				{
 					apply_visitor_to_root(stache_model_printer(out, stache_model(), this), v.nodes);
 				}
          }
 
       private:
+			template <typename T>
+			const T* get(const stache_variant* location) const
+			{
+				return boost::get<T>(location);
+			}
+
+			bool have_value(const stache_variant* location) const
+			{
+				if( location != nullptr )
+				{
+					if( auto f = get<stache_bool_function>(location) )
+					{
+						return (*f)();
+					}
+					return true;
+				}
+				return false;
+			}
+
+			// Recursive lookup to any parent printers to support scoped name lookup.
+			const stache_variant* lookup(const std::string& name) const
+			{
+				auto location = model.find(name);
+				if( location != model.end() )
+				{
+					return &(location->second);
+				}
+				else if( parent )
+				{
+					return parent->lookup(name);
+				}
+				return nullptr;
+			}
+
          std::ostream& out;
 			const stache_model& model;
 			const stache_model_printer* parent;
