@@ -32,12 +32,14 @@ BOOST_AUTO_TEST_CASE(test_model_build)
 	stache_model model;
 	model["NAME"] = "Bob";
 	model["LOCATION"] = stache_model { { "CITY", "Aspen" }, { "STATE", "Colorado" }, { "COUNTRY", "United States" } };
-	model["GENERATED"] = []() { return "abc"; };
+	model["GENERATED_STRING"] = stache_string_function { []() { return "abc"; } };
+	model["GENERATED_BOOL"] = stache_bool_function { []() { return true; } };
 
 	BOOST_CHECK_EQUAL("Bob", boost::get<std::string>(model["NAME"]));
 	BOOST_CHECK_THROW(boost::get<int>(model["NAME"]), boost::bad_get);
 	BOOST_CHECK_EQUAL("Aspen", boost::get<std::string>(boost::get<stache_model>(model["LOCATION"])["CITY"]));
-	BOOST_CHECK_EQUAL("abc", boost::get<stache_function>(model["GENERATED"])());
+	BOOST_CHECK_EQUAL("abc", boost::get<stache_string_function>(model["GENERATED_STRING"])());
+	BOOST_CHECK_EQUAL(true, boost::get<stache_bool_function>(model["GENERATED_BOOL"])());
 }
 
 BOOST_AUTO_TEST_CASE(test_simple_model_formatting)

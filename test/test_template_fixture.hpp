@@ -33,9 +33,17 @@ struct TemplateFixture
 			return result;
 		}
 
+		void set_tag_value(const std::string& tag, const char* value)
+		{
+			model[tag] = std::string(value);
+		}
 		void set_tag_value(const std::string& tag, const std::string& value)
 		{
 			model[tag] = value;
+		}
+		void set_tag_value(const std::string& tag, bool b)
+		{
+			model[tag] = [=]() { return b; };
 		}
 
 		typedef std::map<std::string, std::string> object_t;

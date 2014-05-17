@@ -13,11 +13,13 @@ namespace boost
 	{
 		namespace front_end
 		{
-			typedef std::function<std::string()> stache_function;
+			typedef std::function<std::string()> stache_string_function;
+			typedef std::function<bool()> stache_bool_function;
 
 			typedef boost::make_recursive_variant<
 				std::string,
-				stache_function,
+				stache_string_function,
+				stache_bool_function,
 				std::vector<boost::recursive_variant_>,
 				std::map<std::string, boost::recursive_variant_>
 				>::type stache_variant;
