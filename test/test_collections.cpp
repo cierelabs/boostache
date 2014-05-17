@@ -69,6 +69,7 @@ BOOST_FIXTURE_TEST_CASE(TestCollectionMultipleWithMultipleFields, TemplateFixtur
 	jerry["work"] = "Magic";
 	add_section_item("people", jerry);
 
+	generate_template();
 
 	std::string expected = "Hi I am Daniel.\n";
 	expected += "Hi Daniel, I am Tom, I do Accounting.";
