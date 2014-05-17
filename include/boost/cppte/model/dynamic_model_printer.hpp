@@ -12,7 +12,7 @@
 #ifndef BOOST_CPPTE_MODEL_DYNAMIC_MODEL_PRINTER_HPP
 #define BOOST_CPPTE_MODEL_DYNAMIC_MODEL_PRINTER_HPP
 
-#include <type_traits>
+#include <boost/range/empty.hpp>
 
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/cppte/frontend/stache_ast.hpp>
@@ -20,57 +20,14 @@
 namespace boost { namespace cppte { namespace model
 {
 
-/** This template function is intended to specialization for user own
- * types and should return variable for given key.
- */
-template <typename model_type>
-std::string get_variable_value(const model_type &, const std::string &key)
-{
-    // TODO(burlog): do something better
-    return "undefined:" + key + "|" + __PRETTY_FUNCTION__;
-}
-
-/** This template class is intended to specialization for user own types and
- * should call given meta callback with type of submodel.
- */
-template <
-    template <typename submodel_type> class printer_callback_type,
-    typename model_type
->
-struct pass_section_value_to_callback
-{
-    void operator()(const model_type &,
-                    const std::string &key,
-                    std::ostream &,
-                    const front_end::ast::section &)
-    {
-        // TODO(burlog): do something better
-        throw std::runtime_error("undefined:" + key + "|" + __PRETTY_FUNCTION__);
-    }
-};
-
-template <typename model_type>
-struct single_obj_as_array {
-    single_obj_as_array(const model_type &model)
-        : model(model)
-    {}
-    typedef model_type value_type;
-    typedef value_type &reference;
-    typedef const value_type &const_reference;
-    typedef const value_type *const_iterator;
-    const_iterator begin() const { return &model;}
-    const_iterator end() const { return &model + 1;}
-    const model_type &model;
-};
-
-template <typename model_type>
-single_obj_as_array<model_type> make_single_obj_as_array(const model_type &model)
-{
-    return single_obj_as_array<model_type>(model);
-}
-
 namespace detail
 {
+
+struct empty_model {};
+empty_model *begin(std::pair<empty_model *, empty_model *> p) { return p.first;}
+empty_model *end(std::pair<empty_model *, empty_model *> p) { return p.second;}
+
+} // namespace detail
 
 template <typename model_type>
 class dynamic_model_printer
@@ -79,43 +36,8 @@ public:
     typedef void result_type;
 
     dynamic_model_printer(std::ostream& out, const model_type &model)
-        : out(out)
-        , model(model)
+        : out(out), model(model)
     {}
-
-    template <typename submodel_range_type>
-    class section_callback
-    {
-    public:
-        void operator()(std::ostream &out,
-                        const submodel_range_type &submodels,
-                        front_end::ast::section const &v) const
-        {
-            for (const auto &submodel: submodels)
-            {
-                auto submodel_printer = make_printer(out, submodel);
-                for( const auto& node : v.nodes)
-                {
-                    boost::apply_visitor(submodel_printer, node);
-                }
-            }
-        }
-
-        template <typename submodel_type>
-        dynamic_model_printer<submodel_type>
-        make_printer(std::ostream &out, const submodel_type &submodel) const
-        {
-            return dynamic_model_printer<submodel_type>(out, submodel);
-        }
-
-        template <typename key_type, typename submodel_type>
-        dynamic_model_printer<submodel_type>
-        make_printer(std::ostream &out,
-                     const std::pair<const key_type, submodel_type> &pair) const
-        {
-            return dynamic_model_printer<submodel_type>(out, pair.second);
-        }
-    };
 
     void operator()(front_end::ast::comment) const
     {
@@ -137,33 +59,119 @@ public:
         out << v;
     }
 
-    void operator()(front_end::ast::variable const &v) const
-    {
-        // TODO(burlog): optional
-        out << get_variable_value(model, v.value);
-    }
+    void operator()(front_end::ast::variable const &v) const;
 
-    void operator()(front_end::ast::section const &v) const
-    {
-        // TODO(burlog): optional
-        pass_section_value_to_callback<section_callback, model_type>()
-            (model, v.name, out, v);
-    }
+    void operator()(front_end::ast::section const &v) const;
 
 private:
     std::ostream &out;
     const model_type &model;
 };
 
-} // detail
+template <typename parent_model_type>
+struct section_range_sink: public boost::noncopyable {
+    section_range_sink(std::ostream &out, front_end::ast::section const &v)
+        : out(out), v(v), printed(false)
+    {}
+
+    template <typename submodel_range_type>
+    void operator()(const submodel_range_type &submodels)
+    {
+        printed = true;
+        if (!v.is_inverted) {
+            for (const auto &submodel: submodels)
+            {
+                auto submodel_printer = make_printer(submodel);
+                for( const auto& node : v.nodes)
+                {
+                    boost::apply_visitor(submodel_printer, node);
+                }
+            }
+
+        }
+        else if (v.is_inverted && boost::empty(submodels))
+        {
+            auto submodel_printer = make_printer(detail::empty_model());
+            for( const auto& node : v.nodes)
+            {
+                boost::apply_visitor(submodel_printer, node);
+            }
+        }
+    }
+
+    template <typename submodel_type>
+    dynamic_model_printer<submodel_type>
+    make_printer(const submodel_type &submodel) const
+    {
+        return dynamic_model_printer<submodel_type>(out, submodel);
+    }
+
+    template <typename key_type, typename submodel_type>
+    dynamic_model_printer<submodel_type>
+    make_printer(const std::pair<const key_type, submodel_type> &pair) const
+    {
+        return dynamic_model_printer<submodel_type>(out, pair.second);
+    }
+
+    bool isprinted() const { return printed;}
+
+private:
+    std::ostream &out;
+    const front_end::ast::section &v;
+    bool printed;
+};
+
+/** This template function is intended to specialization for user own
+ * types and should return variable for given key.
+ */
+template <typename model_type>
+std::string get_variable_value(const model_type &, const std::string &key)
+{
+    // TODO(burlog): do something better
+    return "undefined:" + key + "|" + __PRETTY_FUNCTION__;
+}
+
+template <typename model_type>
+void get_section_value(const model_type &,
+                       const std::string &key,
+                       section_range_sink<model_type> &)
+{
+    // TODO(burlog): do something better
+    throw std::runtime_error("undefined:" + key + "|" + __PRETTY_FUNCTION__);
+}
+
+template <typename model_type>
+void dynamic_model_printer<model_type>::operator()
+    (front_end::ast::variable const &v) const
+{
+    // TODO(burlog): What is better? If variable does not exist then rended
+    // TODO(burlog): something like "undefined" or leave it up to the user
+    // TODO(burlog): to let it do what he wants? (empty string, exp, ...)
+    out << get_variable_value(model, v.value);
+}
+
+template <typename model_type>
+void dynamic_model_printer<model_type>::operator()
+    (front_end::ast::section const &v) const
+{
+    section_range_sink<model_type> sink(out, v);
+    get_section_value(model, v.name, sink);
+    if (!sink.isprinted())
+    {
+        // if user don't call sink it means that no section exist
+        section_range_sink<model_type> sink(out, v);
+        sink(std::pair<detail::empty_model *,
+                       detail::empty_model *>(nullptr, nullptr));
+    }
+}
 
 template <typename model_type>
 void print(std::ostream &out,
            const front_end::ast::stache_root &root,
            const model_type &model)
 {
-    detail::dynamic_model_printer<model_type> printer(out, model);
-    for(const auto &node: root)
+    dynamic_model_printer<model_type> printer(out, model);
+    for (const auto &node: root)
     {
         boost::apply_visitor(printer, node);
     }
