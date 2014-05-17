@@ -1,5 +1,5 @@
 /**
- *  \file stache_model_printer.hpp
+ *  \file dynamic_model_printer.hpp
  *
  *  Copyright 2014 Michael Caisse : ciere.com
  *  Copyright 2014 Kevin Harris
