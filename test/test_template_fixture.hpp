@@ -46,7 +46,7 @@ public:
       model[tag] = [=]() { return b; };
    }
 
-   typedef std::map<std::string, std::string> object_t;
+   typedef stache_model object_t;
 
    void add_section_item(const std::string& section_tag, const object_t& item)
    {
