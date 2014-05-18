@@ -37,7 +37,12 @@ namespace boost { namespace cppte { namespace vm { namespace ast
 
          void operator()(variable const & v) const
          {
-            out << "<variable> : " << v.id << std::endl;;
+            out << "<variable> : " << v.name << std::endl;;
+         }
+
+         void operator()(render const & v) const
+         {
+            out << "<render> : " << v.name << std::endl;;
          }
 
          void operator()(for_each const & v) const
@@ -53,7 +58,7 @@ namespace boost { namespace cppte { namespace vm { namespace ast
             out << "<if> : --------------------------- " << std::endl;
             //boost::apply_visitor(*this, v.condition_);
             out << "<then> : --------------------------- " << std::endl;
-            boost::apply_visitor(*this, v.if_);
+            boost::apply_visitor(*this, v.then_);
             out << "<else> : --------------------------- " << std::endl;
             boost::apply_visitor(*this, v.else_);
             out << "-------------------------------------" << std::endl;

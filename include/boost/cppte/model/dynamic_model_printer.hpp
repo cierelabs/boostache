@@ -187,8 +187,8 @@ void get_variable_value(const model_type &,
 
 template <typename model_type>
 void get_section_value(const model_type &,
-                const std::string &key,
-                section_range_sink &)
+                       const std::string &key,
+                       section_range_sink &)
 {
     throw std::runtime_error("you should write specialization for "
                              "get_section_value(" + key + ") for type: "
@@ -227,7 +227,11 @@ void print(std::ostream &out,
            const front_end::ast::stache_root &root,
            const model_type &model)
 {
-    section_range_sink sink(out, root);
+    // HACK - make the stache_root into a section
+    front_end::ast::section section;
+    section.is_inverted = false;
+    section.nodes = root;
+    section_range_sink sink(out, section);
     sink(std::array<const model_type *, 1>{{&model}});
 }
 

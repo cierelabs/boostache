@@ -25,12 +25,7 @@ BOOST_FUSION_ADAPT_STRUCT(
    boost::cppte::front_end::ast::section,
    (bool, is_inverted)
    (boost::cppte::front_end::ast::identifier, name)
-   (std::vector<boost::cppte::front_end::ast::stache_node>, nodes)
-)
-
-BOOST_FUSION_ADAPT_STRUCT(
-   boost::cppte::front_end::ast::stache_root,
-   (std::vector<boost::cppte::front_end::ast::stache_node>, nodes)
+   (boost::cppte::front_end::ast::stache_node_list, nodes)
 )
 
 #endif

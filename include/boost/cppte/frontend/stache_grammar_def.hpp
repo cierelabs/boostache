@@ -40,7 +40,7 @@ namespace boost { namespace cppte { namespace front_end
 
    template <typename Iterator>
    stache_grammar<Iterator>::stache_grammar()
-      : stache_grammar::base_type(stache_root)
+      : stache_grammar::base_type(node_list)
    {
       spirit::_1_type _1;
       spirit::_a_type _a;
@@ -56,10 +56,6 @@ namespace boost { namespace cppte { namespace front_end
       qi::omit_type omit;
 
 
-      stache_root =
-         *stache_node
-         ;
-
       stache_node =
             no_skip[literal_text]
          |  comment
@@ -67,6 +63,11 @@ namespace boost { namespace cppte { namespace front_end
          |  variable_unescaped
          |  section
          |  partial
+         ;
+
+
+      node_list =
+         *stache_node
          ;
 
       literal_text =

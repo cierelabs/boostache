@@ -20,7 +20,7 @@ int main()
    typedef std::string::iterator iterator_t;
    typedef fe::stache_grammar<iterator_t> grammar_t;
 
-   fe::ast::stache_root ast;
+   fe::ast::stache_node_list ast;
    grammar_t grammar;
 
    std::string input( "Hello world \n"
@@ -42,8 +42,8 @@ int main()
    if( qi::phrase_parse( iter, iter_end
                        , grammar
                        , qi::space_type()
-                       , ast
-		)  && (iter == iter_end))
+                       , ast ) )
+//		)  && (iter == iter_end))
    {
       std::cout << "parse succeeded" << std::endl;
       fe::ast::print(std::cout, ast);
@@ -53,6 +53,6 @@ int main()
       std::cout << "parse failed" << std::endl;
    }
 
-   return 0;
+   return -1;
 }
 

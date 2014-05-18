@@ -22,12 +22,12 @@ namespace boost { namespace cppte { namespace front_end
 
    template <typename Iterator>
    struct stache_grammar
-      : qi::grammar<Iterator, ast::stache_nodes(), qi::space_type>
+      : qi::grammar<Iterator, ast::stache_node_list(), qi::space_type>
    {
       stache_grammar();
 
-      qi::rule<Iterator, ast::stache_nodes(), qi::space_type>
-         stache_root
+      qi::rule<Iterator, ast::stache_node_list(), qi::space_type>
+         node_list
          ;
 
       qi::rule<Iterator, ast::stache_node(), qi::space_type>

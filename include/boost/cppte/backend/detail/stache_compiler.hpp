@@ -35,28 +35,29 @@ namespace boost { namespace cppte { namespace backend { namespace stache_compile
 
          vm::ast::node operator()(front_end::ast::literal_text const & v) const
          {
-            out << "literal" << std::endl;
             return vm::ast::literal{v};
          }
 
          vm::ast::node operator()(front_end::ast::variable const & v) const
          {
-            out << "make variable" << std::endl;
-            return vm::ast::variable{v.value};
+            return vm::ast::render{v.value};
          }
 
          vm::ast::node operator()(front_end::ast::section const & v) const
          {
-            out << ">>> make section" << std::endl;
-
             vm::ast::node_list vm_ast;
             for(auto const & node : v.nodes)
             {
                vm_ast.nodes.push_back(boost::apply_visitor(*this, node));
             }
 
-            out << "<<< close section" << std::endl;
-            return vm_ast;
+            vm::ast::if_then_else if_block;
+            if_block.condition_.name = v.name;
+
+            if(v.is_inverted)  { if_block.else_ = vm_ast; }
+            else               { if_block.then_ = vm_ast; }
+
+            return if_block;
          }
 
          vm::ast::node operator()(front_end::ast::comment const & v) const
@@ -69,21 +70,25 @@ namespace boost { namespace cppte { namespace backend { namespace stache_compile
             return vm::ast::literal{};
          }         
 
+         vm::ast::node operator()(front_end::ast::stache_node_list const & v) const
+         {
+            vm::ast::node_list node_list;
+            for(auto const & node : v)
+            {
+               node_list.nodes.push_back(boost::apply_visitor(*this, node));
+            }
+            return node_list;
+         }
+
       private:
          std::ostream& out;
       };
    }
 
-   inline vm::ast::node_list compile(front_end::ast::stache_root const & ast)
+   inline vm::ast::node compile(front_end::ast::stache_node const & ast)
    {
-      vm::ast::node_list vm_root;
-      for(auto const & node : ast.nodes)
-      {
-         detail::stache_visit visit(std::cout);
-         vm_root.nodes.push_back( boost::apply_visitor(visit, node) );
-      }
-
-      return vm_root;
+      detail::stache_visit visit(std::cout);
+      return boost::apply_visitor(visit, ast);
    }
 }}}}
 

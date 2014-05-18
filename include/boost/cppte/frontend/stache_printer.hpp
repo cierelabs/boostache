@@ -75,10 +75,10 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
       };
    }
 
-   inline void print(std::ostream& out, stache_root const& root)
+   inline void print(std::ostream& out, stache_node_list const& nodes)
    {
       detail::stache_printer p(out);
-      for(auto const & node : root.nodes)
+      for(auto const & node : nodes)
       {
          boost::apply_visitor(p, node);
       }

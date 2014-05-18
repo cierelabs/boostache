@@ -10,23 +10,23 @@
 // Tests that a simple mustache tag is replaced
 BOOST_FIXTURE_TEST_CASE(TestSectionsMustache, TemplateFixture)
 {
-	template_string = "Hi I am {{name}}.\n";
-	template_string += "{{# showme}}";
-	template_string += "I like {{pet}}.";
-	template_string += "{{/ showme}}";
-	template_string += "{{# dontshowme}}";
-	template_string += "If you see this, something went wrong.";
-	template_string += "{{/ dontshowme}}";
+   template_string = "Hi I am {{name}}.\n";
+   template_string += "{{# showme}}";
+   template_string += "I like {{pet}}.";
+   template_string += "{{/ showme}}";
+   template_string += "{{# dontshowme}}";
+   template_string += "If you see this, something went wrong.";
+   template_string += "{{/ dontshowme}}";
 
-	set_tag_value("name", "Daniel");
-	set_tag_value("pet", "turtles");
-	set_tag_value("showme", "true");
-	set_tag_value("dontshowme", "false");
+   set_tag_value("name", "Daniel");
+   set_tag_value("pet", "turtles");
+   set_tag_value("showme", "true");
+   set_tag_value("dontshowme", "false");
 
-	generate_template();
+   generate_template();
 
-	std::string expected = "Hi I am Daniel.\n";
-	expected += "I like turtles.";
-	BOOST_CHECK_EQUAL(expected, result);
+   std::string expected = "Hi I am Daniel.\n";
+   expected += "I like turtles.";
+   BOOST_CHECK_EQUAL(expected, result);
 }
 
