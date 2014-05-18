@@ -56,18 +56,16 @@ namespace boost { namespace cppte { namespace front_end { namespace ast
       stache_node(partial const & rhs) : base_type(rhs) {}
    };
 
+   struct stache_node_list :  std::vector<stache_node> {};
+
    struct section
    {
       bool is_inverted;
       identifier name;
-      std::vector<stache_node> nodes;
+      stache_node_list nodes;
    };
 
-   typedef std::vector<stache_node> stache_nodes;
-
-   struct stache_root : section
-   {
-   };
+   struct stache_root : stache_node_list {};
 
 }}}}
 

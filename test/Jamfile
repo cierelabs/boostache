@@ -15,17 +15,24 @@ import feature ;
 project boostache_test
     : requirements
         <include>.
-        <include>../../include
+        <include>../include
+        <source>/boost//headers
+        <source>/boost//unit_test_framework
         <toolset>gcc:<cxxflags>-std=c++0x
         <toolset>gcc:<cxxflags>-ftemplate-depth-512
         <toolset>clang:<cxxflags>-std=c++1y
         <toolset>clang:<cxxflags>-ftemplate-depth-512
         <toolset>darwin:<cxxflags>-std=c++1y
         <toolset>darwin:<cxxflags>-ftemplate-depth-512
+	<define>BOOST_TEST_DYN_LINK
     :
     :
     ;
 
+
+lib simple_parse
+	: ../boost/cppte/simple_parser.cpp
+	;
 
 {
 
@@ -37,19 +44,19 @@ project boostache_test
    ;
 
     test-suite boostache/core :
-      [ run test_simple_parser.cpp ]
-      [ run test_model.cpp ]
-      [ run test_dynamic_model.cpp ]
-      [ run test_json_model.cpp ]
-      [ run test_collections.cpp ]
-      [ run test_html_escape.cpp ]
-      [ run test_multiple.cpp ]
-      [ run test_nested_sections.cpp ]
-      [ run test_partials.cpp ]
-      [ run test_sections.cpp ]
-      [ run test_change_delimiter.cpp ]
-      [ run test_inverted_sections.cpp ]
-      [ run test_mustache_demo.cpp ]
+      [ run test_simple_parser.cpp simple_parse ]
+      [ run test_model.cpp simple_parse simple_parse ]
+      [ run test_dynamic_model.cpp simple_parse ]
+      [ run test_json_model.cpp simple_parse ]
+      [ run test_collections.cpp simple_parse ]
+      [ run test_html_escape.cpp simple_parse ]
+      [ run test_multiple.cpp simple_parse ]
+      [ run test_nested_sections.cpp simple_parse ]
+      [ run test_partials.cpp simple_parse ]
+      [ run test_sections.cpp simple_parse ]
+      [ run test_change_delimiter.cpp simple_parse ]
+      [ run test_inverted_sections.cpp simple_parse ]
+      [ run test_mustache_demo.cpp simple_parse ]
 
    ;
 

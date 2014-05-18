@@ -70,21 +70,25 @@ namespace boost { namespace cppte { namespace backend { namespace stache_compile
             return vm::ast::literal{};
          }         
 
+         vm::ast::node operator()(front_end::ast::stache_node_list const & v) const
+         {
+            vm::ast::node_list node_list;
+            for(auto const & node : v)
+            {
+               node_list.nodes.push_back(boost::apply_visitor(*this, node));
+            }
+            return node_list;
+         }
+
       private:
          std::ostream& out;
       };
    }
 
-   inline vm::ast::node_list compile(front_end::ast::stache_root const & ast)
+   inline vm::ast::node compile(front_end::ast::stache_node const & ast)
    {
-      vm::ast::node_list vm_root;
-      for(auto const & node : ast.nodes)
-      {
-         detail::stache_visit visit(std::cout);
-         vm_root.nodes.push_back( boost::apply_visitor(visit, node) );
-      }
-
-      return vm_root;
+      detail::stache_visit visit(std::cout);
+      return boost::apply_visitor(visit, ast);
    }
 }}}}
 

@@ -5,6 +5,6 @@
 
 BOOST_AUTO_TEST_CASE(parse_empty_input)
 {
-	boost::stache_root ast;
-	BOOST_CHECK(boost::simple_parse_template("", ast));
+   boost::stache_root ast;
+   BOOST_CHECK(boost::cppte::simple_parse_template("", ast));
 }

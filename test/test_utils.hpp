@@ -23,7 +23,7 @@ std::string print(const boost::cppte::front_end::ast::stache_root &ast,
 inline boost::cppte::front_end::ast::stache_root parse(const std::string &text)
 {
     boost::cppte::front_end::ast::stache_root ast;
-    if( !boost::simple_parse_template(text, ast) )
+    if( !boost::cppte::simple_parse_template(text, ast) )
     {
         throw std::runtime_error("Parse failed");
     }

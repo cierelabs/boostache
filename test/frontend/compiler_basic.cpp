@@ -19,7 +19,7 @@ int main()
    typedef std::string::iterator iterator_t;
    typedef fe::stache_grammar<iterator_t> grammar_t;
 
-   fe::ast::stache_root ast;
+   fe::ast::stache_node_list ast;
    grammar_t grammar;
 
    std::string input( "Hello world \n"

@@ -15,7 +15,7 @@
 
 namespace boost { namespace cppte { namespace backend
 {
-   inline vm::ast::node_list compile(front_end::ast::stache_root const & ast)
+   inline vm::ast::node compile(front_end::ast::stache_node const & ast)
    {
       return stache_compiler::compile(ast);
    }
