@@ -16,6 +16,7 @@ namespace boost { namespace boostache { namespace backend
    template<class T>
    vm::ast::node_list compile(T const & ast)
    {
+      std::cout << "generic compile for : " << typeid(ast).name() << std::endl;
       // compiler not implemented... do something smart
       return vm::ast::node_list{};
    }

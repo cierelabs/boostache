@@ -10,12 +10,12 @@
 #define BOOST_BOOSTACHE_BACKEND_DETAIL_STACHE_COMPILER_HPP
 
 #include <boost/boostache/vm/engine_ast.hpp>
-#include <boost/boostache/frontend/stache_ast.hpp>
-#include <boost/boostache/backend/compiler.hpp>
+#include <boost/boostache/frontend/stache/ast.hpp>
 #include <boost/boostache/backend/detail/stache_compiler.hpp>
 
 namespace boost { namespace boostache { namespace backend { namespace stache_compiler
 {
+   namespace fe = boost::boostache::frontend;
    namespace detail
    {
       class stache_visit
@@ -27,23 +27,23 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
             : out(out)
          {}
 
-         vm::ast::node operator()(frontend::ast::undefined) const
+         vm::ast::node operator()(fe::stache::ast::undefined) const
          {
             out << "WHOA! we have an undefined" << std::endl;
             return vm::ast::node{};
          }
 
-         vm::ast::node operator()(frontend::ast::literal_text const & v) const
+         vm::ast::node operator()(fe::stache::ast::literal_text const & v) const
          {
             return vm::ast::literal{v};
          }
 
-         vm::ast::node operator()(frontend::ast::variable const & v) const
+         vm::ast::node operator()(fe::stache::ast::variable const & v) const
          {
             return vm::ast::render{v.value};
          }
 
-         vm::ast::node operator()(frontend::ast::section const & v) const
+         vm::ast::node operator()(fe::stache::ast::section const & v) const
          {
             vm::ast::node_list vm_ast;
             for(auto const & node : v.nodes)
@@ -60,20 +60,30 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
             return if_block;
          }
 
-         vm::ast::node operator()(frontend::ast::comment const & v) const
+         vm::ast::node operator()(fe::stache::ast::comment const & v) const
          {
             return vm::ast::literal{};
          }         
 
-         vm::ast::node operator()(frontend::ast::partial const & v) const
+         vm::ast::node operator()(fe::stache::ast::partial const & v) const
          {
             return vm::ast::literal{};
          }         
 
-         vm::ast::node operator()(frontend::ast::stache_node_list const & v) const
+         vm::ast::node operator()(fe::stache::ast::node_list const & nodes) const
          {
             vm::ast::node_list node_list;
-            for(auto const & node : v)
+            for(auto const & node : nodes)
+            {
+               node_list.nodes.push_back(boost::apply_visitor(*this, node));
+            }
+            return node_list;
+         }
+
+         vm::ast::node operator()(fe::stache::ast::root const & nodes) const
+         {
+            vm::ast::node_list node_list;
+            for(auto const & node : nodes)
             {
                node_list.nodes.push_back(boost::apply_visitor(*this, node));
             }
@@ -85,10 +95,10 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
       };
    }
 
-   inline vm::ast::node compile(frontend::ast::stache_node const & ast)
+   inline vm::ast::node compile(fe::stache::ast::root const & ast)
    {
       detail::stache_visit visit(std::cout);
-      return boost::apply_visitor(visit, ast);
+      return visit(ast);
    }
 }}}}
 

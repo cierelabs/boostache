@@ -11,18 +11,18 @@
 #define BOOST_BOOSTACHE_FRONT_END_STACHE_PRINTER_HPP
 
 #include <boost/variant/apply_visitor.hpp>
-#include <boost/boostache/frontend/stache_ast.hpp>
+#include <boost/boostache/frontend/stache/ast.hpp>
 
-namespace boost { namespace boostache { namespace frontend { namespace ast
+namespace boost { namespace boostache { namespace frontend { namespace stache { namespace ast
 {
    namespace detail
    {
-      class stache_printer
+      class printer
       {
       public:
          typedef void result_type;
 
-         stache_printer(std::ostream& out)
+         printer(std::ostream& out)
             : out(out)
          {}
 
@@ -75,14 +75,14 @@ namespace boost { namespace boostache { namespace frontend { namespace ast
       };
    }
 
-   inline void print(std::ostream& out, stache_node_list const& nodes)
+   inline void print(std::ostream& out, node_list const& nodes)
    {
-      detail::stache_printer p(out);
+      detail::printer p(out);
       for(auto const & node : nodes)
       {
          boost::apply_visitor(p, node);
       }
    }
-}}}}
+}}}}}
 
 #endif

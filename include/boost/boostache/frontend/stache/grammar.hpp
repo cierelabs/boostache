@@ -10,27 +10,27 @@
 #ifndef BOOST_BOOSTACHE_FRONT_END_STACHE_GRAMMAR_HPP
 #define BOOST_BOOSTACHE_FRONT_END_STACHE_GRAMMAR_HPP
 
-#include <boost/boostache/frontend/stache_ast.hpp>
+#include <boost/boostache/frontend/stache/ast.hpp>
 
 #include <boost/spirit/include/qi_char_class.hpp>
 #include <boost/spirit/include/qi_rule.hpp>
 
 
-namespace boost { namespace boostache { namespace frontend
+namespace boost { namespace boostache { namespace frontend { namespace stache
 {
    namespace qi = boost::spirit::qi;
 
    template <typename Iterator>
-   struct stache_grammar
-      : qi::grammar<Iterator, ast::stache_node_list(), qi::space_type>
+   struct grammar
+      : qi::grammar<Iterator, ast::node_list(), qi::space_type>
    {
-      stache_grammar();
+      grammar();
 
-      qi::rule<Iterator, ast::stache_node_list(), qi::space_type>
+      qi::rule<Iterator, ast::node_list(), qi::space_type>
          node_list
          ;
 
-      qi::rule<Iterator, ast::stache_node(), qi::space_type>
+      qi::rule<Iterator, ast::node(), qi::space_type>
          stache_node
          ;
 
@@ -70,7 +70,7 @@ namespace boost { namespace boostache { namespace frontend
          partial
          ;
    };
-}}}
+}}}}
 
 #endif
 

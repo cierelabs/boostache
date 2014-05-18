@@ -14,9 +14,9 @@
 #include <string>
 #include <vector>
 
-namespace boost { namespace boostache { namespace frontend { namespace ast
+namespace boost { namespace boostache { namespace frontend { namespace stache { namespace ast
 {
-   struct stache_node;
+   struct node;
 
    struct undefined {};
 
@@ -39,7 +39,7 @@ namespace boost { namespace boostache { namespace frontend { namespace ast
 
    struct section;
 
-   struct stache_node : boost::spirit::extended_variant<
+   struct node : boost::spirit::extended_variant<
         undefined
       , comment
       , literal_text
@@ -48,25 +48,25 @@ namespace boost { namespace boostache { namespace frontend { namespace ast
       , partial
       >
    {
-      stache_node() : base_type() {}
-      stache_node(comment const & rhs) : base_type(rhs) {}
-      stache_node(literal_text const & rhs) : base_type(rhs) {}
-      stache_node(variable const & rhs) : base_type(rhs) {}
-      stache_node(section const & rhs) : base_type(rhs) {}
-      stache_node(partial const & rhs) : base_type(rhs) {}
+      node() : base_type() {}
+      node(comment const & rhs) : base_type(rhs) {}
+      node(literal_text const & rhs) : base_type(rhs) {}
+      node(variable const & rhs) : base_type(rhs) {}
+      node(section const & rhs) : base_type(rhs) {}
+      node(partial const & rhs) : base_type(rhs) {}
    };
 
-   struct stache_node_list :  std::vector<stache_node> {};
+   struct node_list :  std::vector<node> {};
 
    struct section
    {
       bool is_inverted;
       identifier name;
-      stache_node_list nodes;
+      node_list nodes;
    };
 
-   struct stache_root : stache_node_list {};
+   struct root : node_list {};
 
-}}}}
+}}}}}
 
 #endif

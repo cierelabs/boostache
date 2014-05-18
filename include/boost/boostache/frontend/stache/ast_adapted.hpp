@@ -12,20 +12,20 @@
 #ifndef BOOST_BOOSTACHE_FRONT_END_STACHE_AST_ADAPTED_HPP
 #define BOOST_BOOSTACHE_FRONT_END_STACHE_AST_ADAPTED_HPP
 
-#include <boost/boostache/frontend/stache_ast.hpp>
+#include <boost/boostache/frontend/stache/ast.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 
 BOOST_FUSION_ADAPT_STRUCT(
-   boost::boostache::frontend::ast::variable,
+   boost::boostache::frontend::stache::ast::variable,
    (bool, is_unescaped)
-   (boost::boostache::frontend::ast::identifier, value)
+   (boost::boostache::frontend::stache::ast::identifier, value)
 )
 
 BOOST_FUSION_ADAPT_STRUCT(
-   boost::boostache::frontend::ast::section,
+   boost::boostache::frontend::stache::ast::section,
    (bool, is_inverted)
-   (boost::boostache::frontend::ast::identifier, name)
-   (boost::boostache::frontend::ast::stache_node_list, nodes)
+   (boost::boostache::frontend::stache::ast::identifier, name)
+   (boost::boostache::frontend::stache::ast::node_list, nodes)
 )
 
 #endif

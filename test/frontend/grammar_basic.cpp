@@ -3,9 +3,9 @@
 
 #define BOOST_SPIRIT_NO_PREDEFINED_TERMINALS
 
-#include <boost/boostache/frontend/stache_ast.hpp>
-#include <boost/boostache/frontend/stache_grammar_def.hpp>
-#include <boost/boostache/frontend/stache_printer.hpp>
+#include <boost/boostache/frontend/stache/ast.hpp>
+#include <boost/boostache/frontend/stache/grammar_def.hpp>
+#include <boost/boostache/frontend/stache/printer.hpp>
 
 #include <boost/spirit/include/qi_char_class.hpp>
 #include <boost/spirit/include/qi_parse.hpp>
@@ -18,9 +18,9 @@ namespace qi = boost::spirit::qi;
 int main()
 {
    typedef std::string::iterator iterator_t;
-   typedef fe::stache_grammar<iterator_t> grammar_t;
+   typedef fe::stache::grammar<iterator_t> grammar_t;
 
-   fe::ast::stache_node_list ast;
+   fe::stache::ast::node_list ast;
    grammar_t grammar;
 
    std::string input( "Hello world \n"
@@ -42,11 +42,11 @@ int main()
    if( qi::phrase_parse( iter, iter_end
                        , grammar
                        , qi::space_type()
-                       , ast ) )
-//		)  && (iter == iter_end))
+                       , ast )
+       && (iter == iter_end))
    {
       std::cout << "parse succeeded" << std::endl;
-      fe::ast::print(std::cout, ast);
+      fe::stache::ast::print(std::cout, ast);
    }
    else
    {

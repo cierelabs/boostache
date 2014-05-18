@@ -10,9 +10,8 @@
 #ifndef BOOST_BOOSTACHE_FRONT_END_STACHE_GRAMMAR_DEF_HPP
 #define BOOST_BOOSTACHE_FRONT_END_STACHE_GRAMMAR_DEF_HPP
 
-#include <boost/boostache/frontend/stache_ast_adapted.hpp>
-#include <boost/boostache/frontend/stache_skipper_def.hpp>
-#include <boost/boostache/frontend/stache_grammar.hpp>
+#include <boost/boostache/frontend/stache/ast_adapted.hpp>
+#include <boost/boostache/frontend/stache/grammar.hpp>
 
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/qi_action.hpp>
@@ -33,14 +32,14 @@
 #include <boost/spirit/include/qi_sequence.hpp>
 #include <boost/spirit/include/support_argument.hpp>
 
-namespace boost { namespace boostache { namespace frontend
+namespace boost { namespace boostache { namespace frontend { namespace stache
 {
    namespace qi = boost::spirit::qi;
    namespace spirit = boost::spirit;
 
    template <typename Iterator>
-   stache_grammar<Iterator>::stache_grammar()
-      : stache_grammar::base_type(node_list)
+   grammar<Iterator>::grammar()
+      : grammar::base_type(node_list)
    {
       spirit::_1_type _1;
       spirit::_a_type _a;
@@ -127,6 +126,6 @@ namespace boost { namespace boostache { namespace frontend
          >> "}}"
          ;
    };
-}}}
+}}}}
 
 #endif

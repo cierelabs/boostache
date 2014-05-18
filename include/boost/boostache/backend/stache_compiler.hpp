@@ -15,7 +15,7 @@
 
 namespace boost { namespace boostache { namespace backend
 {
-   inline vm::ast::node compile(frontend::ast::stache_node const & ast)
+   inline vm::ast::node compile(frontend::stache::ast::root const & ast)
    {
       return stache_compiler::compile(ast);
    }

@@ -2,9 +2,9 @@
 // will be removed
 //
 #include <boost/spirit/include/qi.hpp>
-#include <boost/boostache/frontend/stache_ast.hpp>
-#include <boost/boostache/frontend/stache_grammar_def.hpp>
-#include <boost/boostache/frontend/stache_printer.hpp>
+#include <boost/boostache/frontend/stache/ast.hpp>
+#include <boost/boostache/frontend/stache/grammar_def.hpp>
+#include <boost/boostache/frontend/stache/printer.hpp>
 #include <boost/boostache/backend/stache_compiler.hpp>
 #include <boost/boostache/vm/printer.hpp>
 #include <iostream>
@@ -17,9 +17,9 @@ namespace qi = boost::spirit::qi;
 int main()
 {
    typedef std::string::iterator iterator_t;
-   typedef fe::stache_grammar<iterator_t> grammar_t;
+   typedef fe::stache::grammar<iterator_t> grammar_t;
 
-   fe::ast::stache_node_list ast;
+   fe::stache::ast::root ast;
    grammar_t grammar;
 
    std::string input( "Hello world \n"
@@ -44,7 +44,7 @@ int main()
    {
       std::cout << "parse succeeded" << std::endl;
       std::cout << "------------------------------" << std::endl;
-      fe::ast::print(std::cout, ast);
+      fe::stache::ast::print(std::cout, ast);
       std::cout << "------------------------------" << std::endl;
       std::cout << std::endl;
       std::cout << "compile" << std::endl;
