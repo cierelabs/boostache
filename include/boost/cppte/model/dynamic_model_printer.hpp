@@ -29,7 +29,9 @@ namespace detail
 struct empty_model {};
 struct root_parent_printer {};
 
-typedef boost::function<void (front_end::ast::variable const &v)> parent_lookup_type;
+typedef boost::function<
+            void (const front_end::ast::variable &v)
+        > parent_lookup_type;
 
 template <typename model_type>
 class dynamic_model_printer
@@ -37,9 +39,10 @@ class dynamic_model_printer
 public:
     typedef void result_type;
 
-    dynamic_model_printer(std::ostream& out,
+    dynamic_model_printer(std::ostream &out,
                           const model_type &model,
-                          parent_lookup_type parent_lookup = parent_lookup_type())
+                          parent_lookup_type parent_lookup
+                          = parent_lookup_type())
         : out(out), model(model), parent_lookup(parent_lookup)
     {}
 
@@ -58,14 +61,14 @@ public:
         out << "WHOA! we have an undefined" << std::endl;
     }
 
-    void operator()(front_end::ast::literal_text const &v) const
+    void operator()(const front_end::ast::literal_text &v) const
     {
         out << v;
     }
 
-    void operator()(front_end::ast::variable const &v) const;
+    void operator()(const front_end::ast::variable &v) const;
 
-    void operator()(front_end::ast::section const &v) const;
+    void operator()(const front_end::ast::section &v) const;
 
 private:
     std::ostream &out;
@@ -105,7 +108,7 @@ private:
 struct section_range_sink: public boost::noncopyable
 {
     section_range_sink(std::ostream &out,
-                       front_end::ast::section const &v,
+                       const front_end::ast::section &v,
                        detail::parent_lookup_type parent_lookup
                        = detail::parent_lookup_type())
         : out(out), v(v), printed(false), parent_lookup(parent_lookup)
@@ -115,11 +118,12 @@ struct section_range_sink: public boost::noncopyable
     void operator()(const submodel_range_type &submodels)
     {
         printed = true;
-        if (!v.is_inverted) {
+        if (!v.is_inverted)
+        {
             for (const auto &submodel: submodels)
             {
                 auto submodel_printer = make_printer(submodel);
-                for( const auto& node : v.nodes)
+                for (const auto &node: v.nodes)
                 {
                     boost::apply_visitor(submodel_printer, node);
                 }
@@ -129,7 +133,7 @@ struct section_range_sink: public boost::noncopyable
         else if (v.is_inverted && boost::empty(submodels))
         {
             auto submodel_printer = make_printer(detail::empty_model());
-            for( const auto& node : v.nodes)
+            for(const auto &node: v.nodes)
             {
                 boost::apply_visitor(submodel_printer, node);
             }
@@ -177,8 +181,8 @@ void get_variable_value(const model_type &,
                         variable_sink &)
 {
     throw std::runtime_error("you should write specialization for "
-                             "get_variable_value for type: "
-                             + std::string(typeid(model_type).name()));
+                             "get_variable_value(" + key + ") for type: "
+                             + typeid(model_type).name());
 }
 
 template <typename model_type>
@@ -187,13 +191,13 @@ void get_section_value(const model_type &,
                 section_range_sink &)
 {
     throw std::runtime_error("you should write specialization for "
-                             "get_section_value for type: "
-                             + std::string(typeid(model_type).name()));
+                             "get_section_value(" + key + ") for type: "
+                             + typeid(model_type).name());
 }
 
 template <typename model_type>
 void detail::dynamic_model_printer<model_type>::operator()
-    (front_end::ast::variable const &v) const
+    (const front_end::ast::variable &v) const
 {
     variable_sink sink(out, v);
     get_variable_value(model, v.value, sink);
@@ -206,7 +210,7 @@ void detail::dynamic_model_printer<model_type>::operator()
 
 template <typename model_type>
 void detail::dynamic_model_printer<model_type>::operator()
-    (front_end::ast::section const &v) const
+    (const front_end::ast::section &v) const
 {
     section_range_sink sink(out, v, make_parent_lookup(this));
     get_section_value<model_type>(model, v.name, sink);
