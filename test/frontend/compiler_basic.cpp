@@ -2,16 +2,16 @@
 // will be removed
 //
 #include <boost/spirit/include/qi.hpp>
-#include <boost/cppte/frontend/stache_ast.hpp>
-#include <boost/cppte/frontend/stache_grammar_def.hpp>
-#include <boost/cppte/frontend/stache_printer.hpp>
-#include <boost/cppte/backend/stache_compiler.hpp>
-#include <boost/cppte/vm/printer.hpp>
+#include <boost/boostache/frontend/stache_ast.hpp>
+#include <boost/boostache/frontend/stache_grammar_def.hpp>
+#include <boost/boostache/frontend/stache_printer.hpp>
+#include <boost/boostache/backend/stache_compiler.hpp>
+#include <boost/boostache/vm/printer.hpp>
 #include <iostream>
 
 
-namespace fe = boost::cppte::front_end;
-namespace vm = boost::cppte::vm;
+namespace fe = boost::boostache::frontend;
+namespace vm = boost::boostache::vm;
 namespace qi = boost::spirit::qi;
 
 int main()
@@ -49,7 +49,7 @@ int main()
       std::cout << std::endl;
       std::cout << "compile" << std::endl;
       std::cout << "------------------------------" << std::endl;
-      auto engine_ast = boost::cppte::backend::compile(ast);
+      auto engine_ast = boost::boostache::backend::compile(ast);
       std::cout << "------------------------------" << std::endl;
       std::cout << std::endl;
       std::cout << "print engine_ast" << std::endl;

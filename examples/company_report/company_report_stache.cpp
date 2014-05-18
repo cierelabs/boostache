@@ -1,6 +1,6 @@
-#include <boost/cppte/frontend/stache_model.hpp>
-#include <boost/cppte/frontend/stache_model_printer.hpp>
-#include <boost/cppte/simple_parser.hpp>
+#include <boost/boostache/frontend/stache_model.hpp>
+#include <boost/boostache/frontend/stache_model_printer.hpp>
+#include <boost/boostache/simple_parser.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -10,26 +10,26 @@
 #include <map>
 #include <list>
 
-using namespace boost::cppte::front_end;
+using namespace boost::boostache::frontend;
 
 namespace
 {
-        std::string print(const ast::stache_root& ast, const stache_model& model)
-        {
-                std::ostringstream out;
-                boost::cppte::front_end::ast::print(out, ast, model);
-                return out.str();
-        }
+   std::string print(const ast::stache_root& ast, const stache_model& model)
+   {
+      std::ostringstream out;
+      boost::boostache::frontend::ast::print(out, ast, model);
+      return out.str();
+   }
 
-        ast::stache_root parse(const std::string& text)
-        {
-                ast::stache_root ast;
-                if( !boost::simple_parse_template(text, ast) )
-                {
-                        throw std::runtime_error("Parse failed");
-                }
-                return ast;
-        }
+   ast::stache_root parse(const std::string& text)
+   {
+      ast::stache_root ast;
+      if( !boost::simple_parse_template(text, ast) )
+      {
+         throw std::runtime_error("Parse failed");
+      }
+      return ast;
+   }
 }
 
 
@@ -51,50 +51,49 @@ std::string report =
 
 int main(int argc, char* argv[])
 {
-	using std::cout;
+   using std::cout;
 
-	if (argc>1)
-	{
-		std::ifstream source(argv[1], std::ios::binary);
-		std::vector<char> data((std::istreambuf_iterator<char>(source)),
-			std::istreambuf_iterator<char>());
-		report.assign(data.begin(), data.end());
-	}
+   if (argc>1)
+   {
+      std::ifstream source(argv[1], std::ios::binary);
+      std::vector<char> data((std::istreambuf_iterator<char>(source)),
+                             std::istreambuf_iterator<char>());
+      report.assign(data.begin(), data.end());
+   }
 
-	stache_model company;
+   stache_model company;
 
-	company["NAME"] = "BigCorp";
-	company["YEAR FOUNDED"] = "1999";
-	company["YEARS"] = stache_model_vector { stache_model { { "DIVISIONS", stache_model_vector {
-		stache_model {
-			{ "Name", "R&D" },
-			{ "BUDGET", "1000000" },
-			{ "EMPLOYEES", stache_model_vector {
-				stache_model{ { "NAME", "JOE" }, { "EMPLOYEE ID", "1" }, { "SALARY", "10000" } },
-				stache_model{ { "NAME", "Sally" }, { "EMPLOYEE ID", "2" }, { "SALARY", "12000" } },
-				},
-			},
-		},
-		stache_model {
-			{ "NAME", "Finance" },
-			{ "BUDGET", "200000" },
-			{ "EMPLOYEES", stache_model_vector {
-				stache_model{ { "NAME", "Betty" }, { "EMPLOYEE ID", "5" }, { "SALARY", "8000" } },
-				stache_model{ { "NAME", "Jim" }, { "EMPLOYEE ID", "8" }, { "SALARY", "12000" } }, 
-				},
-			},
-		},
-		stache_model {
-			{ "NAME", "HiddenDivision", },
-			{ "EMPLOYEES", stache_model_vector {
-				},
-			},
-		}
-	}}}};
+   company["NAME"] = "BigCorp";
+   company["YEAR FOUNDED"] = "1999";
+   company["YEARS"] = stache_model_vector { stache_model { { "DIVISIONS", stache_model_vector {
+               stache_model {
+                  { "Name", "R&D" },
+                  { "BUDGET", "1000000" },
+                  { "EMPLOYEES", stache_model_vector {
+                        stache_model{ { "NAME", "JOE" }, { "EMPLOYEE ID", "1" }, { "SALARY", "10000" } },
+                        stache_model{ { "NAME", "Sally" }, { "EMPLOYEE ID", "2" }, { "SALARY", "12000" } },
+                     },
+                  },
+               },
+               stache_model {
+                  { "NAME", "Finance" },
+                  { "BUDGET", "200000" },
+                  { "EMPLOYEES", stache_model_vector {
+                        stache_model{ { "NAME", "Betty" }, { "EMPLOYEE ID", "5" }, { "SALARY", "8000" } },
+                        stache_model{ { "NAME", "Jim" }, { "EMPLOYEE ID", "8" }, { "SALARY", "12000" } }, 
+                     },
+                  },
+               },
+               stache_model {
+                  { "NAME", "HiddenDivision", },
+                  { "EMPLOYEES", stache_model_vector {
+                     },
+                  },
+               }
+            }}}};
 
-	ast::stache_root ast = parse(report);
-	cout<<print(ast, company)<<"\n";
-
+   ast::stache_root ast = parse(report);
+   cout<<print(ast, company)<<"\n";
 }
 
 

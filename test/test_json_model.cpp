@@ -13,15 +13,15 @@
 #define BOOST_TEST_MAIN
 
 #include <boost/test/unit_test.hpp>
-#include <boost/cppte/simple_parser.hpp>
-#include <boost/cppte/model/dynamic_model_printer.hpp>
+#include <boost/boostache/simple_parser.hpp>
+#include <boost/boostache/model/dynamic_model_printer.hpp>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
 #include "test_utils.hpp"
 
-namespace boost { namespace cppte { namespace model
+namespace boost { namespace boostache { namespace model
 {
 
 template <>
@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE(test_json_simple_value)
 {
     // prepare model
     namespace bpt = boost::property_tree;
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     bpt::ptree model;
     model.put("NAME", "Muchomurka");
 
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(test_json_simple_int_value)
 {
     // prepare model
     namespace bpt = boost::property_tree;
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     bpt::ptree model;
     model.put("NUMBER", 3);
 
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(test_json_parent_variable)
 {
     // prepare model
     namespace bpt = boost::property_tree;
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     bpt::ptree model;
     model.put("EXCLAMATION", "!");
     model.put("MUSHROOMS.NAME", "Muchomurka Zelena");
@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE(test_json_single_obj_as_section)
 {
     // prepare model
     namespace bpt = boost::property_tree;
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     bpt::ptree model;
     model.put("MUSHROOMS.NAME", "Muchomurka Zelena");
 
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(test_json_single_empty_obj_as_section)
 {
     // prepare model
     namespace bpt = boost::property_tree;
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     bpt::ptree model;
     bpt::ptree empty;
     model.add_child("MUSHROOMS", empty);
@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE(test_json_array_as_section)
 {
     // prepare model
     namespace bpt = boost::property_tree;
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     bpt::ptree model;
 
     bpt::ptree mushrooms;
@@ -181,7 +181,7 @@ BOOST_AUTO_TEST_CASE(test_json_single_obj_as_inv_section)
 {
     // prepare model
     namespace bpt = boost::property_tree;
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     bpt::ptree model;
 
     // parse template
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(test_json_single_obj_as_inv_empty_section)
 {
     // prepare model
     namespace bpt = boost::property_tree;
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     bpt::ptree model;
     bpt::ptree empty;
     model.add_child("MUSHROOMS", empty);
@@ -220,7 +220,7 @@ BOOST_AUTO_TEST_CASE(test_json_single_obj_as_inv_empty_section)
 BOOST_AUTO_TEST_CASE(test_json_section_printing)
 {
     namespace bpt = boost::property_tree;
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     bpt::ptree model;
     model.put("USER.NAME", "Bob");
     model.put("USER.LOCATION", "Earth");

@@ -3,16 +3,16 @@
 
 #define BOOST_SPIRIT_NO_PREDEFINED_TERMINALS
 
-#include <boost/cppte/frontend/stache_ast.hpp>
-#include <boost/cppte/frontend/stache_grammar_def.hpp>
-#include <boost/cppte/frontend/stache_printer.hpp>
+#include <boost/boostache/frontend/stache_ast.hpp>
+#include <boost/boostache/frontend/stache_grammar_def.hpp>
+#include <boost/boostache/frontend/stache_printer.hpp>
 
 #include <boost/spirit/include/qi_char_class.hpp>
 #include <boost/spirit/include/qi_parse.hpp>
 
 #include <iostream>
 
-namespace fe = boost::cppte::front_end;
+namespace fe = boost::boostache::frontend;
 namespace qi = boost::spirit::qi;
 
 int main()

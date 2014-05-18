@@ -16,8 +16,8 @@
 #include <unordered_map>
 
 #include <boost/test/unit_test.hpp>
-#include <boost/cppte/frontend/stache_model.hpp>
-#include <boost/cppte/model/dynamic_model_printer.hpp>
+#include <boost/boostache/frontend/stache_model.hpp>
+#include <boost/boostache/model/dynamic_model_printer.hpp>
 
 #include "test_utils.hpp"
 
@@ -38,7 +38,7 @@ typedef std::map<std::string, user> map_of_users;
 
 } // namespace
 
-namespace boost { namespace cppte { namespace model
+namespace boost { namespace boostache { namespace model
 {
 
 template <>
@@ -90,7 +90,7 @@ void get_section_value(const map_of_users &model,
 
 BOOST_AUTO_TEST_CASE(test_simple_value)
 {
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     map_of_strings model;
     model["NAME"] = "Boosties";
     bfe::ast::stache_root ast = parse("Hello, {{NAME}}!");
@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(test_simple_value)
 
 BOOST_AUTO_TEST_CASE(test_section_printing)
 {
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     user bob;
     bob.name = "Bob";
     bob.location = "Earth";
