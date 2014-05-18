@@ -24,7 +24,7 @@ namespace
    ast::stache_root parse(const std::string& text)
    {
       ast::stache_root ast;
-      if( !boost::simple_parse_template(text, ast) )
+      if( !boost::boostache::simple_parse_template(text, ast) )
       {
          throw std::runtime_error("Parse failed");
       }
