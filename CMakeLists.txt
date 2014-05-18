@@ -11,7 +11,7 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DBOOST_SPIRIT_USE_PHOENIX_V3
 macro(add_boost_test name source)
 add_executable(${name} ${source})
 target_include_directories(${name} PRIVATE ${Boost_INCLUDE_DIRS})
-target_link_libraries(${name} boost_cppte ${Boost_LIBRARIES})
+target_link_libraries(${name} boost_boostache ${Boost_LIBRARIES})
 add_test(${name} ${name})
 endmacro(add_boost_test)
 

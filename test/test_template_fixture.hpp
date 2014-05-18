@@ -1,14 +1,14 @@
 #pragma once
 
-#include <boost/cppte/frontend/stache_ast.hpp>
-#include <boost/cppte/frontend/stache_model.hpp>
-#include <boost/cppte/frontend/stache_model_printer.hpp>
-#include <boost/cppte/simple_parser.hpp>
+#include <boost/boostache/frontend/stache_ast.hpp>
+#include <boost/boostache/frontend/stache_model.hpp>
+#include <boost/boostache/frontend/stache_model_printer.hpp>
+#include <boost/boostache/simple_parser.hpp>
 
 #include <map>
 #include <string>
 
-using namespace boost::cppte::front_end;
+using namespace boost::boostache::frontend;
 
 struct TemplateFixture
 {
@@ -22,13 +22,13 @@ public:
 
    std::string generate_template()
    {
-      boost::cppte::front_end::ast::stache_root ast;
-      if( !boost::cppte::simple_parse_template(template_string, ast) )
+      boost::boostache::frontend::ast::stache_root ast;
+      if( !boost::boostache::simple_parse_template(template_string, ast) )
       {
          throw std::runtime_error("Parse failed");
       }
       std::ostringstream out;
-      boost::cppte::front_end::ast::print(out, ast, model);
+      boost::boostache::frontend::ast::print(out, ast, model);
       result = out.str();
       return result;
    }
@@ -50,7 +50,7 @@ public:
 
    void add_section_item(const std::string& section_tag, const object_t& item)
    {
-      auto model_item = boost::cppte::front_end::stache_model { };
+      auto model_item = boost::boostache::frontend::stache_model { };
       for (auto& x : item)
       {
          model_item[x.first] = x.second;
@@ -66,7 +66,7 @@ public:
    {
    }
 
-   boost::cppte::front_end::stache_model model;
+   boost::boostache::frontend::stache_model model;
 
    std::string result;
    std::string template_string;

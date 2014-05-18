@@ -11,16 +11,16 @@
 #define BOOST_TEST_MAIN
 
 #include <boost/test/unit_test.hpp>
-#include <boost/cppte/simple_parser.hpp>
-#include <boost/cppte/model/dynamic_model_printer.hpp>
-#include <boost/cppte/model/default_adapter.hpp>
+#include <boost/boostache/simple_parser.hpp>
+#include <boost/boostache/model/dynamic_model_printer.hpp>
+#include <boost/boostache/model/default_adapter.hpp>
 
 #include "test_utils.hpp"
 
 BOOST_AUTO_TEST_CASE(test_default_simple_value)
 {
     // prepare model
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     bfe::stache_model model;
     model["NAME"] = std::string("Muchomurka");
 
@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(test_default_simple_value)
 //{
 //    // prepare model
 //    namespace bpt = boost::property_tree;
-//    namespace bfe = boost::cppte::front_end;
+//    namespace bfe = boost::boostache::frontend;
 //    bpt::ptree model;
 //    model.put("NUMBER", 3);
 //
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(test_default_simple_value)
 BOOST_AUTO_TEST_CASE(test_parent_variable)
 {
     // prepare model
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     bfe::stache_model model;
     model["EXCLAMATION"] = std::string("!");
 
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(test_parent_variable)
 BOOST_AUTO_TEST_CASE(test_single_obj_as_section)
 {
     // prepare model
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     bfe::stache_model model;
 
     bfe::stache_model mushroom;
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(test_single_obj_as_section)
 BOOST_AUTO_TEST_CASE(test_array_as_section)
 {
     // prepare model
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     bfe::stache_model model;
 
     bfe::stache_model_vector mushrooms;
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE(test_array_as_section)
 BOOST_AUTO_TEST_CASE(test_single_obj_as_inv_section)
 {
     // prepare model
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     bfe::stache_model model;
 
     // parse template
@@ -146,7 +146,7 @@ BOOST_AUTO_TEST_CASE(test_single_obj_as_inv_section)
 BOOST_AUTO_TEST_CASE(test_single_obj_as_inv_empty_section)
 {
     // prepare model
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     bfe::stache_model model;
     bfe::stache_model_vector mushrooms;
     model["MUSHROOMS"] = mushrooms;
@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE(test_single_obj_as_inv_empty_section)
 
 BOOST_AUTO_TEST_CASE(test_section_printing)
 {
-    namespace bfe = boost::cppte::front_end;
+    namespace bfe = boost::boostache::frontend;
     bfe::stache_model model;
 
     bfe::stache_model user;

@@ -29,7 +29,7 @@ project boostache_test
 
 
 {
-    test-suite boostache/front_end :
+    test-suite boostache/frontend :
 
     [ run adapt_test.cpp ]
     [ run grammar_basic.cpp ]

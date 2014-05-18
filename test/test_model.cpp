@@ -1,25 +1,25 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
-#include <boost/cppte/frontend/stache_model.hpp>
-#include <boost/cppte/frontend/stache_model_printer.hpp>
-#include <boost/cppte/simple_parser.hpp>
+#include <boost/boostache/frontend/stache_model.hpp>
+#include <boost/boostache/frontend/stache_model_printer.hpp>
+#include <boost/boostache/simple_parser.hpp>
 
-using namespace boost::cppte::front_end;
+using namespace boost::boostache::frontend;
 
 namespace
 {
    std::string print(const ast::stache_node_list& ast, const stache_model& model)
    {
       std::ostringstream out;
-      boost::cppte::front_end::ast::print(out, ast, model);
+      boost::boostache::frontend::ast::print(out, ast, model);
       return out.str();
    }
 
    ast::stache_root parse(const std::string& text)
    {
       ast::stache_root ast;
-      if( !boost::cppte::simple_parse_template(text, ast) )
+      if( !boost::boostache::simple_parse_template(text, ast) )
       {
          throw std::runtime_error("Parse failed");
       }
