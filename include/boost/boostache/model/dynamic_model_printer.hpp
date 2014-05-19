@@ -18,7 +18,7 @@
 #include <boost/function.hpp>
 
 #include <boost/variant/apply_visitor.hpp>
-#include <boost/boostache/frontend/stache_ast.hpp>
+#include <boost/boostache/frontend/stache/ast.hpp>
 
 namespace boost { namespace boostache { namespace model
 {
@@ -26,10 +26,12 @@ namespace boost { namespace boostache { namespace model
 namespace detail
 {
 
+namespace fe = boost::boostache::frontend;
+
 struct empty_model {};
 struct root_parent_printer {};
 
-typedef boost::function<void (frontend::ast::variable const &v)> parent_lookup_type;
+   typedef boost::function<void (fe::stache::ast::variable const &v)> parent_lookup_type;
 
 template <typename model_type>
 class dynamic_model_printer
@@ -43,29 +45,29 @@ public:
         : out(out), model(model), parent_lookup(parent_lookup)
     {}
 
-    void operator()(frontend::ast::comment) const
+    void operator()(fe::stache::ast::comment) const
     {
         // just ignore comments
     }
 
-    void operator()(frontend::ast::partial) const
+    void operator()(fe::stache::ast::partial) const
     {
         // FIXME: implement me please
     }
 
-    void operator()(frontend::ast::undefined) const
+    void operator()(fe::stache::ast::undefined) const
     {
         out << "WHOA! we have an undefined" << std::endl;
     }
 
-    void operator()(frontend::ast::literal_text const &v) const
+    void operator()(fe::stache::ast::literal_text const &v) const
     {
         out << v;
     }
 
-    void operator()(frontend::ast::variable const &v) const;
+    void operator()(fe::stache::ast::variable const &v) const;
 
-    void operator()(frontend::ast::section const &v) const;
+    void operator()(fe::stache::ast::section const &v) const;
 
 private:
     std::ostream &out;
@@ -76,14 +78,14 @@ private:
 template <typename printer_type>
 parent_lookup_type make_parent_lookup(printer_type *printer)
 {
-    return [printer] (const frontend::ast::variable &v) { (*printer)(v);};
+    return [printer] (const fe::stache::ast::variable &v) { (*printer)(v);};
 }
 
 } // namespace detail
 
 struct variable_sink: public boost::noncopyable
 {
-    variable_sink(std::ostream &out, frontend::ast::variable const &v)
+    variable_sink(std::ostream &out, frontend::stache::ast::variable const &v)
         : out(out), v(v), printed(false)
     {}
 
@@ -98,14 +100,14 @@ struct variable_sink: public boost::noncopyable
 
 private:
     std::ostream &out;
-    const frontend::ast::variable &v;
+    const frontend::stache::ast::variable &v;
     bool printed;
 };
 
 struct section_range_sink: public boost::noncopyable
 {
     section_range_sink(std::ostream &out,
-                       frontend::ast::section const &v,
+                       frontend::stache::ast::section const &v,
                        detail::parent_lookup_type parent_lookup
                        = detail::parent_lookup_type())
         : out(out), v(v), printed(false), parent_lookup(parent_lookup)
@@ -163,7 +165,7 @@ struct section_range_sink: public boost::noncopyable
 
 private:
     std::ostream &out;
-    const frontend::ast::section &v;
+    const frontend::stache::ast::section &v;
     bool printed;
     detail::parent_lookup_type parent_lookup;
 };
@@ -193,7 +195,7 @@ void get_section_value(const model_type &,
 
 template <typename model_type>
 void detail::dynamic_model_printer<model_type>::operator()
-    (frontend::ast::variable const &v) const
+    (frontend::stache::ast::variable const &v) const
 {
     variable_sink sink(out, v);
     get_variable_value(model, v.value, sink);
@@ -206,7 +208,7 @@ void detail::dynamic_model_printer<model_type>::operator()
 
 template <typename model_type>
 void detail::dynamic_model_printer<model_type>::operator()
-    (frontend::ast::section const &v) const
+    (frontend::stache::ast::section const &v) const
 {
     section_range_sink sink(out, v, make_parent_lookup(this));
     get_section_value<model_type>(model, v.name, sink);
@@ -220,11 +222,11 @@ void detail::dynamic_model_printer<model_type>::operator()
 
 template <typename model_type>
 void print(std::ostream &out,
-           const frontend::ast::stache_root &root,
+           const frontend::stache::ast::root &root,
            const model_type &model)
 {
     // HACK - make the stache_root into a section
-    frontend::ast::section section;
+    frontend::stache::ast::section section;
     section.is_inverted = false;
     section.nodes = root;
     section_range_sink sink(out, section);

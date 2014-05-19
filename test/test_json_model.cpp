@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(test_json_simple_value)
     model.put("NAME", "Muchomurka");
 
     // parse template
-    bfe::ast::stache_root ast = parse(
+    bfe::stache::ast::root ast = parse(
             "Amanita in czech is {{NAME}}");
 
     // render and check
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(test_json_simple_int_value)
     model.put("NUMBER", 3);
 
     // parse template
-    bfe::ast::stache_root ast = parse(
+    bfe::stache::ast::root ast = parse(
             "{{NUMBER}} is three");
 
     // render and check
@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE(test_json_parent_variable)
     model.put("MUSHROOMS.NAME", "Muchomurka Zelena");
 
     // parse template
-    bfe::ast::stache_root ast = parse(
+    bfe::stache::ast::root ast = parse(
             "{{#MUSHROOMS}}{{NAME}}{{EXCLAMATION}}\n{{/MUSHROOMS}}");
 
     // render and check
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(test_json_single_obj_as_section)
     model.put("MUSHROOMS.NAME", "Muchomurka Zelena");
 
     // parse template
-    bfe::ast::stache_root ast = parse(
+    bfe::stache::ast::root ast = parse(
             "{{#MUSHROOMS}}{{NAME}}\n{{/MUSHROOMS}}");
 
     // render and check
@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE(test_json_single_empty_obj_as_section)
     model.add_child("MUSHROOMS", empty);
 
     // parse template
-    bfe::ast::stache_root ast = parse(
+    bfe::stache::ast::root ast = parse(
             "{{#MUSHROOMS}}{{NAME}}\n{{/MUSHROOMS}}");
 
     // render and check
@@ -167,7 +167,7 @@ BOOST_AUTO_TEST_CASE(test_json_array_as_section)
     model.add_child("MUSHROOMS", mushrooms);
 
     // parse template
-    bfe::ast::stache_root ast = parse(
+    bfe::stache::ast::root ast = parse(
             "{{#MUSHROOMS}}{{NAME}}\n{{/MUSHROOMS}}");
 
     // render and check
@@ -185,7 +185,7 @@ BOOST_AUTO_TEST_CASE(test_json_single_obj_as_inv_section)
     bpt::ptree model;
 
     // parse template
-    bfe::ast::stache_root ast = parse(
+    bfe::stache::ast::root ast = parse(
             "{{#MUSHROOMS}}{{NAME}}\n{{/MUSHROOMS}}"
             "{{^MUSHROOMS}}No mushrooms\n{{/MUSHROOMS}}"
             );
@@ -206,7 +206,7 @@ BOOST_AUTO_TEST_CASE(test_json_single_obj_as_inv_empty_section)
     model.add_child("MUSHROOMS", empty);
 
     // parse template
-    bfe::ast::stache_root ast = parse(
+    bfe::stache::ast::root ast = parse(
             "{{#MUSHROOMS}}{{NAME}}\n{{/MUSHROOMS}}"
             "{{^MUSHROOMS}}No mushrooms\n{{/MUSHROOMS}}"
             );
@@ -238,7 +238,7 @@ BOOST_AUTO_TEST_CASE(test_json_section_printing)
 
     model.add_child("USER.FAVORITES", fs);
 
-    bfe::ast::stache_root ast = parse(
+    bfe::stache::ast::root ast = parse(
             "{{#USER}}"
             "user.name={{NAME}}\n"
             "user.location={{LOCATION}}\n"

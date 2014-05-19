@@ -3,26 +3,19 @@
 
 #define BOOST_SPIRIT_NO_PREDEFINED_TERMINALS
 
-#include <boost/boostache/frontend/stache/ast.hpp>
+#include <boost/boostache/frontend/parse.hpp>
+#include <boost/boostache/stache.hpp>
 #include <boost/boostache/frontend/stache/grammar_def.hpp>
 #include <boost/boostache/frontend/stache/printer.hpp>
 
-#include <boost/spirit/include/qi_char_class.hpp>
-#include <boost/spirit/include/qi_parse.hpp>
-
 #include <iostream>
 
-namespace fe = boost::boostache::frontend;
-namespace qi = boost::spirit::qi;
+namespace boostache = boost::boostache;
+namespace fe = boostache::frontend;
+using boostache::frontend::parse;
 
 int main()
 {
-   typedef std::string::iterator iterator_t;
-   typedef fe::stache::grammar<iterator_t> grammar_t;
-
-   fe::stache::ast::node_list ast;
-   grammar_t grammar;
-
    std::string input( "Hello world \n"
                       "{{name}} is here.\n"
                       "{{& escaped_name}} is here\n"
@@ -36,22 +29,10 @@ int main()
                       "{{> partial}}\n"
       );
 
-   iterator_t iter = input.begin();
-   iterator_t iter_end = input.end();
+   auto iter = input.begin();
 
-   if( qi::phrase_parse( iter, iter_end
-                       , grammar
-                       , qi::space_type()
-                       , ast )
-       && (iter == iter_end))
-   {
-      std::cout << "parse succeeded" << std::endl;
-      fe::stache::ast::print(std::cout, ast);
-   }
-   else
-   {
-      std::cout << "parse failed" << std::endl;
-   }
+   auto ast = parse<boostache::format::stache>(iter,input.end());
+   fe::stache::ast::print(std::cout, ast);
 
    return -1;
 }

@@ -16,7 +16,7 @@
 #include <unordered_map>
 
 #include <boost/test/unit_test.hpp>
-#include <boost/boostache/frontend/stache_model.hpp>
+#include <boost/boostache/model/stache_model.hpp>
 #include <boost/boostache/model/dynamic_model_printer.hpp>
 
 #include "test_utils.hpp"
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(test_simple_value)
     namespace bfe = boost::boostache::frontend;
     map_of_strings model;
     model["NAME"] = "Boosties";
-    bfe::ast::stache_root ast = parse("Hello, {{NAME}}!");
+    bfe::stache::ast::root ast = parse("Hello, {{NAME}}!");
     std::string result = print(ast, model);
     BOOST_CHECK_EQUAL("Hello,"
             " "
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE(test_section_printing)
     bob.favorites.back()["MUSIC"] = "Classical";
     map_of_users model;
     model["USER"] = bob;
-    bfe::ast::stache_root ast = parse(
+    bfe::stache::ast::root ast = parse(
             "{{#USER}}"
             "user.name={{NAME}}\n"
             "user.location={{LOCATION}}\n"

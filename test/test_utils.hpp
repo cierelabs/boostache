@@ -12,7 +12,7 @@
 #include <boost/boostache/model/dynamic_model_printer.hpp>
 
 template <typename model_type> inline
-std::string print(const boost::boostache::frontend::ast::stache_root &ast,
+std::string print(const boost::boostache::frontend::stache::ast::root &ast,
                   const model_type &model)
 {
     std::ostringstream out;
@@ -20,9 +20,9 @@ std::string print(const boost::boostache::frontend::ast::stache_root &ast,
     return out.str();
 }
 
-inline boost::boostache::frontend::ast::stache_root parse(const std::string &text)
+inline boost::boostache::frontend::stache::ast::root parse(const std::string &text)
 {
-    boost::boostache::frontend::ast::stache_root ast;
+    boost::boostache::frontend::stache::ast::root ast;
     if( !boost::boostache::simple_parse_template(text, ast) )
     {
         throw std::runtime_error("Parse failed");

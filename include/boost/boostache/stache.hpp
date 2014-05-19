@@ -10,16 +10,19 @@
 #ifndef BOOST_BOOSTACHE_FRONT_END_STACHE_HPP
 #define BOOST_BOOSTACHE_FRONT_END_STACHE_HPP
 
-#include <stache_grammar.hpp>
-#include <stache_ast.hpp>
+#include <boost/boostache/frontend/stache/grammar.hpp>
+#include <boost/boostache/frontend/stache/ast.hpp>
+#include <boost/spirit/include/qi_char_class.hpp>
 
 namespace boost { namespace boostache { namespace format
 {
    struct stache
    {
-      typedef stach::grammar grammar_t;
-      typedef stach::skipper skipper_t;
-      typedef stach::ast ast_t;
+      template <typename Iterator>
+      using grammar_t = frontend::stache::grammar<Iterator>;
+
+      using ast_t = frontend::stache::ast::root;
+      using skipper_t = boost::spirit::qi::space_type;
    };
 }}}
 

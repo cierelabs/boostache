@@ -1,8 +1,8 @@
 #pragma once
 
-#include <boost/boostache/frontend/stache_ast.hpp>
-#include <boost/boostache/frontend/stache_model.hpp>
-#include <boost/boostache/frontend/stache_model_printer.hpp>
+#include <boost/boostache/frontend/stache/ast.hpp>
+#include <boost/boostache/model/stache_model.hpp>
+#include <boost/boostache/model/stache_model_printer.hpp>
 #include <boost/boostache/simple_parser.hpp>
 
 #include <map>
@@ -22,7 +22,7 @@ public:
 
    std::string generate_template()
    {
-      boost::boostache::frontend::ast::stache_root ast;
+      boost::boostache::frontend::stache::ast::root ast;
       if( !boost::boostache::simple_parse_template(template_string, ast) )
       {
          throw std::runtime_error("Parse failed");

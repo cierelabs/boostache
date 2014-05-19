@@ -1,27 +1,26 @@
 // file used during initial dev
 // will be removed
 //
-#include <boost/spirit/include/qi.hpp>
-#include <boost/boostache/frontend/stache/ast.hpp>
+#define BOOST_SPIRIT_NO_PREDEFINED_TERMINALS
+
+#include <boost/boostache/frontend/parse.hpp>
+#include <boost/boostache/stache.hpp>
 #include <boost/boostache/frontend/stache/grammar_def.hpp>
 #include <boost/boostache/frontend/stache/printer.hpp>
+
 #include <boost/boostache/backend/stache_compiler.hpp>
 #include <boost/boostache/vm/printer.hpp>
 #include <iostream>
 
 
-namespace fe = boost::boostache::frontend;
-namespace vm = boost::boostache::vm;
-namespace qi = boost::spirit::qi;
+namespace boostache = boost::boostache;
+namespace fe = boostache::frontend;
+namespace vm = boostache::vm;
+using boostache::frontend::parse;
+
 
 int main()
 {
-   typedef std::string::iterator iterator_t;
-   typedef fe::stache::grammar<iterator_t> grammar_t;
-
-   fe::stache::ast::root ast;
-   grammar_t grammar;
-
    std::string input( "Hello world \n"
                       "{{name}} is here.\n"
                       "{{& escaped_name}} is here\n"
@@ -33,33 +32,22 @@ int main()
                       "{{/foo}} done.\n"
       );
 
-   iterator_t iter = input.begin();
-   iterator_t iter_end = input.end();
+   auto iter = input.begin();
 
-   if( qi::phrase_parse( iter, iter_end
-                       , grammar
-                       , qi::space_type()
-                       , ast
-          ) )
-   {
-      std::cout << "parse succeeded" << std::endl;
-      std::cout << "------------------------------" << std::endl;
-      fe::stache::ast::print(std::cout, ast);
-      std::cout << "------------------------------" << std::endl;
-      std::cout << std::endl;
-      std::cout << "compile" << std::endl;
-      std::cout << "------------------------------" << std::endl;
-      auto engine_ast = boost::boostache::backend::compile(ast);
-      std::cout << "------------------------------" << std::endl;
-      std::cout << std::endl;
-      std::cout << "print engine_ast" << std::endl;
-      vm::ast::print(std::cout,engine_ast);
-      std::cout << "------------------------------" << std::endl;
-   }
-   else
-   {
-      std::cout << "parse failed" << std::endl;
-   }
+   auto ast = parse<boostache::format::stache>(iter,input.end());
+
+   std::cout << "------------------------------" << std::endl;
+   fe::stache::ast::print(std::cout, ast);
+   std::cout << "------------------------------" << std::endl;
+   std::cout << std::endl;
+   std::cout << "compile" << std::endl;
+   std::cout << "------------------------------" << std::endl;
+   auto engine_ast = boost::boostache::backend::compile(ast);
+   std::cout << "------------------------------" << std::endl;
+   std::cout << std::endl;
+   std::cout << "print engine_ast" << std::endl;
+   vm::ast::print(std::cout,engine_ast);
+   std::cout << "------------------------------" << std::endl;
 
    return -1;
 }

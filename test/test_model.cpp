@@ -1,24 +1,25 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
-#include <boost/boostache/frontend/stache_model.hpp>
-#include <boost/boostache/frontend/stache_model_printer.hpp>
+#include <boost/boostache/model/stache_model.hpp>
+#include <boost/boostache/model/stache_model_printer.hpp>
 #include <boost/boostache/simple_parser.hpp>
 
 using namespace boost::boostache::frontend;
 
 namespace
 {
-   std::string print(const ast::stache_node_list& ast, const stache_model& model)
+   std::string print( const stache::ast::root& ast
+                    , const stache_model& model)
    {
       std::ostringstream out;
       boost::boostache::frontend::ast::print(out, ast, model);
       return out.str();
    }
 
-   ast::stache_root parse(const std::string& text)
+   stache::ast::root parse(const std::string& text)
    {
-      ast::stache_root ast;
+      stache::ast::root ast;
       if( !boost::boostache::simple_parse_template(text, ast) )
       {
          throw std::runtime_error("Parse failed");
@@ -46,7 +47,7 @@ BOOST_AUTO_TEST_CASE(test_simple_model_formatting)
 {
    stache_model model;
    model["NAME"] = "Boosties";
-   ast::stache_root ast = parse("Hello, {{NAME}}!");
+   stache::ast::root ast = parse("Hello, {{NAME}}!");
    std::string result = print(ast, model);
    BOOST_CHECK_EQUAL("Hello, Boosties!", result);
 }
@@ -74,7 +75,7 @@ BOOST_AUTO_TEST_CASE(test_section_printing)
          }
       }
    };
-   ast::stache_root ast = parse(
+   stache::ast::root ast = parse(
       "{{#USER}}"
       "user.name={{NAME}}\n"
       "user.location={{LOCATION}}\n"
@@ -98,13 +99,13 @@ BOOST_AUTO_TEST_CASE(test_section_printing)
 
 BOOST_AUTO_TEST_CASE(test_inversion_on_empty_model_simple)
 {
-   ast::stache_root ast = parse("{{^entries}}No entries found!\n{{/entries}}");
+   stache::ast::root ast = parse("{{^entries}}No entries found!\n{{/entries}}");
    BOOST_CHECK_EQUAL("No entries found!\n", print(ast, stache_model()));
 }
 
 BOOST_AUTO_TEST_CASE(test_mixed_inversion_on_empty_model)
 {
-   ast::stache_root ast = parse(
+   stache::ast::root ast = parse(
       "{{#entries}}Have entry with value {{value}}\n{{/entries}}"
       "{{^entries}}No entries found!\n{{/entries}}");
 
@@ -113,7 +114,7 @@ BOOST_AUTO_TEST_CASE(test_mixed_inversion_on_empty_model)
 
 BOOST_AUTO_TEST_CASE(test_non_empty_model_simple)
 {
-   ast::stache_root ast = parse("{{#entries}}Have entry with value {{value}}\n{{/entries}}");
+   stache::ast::root ast = parse("{{#entries}}Have entry with value {{value}}\n{{/entries}}");
 
    stache_model model = {
       { "entries", stache_model_vector {
@@ -131,7 +132,7 @@ BOOST_AUTO_TEST_CASE(test_non_empty_model_simple)
 
 BOOST_AUTO_TEST_CASE(test_mixed_inversion_on_non_empty_model)
 {
-   ast::stache_root ast = parse(
+   stache::ast::root ast = parse(
       "{{#entries}}Have entry with value {{value}}\n{{/entries}}"
       "{{^entries}}No entries found!\n{{/entries}}");
 
