@@ -15,7 +15,7 @@ namespace boost
       {
          typedef std::function<std::string()> stache_string_function;
          typedef std::function<bool()> stache_bool_function;
-         
+
          typedef boost::make_recursive_variant<
             std::string,
             stache_string_function,

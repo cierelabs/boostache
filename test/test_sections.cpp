@@ -20,8 +20,8 @@ BOOST_FIXTURE_TEST_CASE(TestSectionsMustache, TemplateFixture)
 
    set_tag_value("name", "Daniel");
    set_tag_value("pet", "turtles");
-   set_tag_value("showme", "true");
-   set_tag_value("dontshowme", "false");
+   set_tag_value("showme", true);
+   set_tag_value("dontshowme", false);
 
    generate_template();
 

@@ -15,45 +15,9 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/boostache/simple_parser.hpp>
 #include <boost/boostache/model/dynamic_model_printer.hpp>
-
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
+#include <boost/boostache/model/property_tree_adapter.hpp>
 
 #include "test_utils.hpp"
-
-namespace boost { namespace boostache { namespace model
-{
-
-template <>
-void get_variable_value(const boost::property_tree::ptree &model,
-                        const std::string &key,
-                        variable_sink &sink)
-{
-    auto ivar = model.find(key);
-    if (ivar != model.not_found()) sink(ivar->second.data());
-}
-
-template <>
-void get_section_value(const boost::property_tree::ptree &model,
-                       const std::string &key,
-                       section_range_sink &sink)
-{
-    auto isubmodel = model.find(key);
-    if (isubmodel != model.not_found())
-    {
-        auto &submodel = isubmodel->second;
-        if (!submodel.empty())
-        {
-            // in terms of property tree nodes with empty key are array
-            // entries so pass them directly into printer otherwise create
-            // temporary array
-            if (submodel.front().first.empty()) sink(submodel);
-            else sink(std::array<decltype(&submodel), 1>{{&submodel}});
-        }
-    }
-}
-
-}}}
 
 BOOST_AUTO_TEST_CASE(test_json_simple_value)
 {
@@ -248,8 +212,6 @@ BOOST_AUTO_TEST_CASE(test_json_section_printing)
             "{{/FAVORITES}}"
             "{{/USER}}");
 
-    // FIXME! Whitespace!
-    // Should have a trailing newline on all of these lines.
     BOOST_CHECK_EQUAL(
             "user.name=Bob\n"
             "user.location=Earth\n"
