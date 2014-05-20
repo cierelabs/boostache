@@ -7,16 +7,20 @@
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 #ifndef BOOST_BOOSTACHE_VM_GENERATE_HPP
-#ifndef BOOST_BOOSTACHE_VM_GENERATE_HPP
+#define BOOST_BOOSTACHE_VM_GENERATE_HPP
+
+#include <boost/boostache/vm/detail/engine_visitor.hpp>
 
 namespace boost { namespace boostache { namespace vm
 {
-
-   template <typename Stream, typename Context, typename Template>
-   void generate(Stream & stream, Template const & , Context const & context)
-   {}
-
+   template <typename Stream, typename Template, typename Context>
+   void generate( Stream & stream
+                , Template const & templ
+                , Context const & context)
+   {
+      vm::detail::engine_visitor_base<Stream,Context> engine(stream,context);
+      engine(templ);
+   }
 }}}
-
 
 #endif

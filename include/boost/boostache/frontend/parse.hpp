@@ -15,6 +15,8 @@
 #define BOOST_BOOSTACHE_FRONT_END_TAGS_HPP
 
 #include <boost/spirit/include/qi_parse.hpp>
+#include <boost/spirit/include/support_istream_iterator.hpp>
+#include <iostream>
 
 namespace boost { namespace boostache { namespace frontend
 {
@@ -24,8 +26,7 @@ namespace boost { namespace boostache { namespace frontend
       typename Format::ast_t ast;
       typename Format::template grammar_t<Iterator> grammar;
       
-      // what shall we do with a parser error?
-      // what shall we do if the input isn't fully parsed?
+      // TODO mjc : should throw with parse error location
       if(!boost::spirit::qi::phrase_parse( begin, end
                                          , grammar
                                          , typename Format::skipper_t{}
@@ -35,7 +36,17 @@ namespace boost { namespace boostache { namespace frontend
       }
       return ast;
    }
+
+
+   template <typename Format>
+   typename Format::ast_t parse(std::istream& input)
+   {
+      // TODO mjc : store/restor ios state?
+      //input.unset(std::ios::skipws);
+
+      return parse<Format>( boost::spirit::istream_iterator(input)
+                          , boost::spirit::istream_iterator() );
+   }
 }}}
 
 #endif
-
