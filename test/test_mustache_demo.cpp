@@ -27,8 +27,8 @@ BOOST_FIXTURE_TEST_CASE(TestMultipleMustacheFromString, TemplateFixture)
 
 	set_tag_value("header", "Colors");
 	set_tag_value("empty", false);
-	auto visible = []() { return true; };
-	add_section_item("items", { { "name", "red" }, { "first", visible }, { "url", "#Red" } });
+        std::function<bool()> visible = []() { return true; };
+        add_section_item("items", { { "name", "red" }, { "first", visible }, { "url", "#Red" } });
 	add_section_item("items", { { "name", "green" }, { "link", visible }, { "url", "#Green" } });
 	add_section_item("items", { { "name", "blue" }, { "link", visible }, { "url", "#Blue" } });
 

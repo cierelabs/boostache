@@ -14,13 +14,15 @@
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/boostache/frontend/stache/ast.hpp>
 
-namespace boost { namespace boostache { namespace frontend { namespace ast
+namespace boost { namespace boostache { namespace model { namespace ast
 {
    namespace detail
    {
+      namespace fe = boost::boostache::frontend;
+
       template <typename visitor>
       void apply_visitor_to_root( const visitor& v
-                                , std::vector<stache::ast::node> const & root)
+                                , std::vector<fe::stache::ast::node> const & root)
       {
          for( const auto& node : root )
          {
@@ -65,17 +67,17 @@ namespace boost { namespace boostache { namespace frontend { namespace ast
             , parent(parent)
          {}
 
-         void operator()(stache::ast::undefined) const
+         void operator()(fe::stache::ast::undefined) const
          {
             out << "WHOA! we have an undefined" << std::endl;
          }
 
-         void operator()(stache::ast::literal_text const & v) const
+         void operator()(fe::stache::ast::literal_text const & v) const
          {
             out << v;
          }
 
-         void operator()(stache::ast::variable const & v) const
+         void operator()(fe::stache::ast::variable const & v) const
          {
             // TODO: Escaping.
             if( auto location = lookup(v.value) )
@@ -85,17 +87,17 @@ namespace boost { namespace boostache { namespace frontend { namespace ast
             }
          }
 
-         void operator()(const stache::ast::comment& c) const
+         void operator()(const fe::stache::ast::comment& c) const
          {
             // Nothing to do.
          }
 
-         void operator()(const stache::ast::partial& p) const
+         void operator()(const fe::stache::ast::partial& p) const
          {
             // TODO:  Something.
          }
 
-         void operator()(stache::ast::section const & v) const
+         void operator()(fe::stache::ast::section const & v) const
          {
             const stache_variant* location = lookup(v.name);
             bool positive = have_value(location);
@@ -180,7 +182,7 @@ namespace boost { namespace boostache { namespace frontend { namespace ast
    }
 
    inline void print( std::ostream& out
-                    , stache::ast::root const & root
+                    , frontend::stache::ast::root const & root
                     , stache_model const & model)
    {
       detail::stache_model_printer p(out, model);

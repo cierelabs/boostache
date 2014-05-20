@@ -6,6 +6,11 @@
 #include <boost/boostache/simple_parser.hpp>
 
 using namespace boost::boostache::frontend;
+using boost::boostache::model::stache_model;
+using boost::boostache::model::stache_model_vector;
+using boost::boostache::model::stache_string_function;
+using boost::boostache::model::stache_bool_function;
+
 
 namespace
 {
@@ -13,7 +18,7 @@ namespace
                     , const stache_model& model)
    {
       std::ostringstream out;
-      boost::boostache::frontend::ast::print(out, ast, model);
+      boost::boostache::model::ast::print(out, ast, model);
       return out.str();
    }
 

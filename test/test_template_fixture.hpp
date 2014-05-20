@@ -7,8 +7,9 @@
 
 #include <map>
 #include <string>
+#include <initializer_list>
 
-using namespace boost::boostache::frontend;
+using namespace boost::boostache::model;
 
 struct TemplateFixture
 {
@@ -28,7 +29,7 @@ public:
          throw std::runtime_error("Parse failed");
       }
       std::ostringstream out;
-      boost::boostache::frontend::ast::print(out, ast, model);
+      boost::boostache::model::ast::print(out, ast, model);
       result = out.str();
       return result;
    }
@@ -46,11 +47,11 @@ public:
       model[tag] = [=]() { return b; };
    }
 
-   typedef stache_model object_t;
+   typedef boost::boostache::model::stache_model object_t;
 
    void add_section_item(const std::string& section_tag, const object_t& item)
    {
-      auto model_item = boost::boostache::frontend::stache_model { };
+      auto model_item = boost::boostache::model::stache_model { };
       for (auto& x : item)
       {
          model_item[x.first] = x.second;
@@ -66,7 +67,7 @@ public:
    {
    }
 
-   boost::boostache::frontend::stache_model model;
+   boost::boostache::model::stache_model model;
 
    std::string result;
    std::string template_string;
