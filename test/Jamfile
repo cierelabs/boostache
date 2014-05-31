@@ -48,7 +48,6 @@ lib simple_parse
    ;
 
     test-suite boostache/core :
-      [ run simple_generate_test.cpp ]
       [ run test_simple_parser.cpp simple_parse ]
       [ run test_model.cpp simple_parse simple_parse ]
       [ run test_dynamic_model.cpp simple_parse ]

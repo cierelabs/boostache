@@ -14,7 +14,7 @@
 #include <boost/boostache/model/stache_model.hpp>
 #include <boost/boostache/model/helper.hpp>
 #include <iostream>
-#include <strstream>
+#include <sstream>
 
 namespace bstache = boost::boostache;
 namespace extn =  bstache::extension;
@@ -73,19 +73,19 @@ int main()
    std::function<bool()> false_ = [](){return false;};
    std::function<bool()> true_  = [](){return true;};
 
-   //bstache::model::stache_model data = {{"name","Jeff"},{"whoot","yipee"},{"bar",false_},{"foo",true_}};
-   bstache::model::stache_model data = {
-      {"name","Jeff"},
-      {"whoot","yipee"},
-      {"bar",false_},
-      {"foo",{
-            {{"whoot","yipee 1"}},
-            {{"whoot","yipee 2"}},
-            {{"whoot","yipee 3"}},
-            {{"whoot","yipee 4"}},
-         }
-      }
-   };
+   bstache::model::stache_model data = {{"name","Jeff"},{"whoot","yipee"},{"bar",false_},{"foo",true_}};
+   // bstache::model::stache_model data = {
+   //    {"name","Jeff"},
+   //    {"whoot","yipee"},
+   //    {"bar",false_}
+   //    // {"foo",{
+   //    //       {{"whoot","yipee 1"}},
+   //    //       {{"whoot","yipee 2"}},
+   //    //       {{"whoot","yipee 3"}},
+   //    //       {{"whoot","yipee 4"}},
+   //    //    }
+   //    }
+   // };
    // ------------------------------------------------------------------
 
 
@@ -100,7 +100,7 @@ int main()
    // ------------------------------------------------------------------
    // Apply the compiled template and the data model to the generate
    // method
-   std::ostringstream stream;
+   std::stringstream stream;
    bstache::generate(stream, templ, data);
    // ------------------------------------------------------------------
 
