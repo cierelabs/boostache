@@ -20,10 +20,11 @@ project boostache_test
         <source>/boost//unit_test_framework
         <toolset>gcc:<cxxflags>-std=c++0x
         <toolset>gcc:<cxxflags>-ftemplate-depth-512
-        <toolset>clang:<cxxflags>-std=c++1y
+        <toolset>clang:<cxxflags>-std=c++11
         <toolset>clang:<cxxflags>-ftemplate-depth-512
-        <toolset>darwin:<cxxflags>-std=c++1y
+        <toolset>darwin:<cxxflags>-std=c++11
         <toolset>darwin:<cxxflags>-ftemplate-depth-512
+	<target-os>darwin:<toolset>clang:<cxxflags>-stdlib=libc++
 	<define>BOOST_TEST_DYN_LINK
     :
     :
@@ -35,19 +36,19 @@ lib simple_parse
 	;
 
 {
-    test-suite boostache/frontend :
+   test-suite boostache/frontend :
        [ run frontend/grammar_basic.cpp ]
        [ run frontend/compiler_basic.cpp ]
-   ;
+    ;
 
-    test-suite boostache/model :
+   test-suite boostache/model :
        [ run model/traits.cpp ]
        [ run model/unwrap_variant.cpp ]
    ;
 
-#    test-suite boostache/core :
+   test-suite boostache/core :
+      [ run test_model.cpp simple_parse simple_parse ]
 #      [ run test_simple_parser.cpp simple_parse ]
-#      [ run test_model.cpp simple_parse simple_parse ]
 #      [ run test_dynamic_model.cpp simple_parse ]
 #      [ run test_json_model.cpp simple_parse ]
 #      [ run test_collections.cpp simple_parse ]
@@ -59,7 +60,6 @@ lib simple_parse
 #      [ run test_change_delimiter.cpp simple_parse ]
 #      [ run test_inverted_sections.cpp simple_parse ]
 #      [ run test_mustache_demo.cpp simple_parse ]
-#   ;
-
+   ;
 
 }
