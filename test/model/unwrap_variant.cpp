@@ -11,12 +11,11 @@
 
 #include <boost/variant/variant.hpp>
 #include <boost/spirit/include/support_extended_variant.hpp>
-#include <boost/boostache/model/unwrap_variant.hpp>
+#include <boost/boostache/model/helper.hpp>
 #include <iostream>
 #include <string>
 #include <map>
 
-#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 

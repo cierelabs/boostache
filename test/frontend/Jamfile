@@ -31,7 +31,6 @@ project boostache_test
 {
     test-suite boostache/frontend :
 
-    [ run adapt_test.cpp ]
     [ run grammar_basic.cpp ]
     [ run compiler_basic.cpp ]
 

@@ -1,6 +1,13 @@
-// file used during initial development
-// will be removed
-
+/**
+ *  \file frontend/grammar_basic.cpp
+ *
+ *  Copyright 2014 Michael Caisse : ciere.com
+ *
+ *  Basic stache gramar test
+ *
+ *  Distributed under the Boost Software License, Version 1.0. (See accompanying
+ *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
 #define BOOST_SPIRIT_NO_PREDEFINED_TERMINALS
 
 #include <boost/boostache/frontend/parse.hpp>
@@ -8,13 +15,17 @@
 #include <boost/boostache/frontend/stache/grammar_def.hpp>
 #include <boost/boostache/frontend/stache/printer.hpp>
 
-#include <iostream>
+#include <sstream>
+#include <string>
+
+#define BOOST_TEST_MAIN
+#include <boost/test/unit_test.hpp>
 
 namespace boostache = boost::boostache;
 namespace fe = boostache::frontend;
 using boostache::frontend::parse;
 
-int main()
+BOOST_AUTO_TEST_CASE(stache_parse_test)
 {
    std::string input( "Hello world \n"
                       "{{name}} is here.\n"
@@ -30,10 +41,26 @@ int main()
       );
 
    auto iter = input.begin();
-
    auto ast = parse<boostache::format::stache>(iter,input.end());
-   fe::stache::ast::print(std::cout, ast);
 
-   return -1;
+   // we expect everything got parsed
+   BOOST_CHECK(iter==input.end());
+
+   std::stringstream stream;
+   fe::stache::ast::print(stream, ast);
+
+   std::string expected( "Hello world \n"
+                         "{{name}} is here.\n"
+                         "{{&escaped_name}} is here\n"
+                         "{{#foo}}\n"
+                         "Some cool section {{whoot}} is {{foo}} {{bar}} here.\n"
+                         "{{/foo}} done.\n"
+                         "{{^bar}}\n"
+                         "Some cool empty section {{&whoot}} is here.\n"
+                         "{{/bar}} done.\n"
+                         "{{>partial}}\n"
+      );
+
+   BOOST_CHECK_EQUAL(expected,stream.str());
 }
 

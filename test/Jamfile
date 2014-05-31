@@ -36,10 +36,8 @@ lib simple_parse
 
 {
     test-suite boostache/frontend :
-       [ run frontend/adapt_test.cpp ]
        [ run frontend/grammar_basic.cpp ]
        [ run frontend/compiler_basic.cpp ]
-
    ;
 
     test-suite boostache/model :
@@ -47,22 +45,21 @@ lib simple_parse
        [ run model/unwrap_variant.cpp ]
    ;
 
-    test-suite boostache/core :
-      [ run test_simple_parser.cpp simple_parse ]
-      [ run test_model.cpp simple_parse simple_parse ]
-      [ run test_dynamic_model.cpp simple_parse ]
-      [ run test_json_model.cpp simple_parse ]
-      [ run test_collections.cpp simple_parse ]
-      [ run test_html_escape.cpp simple_parse ]
-      [ run test_multiple.cpp simple_parse ]
-      [ run test_nested_sections.cpp simple_parse ]
-      [ run test_partials.cpp simple_parse ]
-      [ run test_sections.cpp simple_parse ]
-      [ run test_change_delimiter.cpp simple_parse ]
-      [ run test_inverted_sections.cpp simple_parse ]
-      [ run test_mustache_demo.cpp simple_parse ]
-
-   ;
+#    test-suite boostache/core :
+#      [ run test_simple_parser.cpp simple_parse ]
+#      [ run test_model.cpp simple_parse simple_parse ]
+#      [ run test_dynamic_model.cpp simple_parse ]
+#      [ run test_json_model.cpp simple_parse ]
+#      [ run test_collections.cpp simple_parse ]
+#      [ run test_html_escape.cpp simple_parse ]
+#      [ run test_multiple.cpp simple_parse ]
+#      [ run test_nested_sections.cpp simple_parse ]
+#      [ run test_partials.cpp simple_parse ]
+#      [ run test_sections.cpp simple_parse ]
+#      [ run test_change_delimiter.cpp simple_parse ]
+#      [ run test_inverted_sections.cpp simple_parse ]
+#      [ run test_mustache_demo.cpp simple_parse ]
+#   ;
 
 
 }

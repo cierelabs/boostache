@@ -13,7 +13,6 @@
 #include <boost/spirit/include/support_extended_variant.hpp>
 #include <boost/boostache/vm/traits.hpp>
 
-#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
