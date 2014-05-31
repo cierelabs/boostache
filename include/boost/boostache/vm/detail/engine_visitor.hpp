@@ -13,7 +13,7 @@
 
 ////////// some test hackery ////////////////////////
 
-namespace boost { namespace boostache { namespace model { namespace customization
+namespace boost { namespace boostache { namespace extension
 {
    template <typename Stream, typename Object>
    void render(Stream & stream, Object const & v)
@@ -21,16 +21,12 @@ namespace boost { namespace boostache { namespace model { namespace customizatio
       stream << v;
    }
 
+   template <typename T>
+   bool test(std::string const & name, T const & context);
 
-   // template <typename Stream, typename Context>
-   // void render(Stream & stream, Context const & v, std::string const & name);
-   // {
-   //    stream << "name{" << name << "} : " << v;
-   // }
-
-   template <typename Context>
-   bool test(std::string const & name, Context const & c);
-}}}}
+   template< typename Stream, typename T >
+   void render(Stream & stream, T const & context, std::string const & name);
+}}}
 
 /////////////////////////////////////////////////////
 
@@ -53,7 +49,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
 
       void operator()(ast::literal const & v) const
       {
-         using boost::boostache::model::customization::render;
+         using boost::boostache::extension::render;
          render(stream,v.value);
       }
 
@@ -62,7 +58,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
 
       void operator()(ast::render const & v) const
       {
-         using boost::boostache::model::customization::render;
+         using boost::boostache::extension::render;
          render(stream,context,v.name);
       }
 
@@ -72,7 +68,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
 
       void operator()(ast::if_then_else const & v) const
       {
-         using boost::boostache::model::customization::test;
+         using boost::boostache::extension::test;
 
          if(test(v.condition_.name,context))
          {

@@ -42,6 +42,11 @@ lib simple_parse
 
    ;
 
+    test-suite boostache/model :
+       [ run model/traits.cpp ]
+       [ run model/unwrap_variant.cpp ]
+   ;
+
     test-suite boostache/core :
       [ run simple_generate_test.cpp ]
       [ run test_simple_parser.cpp simple_parse ]

@@ -12,105 +12,42 @@
 #include <boost/boostache/frontend/stache/grammar_def.hpp> // need to work out header only syntax
 #include <boost/boostache/stache.hpp>
 #include <boost/boostache/model/stache_model.hpp>
+#include <boost/boostache/model/helper.hpp>
 #include <iostream>
 #include <strstream>
 
 namespace bstache = boost::boostache;
+namespace extn =  bstache::extension;
 
-// ----------------------------------------
-// The following specializations allow
-// the engine to understand how to handle
-// our model::stache_model type.
-//
-// Extending is simply a matter of supplying
-// the render and test methods that can be
-// found via ADL.
-// ----------------------------------------
-namespace boost { namespace boostache { namespace model
+
+
+namespace boost { namespace boostache { namespace extension
 {
-   struct print_value
+   template <typename T>
+   struct render_category<std::vector<T>> 
+      : mpl::identity<unused_attribute>
+   {};
+
+   template <typename T>
+   bool test( std::string const & name, std::function<T()> const & context
+            , extn::plain_attribute)
    {
-      typedef void result_type;
-      print_value(std::ostream & s) : stream(s) {}
-
-      template <typename T>
-      void operator()(T const &) const
-      {}
-
-      void operator()(std::string const & v) const
-      {
-         stream << v;
-      }
-
-      void operator()(model::stache_variant const & v) const
-      {
-         boost::apply_visitor(*this, v);
-      }
-
-   private:
-      std::ostream & stream;
-   };
-
-   template <typename Stream>
-   inline void render(Stream & stream, stache_model const & context, std::string const & name)
-   {
-      auto iter = context.find(name);
-      if(iter != context.end())
-      {
-         print_value printer(stream);
-         printer(iter->second);
-      }
+      return test(name,context());
    }
 
-   struct test_value
+   template< typename Stream
+           , typename T       >
+   void render( Stream & stream, std::function<T()> const & context, std::string const & name
+              , extn::plain_attribute)
    {
-      typedef bool result_type;
-
-      template <typename T>
-      bool operator()(T const &) const
-      {
-         return false;
-      }
-
-      bool operator()(std::string const &) const
-      {
-         return true;
-      }
-
-      bool operator()(model::stache_model_vector const & v) const
-      {
-         return !v.empty();
-      }
-
-      bool operator()(model::stache_model const & v) const
-      {
-         return !v.empty();
-      }
-
-      bool operator()(model::stache_bool_function const & v) const
-      {
-         return v();
-      }
-
-      bool operator()(model::stache_variant const & v) const
-      {
-         return boost::apply_visitor(*this, v);
-      }
-   };
-
-   bool test(std::string const & name, stache_model const & context)
-   {
-      auto iter = context.find(name);
-      if(iter != context.end())
-      {
-         test_value tester;
-         return tester(iter->second);
-      }
-      return false;
+      render(stream,context(),name);
    }
 }}}
+
+
 // ----------------------------------------
 // ----------------------------------------
+
 
 
 
@@ -136,7 +73,19 @@ int main()
    std::function<bool()> false_ = [](){return false;};
    std::function<bool()> true_  = [](){return true;};
 
-   bstache::model::stache_model data = {{"name","Jeff"},{"whoot","yipee"},{"bar",false_},{"foo",true_}};
+   //bstache::model::stache_model data = {{"name","Jeff"},{"whoot","yipee"},{"bar",false_},{"foo",true_}};
+   bstache::model::stache_model data = {
+      {"name","Jeff"},
+      {"whoot","yipee"},
+      {"bar",false_},
+      {"foo",{
+            {{"whoot","yipee 1"}},
+            {{"whoot","yipee 2"}},
+            {{"whoot","yipee 3"}},
+            {{"whoot","yipee 4"}},
+         }
+      }
+   };
    // ------------------------------------------------------------------
 
 
@@ -148,7 +97,6 @@ int main()
    auto templ = bstache::load_template<bstache::format::stache>(iter,input.end());
    // ------------------------------------------------------------------
 
-   
    // ------------------------------------------------------------------
    // Apply the compiled template and the data model to the generate
    // method

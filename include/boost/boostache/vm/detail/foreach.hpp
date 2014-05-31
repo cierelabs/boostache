@@ -36,9 +36,16 @@ void generate(Stream & stream, Template const & templ, Context const & context)
 
 namespace boost { namespace boostache
 {
-   template <typename T>
+   template < typename T
+            , typename Enable = void>
    struct supports_foreach : boost::mpl::identity<boost::mpl::false_>
    {};
+
+   template < typename T
+            , typename Enable = decltype(begin(T{})) >
+   struct supports_foreach<T,Enable> : boost::mpl::identity<boost::mpl::true_>
+   {};
+
 }}
 
 
