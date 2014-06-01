@@ -21,3 +21,12 @@ http://mail-lists.crystalclearsoftware.com/listinfo.cgi/liaw2014-crystalclearsof
 Build
 ==============
 See build/readme.md
+
+Build Status
+==============
+
+Platform     | Build Result
+------------ | -------------
+Linux Clang  | ![clang build result](https://bamboo.cierecloud.com/plugins/servlet/buildStatusImage/BSTCH-FMC)
+Linux GCC    | ![gcc build result](https://bamboo.cierecloud.com/plugins/servlet/buildStatusImage/BSTCH-MAS)
+
