@@ -12,10 +12,8 @@
 #include <boost/optional.hpp>
 #include <boost/boostache/vm/traits.hpp>
 #include <boost/boostache/model/category.hpp>
+#include <boost/boostache/model/render_traits.hpp>
 #include <type_traits>
-#include <map>
-#include <vector>
-
 
 
 namespace boost { namespace boostache { namespace extension
@@ -65,6 +63,19 @@ namespace boost { namespace boostache { namespace extension
       if(iter!=context.end())
       {
          render(std::forward<Stream>(stream),iter->second,name);
+      }
+   }
+
+
+   template< typename Stream
+           , typename T
+           >
+   void render( Stream && stream, T const & context, std::string const & name
+              , container_attribute)
+   {
+      for(auto const & item : context)
+      {
+         render(std::forward<Stream>(stream),item,name);
       }
    }
 

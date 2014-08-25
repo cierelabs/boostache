@@ -18,18 +18,25 @@
 
 namespace boost { namespace boostache { namespace model
 {
-   typedef std::function<std::string()> stache_string_function;
-   typedef std::function<bool()> stache_bool_function;
+   struct stache_variant;
+
+   using stache_string_function = std::function<std::string()>;
+   using stache_bool_function = std::function<bool()>;
+   using stache_model_vector = std::vector<stache_variant>;
+   using stache_model = std::map<std::string, stache_variant>;
+
 
    struct stache_variant : boost::spirit::extended_variant<
-        std::string
+        bool
+      , std::string
       , stache_string_function
       , stache_bool_function
-      , boost::recursive_wrapper<std::vector<stache_variant> >
-      , boost::recursive_wrapper<std::map<std::string, stache_variant> >
+      , stache_model_vector
+      , stache_model
       >
    {
       stache_variant() : base_type() {}
+      stache_variant(bool rhs) : base_type(rhs) {}
       stache_variant(std::string const & rhs) : base_type(rhs) {}
       stache_variant(const char * rhs) : base_type(std::string{rhs}) {}
       stache_variant(stache_string_function const & rhs) : base_type(rhs) {}
@@ -47,8 +54,4 @@ namespace boost { namespace boostache { namespace model
          return *this;
       }
    };
-
-   typedef std::vector<stache_variant> stache_model_vector;
-   typedef std::map<std::string, stache_variant> stache_model;
-
 }}}

@@ -37,11 +37,10 @@ namespace boost { namespace boostache { namespace extension
    struct render_category<std::map<std::string,T>>
       : mpl::identity<associative_attribute> {};
 
-   // template <typename T>
-   // struct render_category<T,
-   //                        typename enable_if<traits::is_container<T>>::type>
-   //    : mpl::identity<container_attribute> {};
-
+   template <typename T>
+   struct render_category<T,
+                          typename enable_if<vm::trait::has_begin<T>>::type>
+      : mpl::identity<container_attribute> {};
 }}}
 
 #endif

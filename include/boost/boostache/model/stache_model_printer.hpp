@@ -41,6 +41,10 @@ namespace boost { namespace boostache { namespace model { namespace ast
          {
             return f() ? "true" : "false";
          }
+         std::string operator()(const bool v) const
+         {
+            return v ? "true" : "false";
+         }
          std::string operator()(const std::string& s) const
          {
             return s;

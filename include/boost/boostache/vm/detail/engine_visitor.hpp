@@ -10,6 +10,8 @@
 #define BOOST_BOOSTACHE_VM_DETAIL_ENGINE_VISITOR_HPP
 
 #include <boost/boostache/vm/engine_ast.hpp>
+#include <boost/boostache/vm/detail/foreach.hpp>
+
 
 ////////// some test hackery ////////////////////////
 
@@ -49,6 +51,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
 
       void operator()(ast::literal const & v) const
       {
+         std::cout << "LITERAL" << std::endl;
          using boost::boostache::extension::render;
          render(stream,v.value);
       }
@@ -58,30 +61,39 @@ namespace boost { namespace boostache { namespace vm { namespace detail
 
       void operator()(ast::render const & v) const
       {
+         std::cout << "RENDER(" << v.name << ")" << std::endl;
          using boost::boostache::extension::render;
          render(stream,context,v.name);
       }
 
       void operator()(ast::for_each const & v) const
       {
+         std::cout << "--> FOREACH(" << v.name << ")" << std::endl;
+         using boost::boostache::vm::detail::foreach;
+         foreach(stream,v,context);
+         std::cout << "<-- FOREACH(" << v.name << ")" << std::endl;
       }
 
       void operator()(ast::if_then_else const & v) const
       {
+         std::cout << "--> IFTHENELSE(" << v.condition_.name << ")" << std::endl;
          using boost::boostache::extension::test;
-
          if(test(v.condition_.name,context))
          {
+            std::cout << "THEN" << std::endl;
             boost::apply_visitor(*this, v.then_);
          }
          else
          {
+            std::cout << "ELSE" << std::endl;
             boost::apply_visitor(*this, v.else_);
          }
+         std::cout << "<-- IFTHENELSE(" << v.condition_.name << ")" << std::endl;
       }
 
       void operator()(ast::node_list const & nodes) const
       {
+         std::cout << "NODELIST" << std::endl;
          for(auto const & node : nodes.nodes)
          {
             boost::apply_visitor(*this, node);
@@ -90,6 +102,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
 
       void operator()(ast::node const & v) const
       {
+         std::cout << "NODE" << std::endl;
          boost::apply_visitor(*this, v);
       }
 

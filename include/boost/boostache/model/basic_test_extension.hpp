@@ -12,10 +12,8 @@
 #include <boost/optional.hpp>
 #include <boost/boostache/vm/traits.hpp>
 #include <boost/boostache/model/category.hpp>
+#include <boost/boostache/model/test_traits.hpp>
 #include <type_traits>
-#include <map>
-#include <vector>
-
 
 
 namespace boost { namespace boostache { namespace extension

@@ -15,6 +15,7 @@ project boostache_examples
         <include>../include
         <source>/boost//headers
         <toolset>gcc:<cxxflags>-std=c++0x
+        <toolset>gcc:<cxxflags>-Wno-unused-local-typedefs
         <toolset>gcc:<cxxflags>-ftemplate-depth-512
         <toolset>clang:<cxxflags>-std=c++1y
         <toolset>clang:<cxxflags>-ftemplate-depth-512
@@ -27,5 +28,9 @@ project boostache_examples
 
 exe simple_generate
    : simple_generate.cpp
+   ;
+
+exe simple_generate2
+   : simple_generate2.cpp
    ;
 

@@ -43,6 +43,14 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
             return vm::ast::render{v.value};
          }
 
+         /**
+          *  In stache, the section is a conditional that then loops over
+          *  the section body for each data member.
+          *
+          *  Stache doesn't have an if-then-else structure... just a
+          *  conditional that will execute the body if the data element
+          *  evaluates to true (or false if marked inverted).
+          */
          vm::ast::node operator()(fe::stache::ast::section const & v) const
          {
             vm::ast::node_list vm_ast;
@@ -51,11 +59,15 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
                vm_ast.nodes.push_back(boost::apply_visitor(*this, node));
             }
 
+            vm::ast::for_each section_body;
+            section_body.name = v.name;
+            section_body.value = vm_ast;
+
             vm::ast::if_then_else if_block;
             if_block.condition_.name = v.name;
 
-            if(v.is_inverted)  { if_block.else_ = vm_ast; }
-            else               { if_block.then_ = vm_ast; }
+            if(v.is_inverted)  { if_block.else_ = section_body; }
+            else               { if_block.then_ = section_body; }
 
             return if_block;
          }

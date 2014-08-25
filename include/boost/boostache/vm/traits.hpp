@@ -31,6 +31,18 @@ namespace boost { namespace boostache { namespace vm { namespace trait
       : mpl::true_ 
    {}; 
 
+   template < typename T
+            , typename Enable=void>
+   struct has_begin
+      : mpl::false_
+   {};
+
+   using std::begin;
+   template < typename T >
+   struct has_begin< T,decltype(begin(T())) >
+      : mpl::true_
+   {};
+
 }}}}
 
 #endif

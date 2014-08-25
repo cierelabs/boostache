@@ -1,6 +1,9 @@
 /**
  *  \file unwrap_variant.hpp
  *
+ *  When the model node is a variant, we need to unwrap it and dispatch
+ *  to the contained data type. This is a helper to do that for us.
+ *
  *  Copyright 2014 Michael Caisse : ciere.com
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying

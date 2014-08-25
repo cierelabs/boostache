@@ -24,6 +24,10 @@ namespace boost { namespace boostache { namespace vm { namespace ast
 
    struct undefined {};
 
+   // TODO : MJC add a select primative that will be
+   //        used to decend a context. For example, in an
+   //        associative for each.
+   // ---------------------------------------------------
 
    struct literal
    {
