@@ -27,8 +27,8 @@ namespace boost { namespace boostache { namespace extension
            , typename T
            , typename Enable = typename std::enable_if<!vm::trait::is_variant<T>::value>::type
            >
-   auto render(Stream && stream, T const & context, std::string const & name, plain_attribute)
-      -> decltype(std::forward<Stream>(stream)<<context)
+   auto render( Stream && stream, T const & context, std::string const & name
+              , plain_attribute) -> decltype(std::forward<Stream>(stream)<<context)
    {
       return (std::forward<Stream>(stream) << context);
    }
