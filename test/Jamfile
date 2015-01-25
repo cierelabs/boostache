@@ -31,10 +31,6 @@ project boostache_test
     ;
 
 
-lib simple_parse
-	: ../boost/boostache/simple_parser.cpp
-	;
-
 {
    test-suite boostache/frontend :
        [ run frontend/grammar_basic.cpp ]
@@ -46,8 +42,8 @@ lib simple_parse
        [ run model/unwrap_variant.cpp ]
    ;
 
-   test-suite boostache/core :
-      [ run test_model.cpp simple_parse simple_parse ]
+#   test-suite boostache/core :
+#      [ run test_model.cpp simple_parse simple_parse ]
 #      [ run test_simple_parser.cpp simple_parse ]
 #      [ run test_dynamic_model.cpp simple_parse ]
 #      [ run test_json_model.cpp simple_parse ]
@@ -60,6 +56,6 @@ lib simple_parse
 #      [ run test_change_delimiter.cpp simple_parse ]
 #      [ run test_inverted_sections.cpp simple_parse ]
 #      [ run test_mustache_demo.cpp simple_parse ]
-   ;
+#   ;
 
 }
