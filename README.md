@@ -11,12 +11,12 @@ Status
 
 This library is starting to get some attention again. Usage, build, and refernce docs coming. Examples too!
 
-The CI status for Master is currently:
+The CI status:
 
-Platform     | Build Result
------------- | -------------
-Linux Clang  | ![clang build result](https://bamboo.cierecloud.com/plugins/servlet/buildStatusImage/BSTCH-FMC)
-Linux GCC    | ![gcc build result](https://bamboo.cierecloud.com/plugins/servlet/buildStatusImage/BSTCH-MAS)
+Platform     | Master          | Develop
+------------ | -------------   | -------------
+Linux Clang  | ![clang build result](https://bamboo.cierecloud.com/plugins/servlet/buildStatusImage/BSTCH-FMC) | ![clang build result](https://bamboo.cierecloud.com/plugins/servlet/buildStatusImage/BSTCH-FMC0)
+Linux GCC    | ![gcc build result](https://bamboo.cierecloud.com/plugins/servlet/buildStatusImage/BSTCH-MAS) | ![gcc build result](https://bamboo.cierecloud.com/plugins/servlet/buildStatusImage/BSTCH-MAS0)
 
 
 History
