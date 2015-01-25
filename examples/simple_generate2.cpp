@@ -1,7 +1,7 @@
 /**
- *  \file load_test.cpp
+ *  \file simple_generate2.cpp
  *
- *  Copyright 2014 Michael Caisse : ciere.com
+ *  Copyright 2014, 2015 Michael Caisse : ciere.com
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -20,18 +20,14 @@
 #include <string>
 #include <map>
 #include <list>
+#include <type_traits>
 
 namespace boost { namespace boostache { namespace extension
 {
-   template <typename T>
-   struct render_category<std::list<T>> 
-      : mpl::identity<container_attribute>
-   {};
-
-   template <typename T>
-   struct test_category<std::list<T>> 
-      : mpl::identity<container_attribute>
-   {};
+   // template <typename T>
+   // struct test_category<std::list<T>> 
+   //    : mpl::identity<container_attribute>
+   // {};
 }}}
 // ---------------------------------------------------------
 

@@ -1,7 +1,7 @@
 /**
  *  \file test_traits.hpp
  *
- *  Copyright 2014 Michael Caisse : ciere.com
+ *  Copyright 2014, 2015 Michael Caisse : ciere.com
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -35,8 +35,15 @@ namespace boost { namespace boostache { namespace extension
       : mpl::identity<container_attribute> {};
 
    template <typename T>
-   struct test_category<std::vector<T> >
-      : mpl::identity<container_attribute> {};
+   struct test_category< T
+                       , typename std::enable_if<
+                            vm::trait::has_begin<
+                               typename vm::trait::not_a_map<T>::type 
+                               >::value 
+                            >::type
+                        >
+      : mpl::identity<container_attribute>
+   {};
 
    // template <typename T>
    // struct test_category<T,

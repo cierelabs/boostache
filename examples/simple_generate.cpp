@@ -1,7 +1,7 @@
 /**
- *  \file load_test.cpp
+ *  \file simple_generate.cpp
  *
- *  Copyright 2014 Michael Caisse : ciere.com
+ *  Copyright 2014, 2015 Michael Caisse : ciere.com
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -23,16 +23,6 @@ namespace extn =  bstache::extension;
 
 namespace boost { namespace boostache { namespace extension
 {
-   // template <typename T>
-   // struct render_category<std::vector<T>> 
-   //    : mpl::identity<unused_attribute>
-   // {};
-
-   template <typename T>
-   struct render_category<std::vector<T>> 
-      : mpl::identity<container_attribute>
-   {};
-
    template <typename T>
    bool test( std::string const & name, std::function<T()> const & context
             , extn::plain_attribute)
@@ -63,14 +53,15 @@ int main()
 {
    // ------------------------------------------------------------------
    // The input template
-   std::string input( "Hello world \n"
+   std::string input( 
+                      "Hello world \n"
                       "{{name}} is here.\n"
                       "{{& escaped_name}} is here\n"
                       "{{#foo}}\n"
-                      "Some cool section {{whoot}} is here.\n"
-                      "{{^bar}}\n"
-                      "Some cool empty section {{whoot}} is here.\n"
-                      "{{/bar}} done.\n"
+                      "  Some cool section {{whoot}} is here.\n"
+                      "  {{^bar}}\n"
+                      "    Some cool empty section {{whoot}} is here.\n"
+                      "  {{/bar}} done.\n"
                       "{{/foo}} done.\n"
       );
    // ------------------------------------------------------------------

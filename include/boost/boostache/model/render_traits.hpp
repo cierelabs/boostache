@@ -1,7 +1,7 @@
 /**
  *  \file render_traits.hpp
  *
- *  Copyright 2014 Michael Caisse : ciere.com
+ *  Copyright 2014, 2015 Michael Caisse : ciere.com
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -14,7 +14,6 @@
 #include <boost/boostache/model/category.hpp>
 #include <type_traits>
 #include <map>
-#include <vector>
 
 
 namespace boost { namespace boostache { namespace extension
@@ -37,10 +36,18 @@ namespace boost { namespace boostache { namespace extension
    struct render_category<std::map<std::string,T>>
       : mpl::identity<associative_attribute> {};
 
+
    template <typename T>
-   struct render_category<T,
-                          typename enable_if<vm::trait::has_begin<T>>::type>
-      : mpl::identity<container_attribute> {};
+   struct render_category< T
+                         , typename std::enable_if<
+                              vm::trait::has_begin<
+                                 typename vm::trait::not_a_map<T>::type 
+                                 >::value 
+                              >::type
+                           >
+      : mpl::identity<container_attribute>
+   {};
+
 }}}
 
 #endif
