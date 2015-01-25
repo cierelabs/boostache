@@ -33,7 +33,3 @@ exe simple_generate
 exe simple_generate2
    : simple_generate2.cpp
    ;
-
-exe test
-   : test.cpp
-   ;
