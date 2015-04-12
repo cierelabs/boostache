@@ -41,11 +41,11 @@ namespace boost { namespace boostache { namespace frontend
    template <typename Format>
    typename Format::ast_t parse(std::istream& input)
    {
-      // TODO mjc : store/restor ios state?
-      //input.unset(std::ios::skipws);
-
-      return parse<Format>( boost::spirit::istream_iterator(input)
-                          , boost::spirit::istream_iterator() );
+      // TODO mjc : store/restore ios state?
+      input.unsetf(std::ios::skipws);
+      boost::spirit::istream_iterator iter{input};
+      return parse<Format>( iter
+                          , boost::spirit::istream_iterator{} );
    }
 }}}
 

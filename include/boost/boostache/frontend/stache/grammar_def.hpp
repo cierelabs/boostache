@@ -1,5 +1,5 @@
 /**
- *  \file stache_grammar.hpp
+ *  \file stache/grammar_def.hpp
  *
  *  Copyright 2014 Michael Caisse : ciere.com
  *  Copyright 2014 Jeroen Habraken

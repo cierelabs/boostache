@@ -18,10 +18,14 @@ project boostache_test
         <include>../include
         <source>/boost//headers
         <source>/boost//unit_test_framework
+        <source>/boost//system
+        <source>/boost//filesystem
         <toolset>gcc:<cxxflags>-std=c++0x
 	<toolset>gcc:<cxxflags>-ftemplate-depth=512
+	<toolset>gcc:<cxxflags>-Wno-unused-local-typedefs
         <toolset>clang:<cxxflags>-std=c++11
         <toolset>clang:<cxxflags>-ftemplate-depth-512
+	<toolset>clang:<cxxflags>-stdlib=libc++
         <toolset>darwin:<cxxflags>-std=c++11
         <toolset>darwin:<cxxflags>-ftemplate-depth-512
 	<target-os>darwin:<toolset>clang:<cxxflags>-stdlib=libc++
@@ -42,7 +46,7 @@ project boostache_test
        [ run model/unwrap_variant.cpp ]
    ;
 
-#   test-suite boostache/core :
+   test-suite boostache/core :
 #      [ run test_model.cpp simple_parse simple_parse ]
 #      [ run test_simple_parser.cpp simple_parse ]
 #      [ run test_dynamic_model.cpp simple_parse ]
@@ -52,10 +56,13 @@ project boostache_test
 #      [ run test_multiple.cpp simple_parse ]
 #      [ run test_nested_sections.cpp simple_parse ]
 #      [ run test_partials.cpp simple_parse ]
-#      [ run test_sections.cpp simple_parse ]
+      [ run mustache/test_sections.cpp ]
+      [ run mustache/mustache_parser.cpp 
+	    shared/parser_test.cpp
+	]
 #      [ run test_change_delimiter.cpp simple_parse ]
 #      [ run test_inverted_sections.cpp simple_parse ]
 #      [ run test_mustache_demo.cpp simple_parse ]
-#   ;
+   ;
 
 }

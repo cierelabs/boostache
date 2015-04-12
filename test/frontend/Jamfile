@@ -13,7 +13,7 @@ import modules ;
 import feature ;
 
 ###############################################################################
-project boostache_test
+project boostache_test_frontend
     : requirements
         <include>.
         <include>../../include
