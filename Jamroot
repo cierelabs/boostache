@@ -1,5 +1,5 @@
 #
-#   Copyright (C) 2014 Michael Caisse
+#   Copyright (C) 2014, 2015 Michael Caisse, ciere.com
 #
 #   Distributed under the Boost Software License, Version 1.0. (See accompanying
 #   file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -16,6 +16,17 @@ if $(BOOST_ROOT)
 
 project
    : requirements
-      <define>BOOST_SPIRIT_USE_PHOENIX_V3=1
-      <source>/boost//headers
+	<toolset>gcc:<cxxflags>-std=c++0x
+	<toolset>gcc:<cxxflags>-ftemplate-depth=512
+	<toolset>gcc:<cxxflags>-Wno-unused-local-typedefs
+	<toolset>gcc:<cxxflags>-Wno-deprecated-declarations
+        <toolset>clang:<cxxflags>-std=c++11
+        <toolset>clang:<cxxflags>-ftemplate-depth-512
+	<toolset>clang:<cxxflags>-stdlib=libc++
+        <toolset>darwin:<cxxflags>-std=c++11
+        <toolset>darwin:<cxxflags>-ftemplate-depth-512
+	<target-os>darwin:<toolset>clang:<cxxflags>-stdlib=libc++
+	<define>BOOST_SPIRIT_USE_PHOENIX_V3=1
+	<use>/boost//headers
+        <include>./include
    ;
