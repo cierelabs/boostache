@@ -1,0 +1,9 @@
+Hello world 
+{{name}} is here.
+{{& escaped_name}} is here
+{{#foo}}
+Some cool section {{whoot}} is here.
+{{^bar}}
+Some cool empty section {{whoot}} is here.
+{{/bar}} done.
+{{/foo}} done.

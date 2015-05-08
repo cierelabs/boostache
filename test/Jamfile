@@ -26,7 +26,6 @@ project boostache_test
 {
    test-suite boostache/frontend :
        [ run frontend/grammar_basic.cpp ]
-       [ run frontend/compiler_basic.cpp ]
     ;
 
    test-suite boostache/model :
@@ -46,6 +45,9 @@ project boostache_test
 #      [ run test_partials.cpp simple_parse ]
       [ run mustache/test_sections.cpp ]
       [ run mustache/mustache_parser.cpp 
+	    shared/parser_test.cpp
+	]
+      [ run mustache/mustache_compiler.cpp 
 	    shared/parser_test.cpp
 	]
 #      [ run test_change_delimiter.cpp simple_parse ]

@@ -27,27 +27,29 @@ namespace boost { namespace boostache { namespace vm { namespace ast
 
          void operator()(undefined) const
          {
-            out << "WHOA! we have an undefined" << std::endl;
+            out << "[<UNDEFINED>]";
          }
 
          void operator()(literal const & v) const
          {
-            out << "<literal node> : " << v.value;
+            out << "[<literal node> : " << v.value << "]";
          }
 
          void operator()(variable const & v) const
          {
-            out << "<variable> : " << v.name << std::endl;
+            out << "[<variable> : " << v.name << "]";
          }
 
          void operator()(render const & v) const
          {
-            out << "<render> : " << v.name << std::endl;
+            out << "[<render> : " << v.name << "]";
          }
 
          void operator()(for_each const & v) const
          {
-            out << "<for_each> : " << std::endl;
+            out << "[<for_each> : " << std::endl;
+            boost::apply_visitor(*this, v.value);
+            out << "\n</for_each>]" << std::endl;
          }
 
          void operator()(condition const & v) const
@@ -55,13 +57,14 @@ namespace boost { namespace boostache { namespace vm { namespace ast
 
          void operator()(if_then_else const & v) const
          {
-            out << "<if> : --------------------------- " << std::endl;
+            out << "[<if> : --------------------------- " << std::endl;
             //boost::apply_visitor(*this, v.condition_);
-            out << "<then> : --------------------------- " << std::endl;
+            out << "[<then> : --------------------------- " << std::endl;
             boost::apply_visitor(*this, v.then_);
-            out << "<else> : --------------------------- " << std::endl;
+            out << "\n]\n";
+            out << "[<else> : --------------------------- " << std::endl;
             boost::apply_visitor(*this, v.else_);
-            out << "-------------------------------------" << std::endl;
+            out << "\n</if>]" << std::endl;
          }
 
          void operator()(node_list const & v) const
