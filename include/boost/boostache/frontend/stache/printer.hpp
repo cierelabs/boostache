@@ -54,7 +54,7 @@ namespace boost { namespace boostache { namespace frontend { namespace stache { 
          {
             out << "{{";
             if(v.is_inverted) {  out << "^";   }
-            else            {  out << "#";   }
+            else              {  out << "#";   }
             out << v.name << "}}";
 
             for(auto const & node : v.nodes)

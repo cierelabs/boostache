@@ -1,7 +1,7 @@
 /**
  *  \file vm/printer.hpp
  *
- *  Copyright 2014 Michael Caisse : ciere.com
+ *  Copyright 2014, 2015 Michael Caisse : ciere.com
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -32,22 +32,22 @@ namespace boost { namespace boostache { namespace vm { namespace ast
 
          void operator()(literal const & v) const
          {
-            out << "<literal node> : " << v.value << std::endl;;
+            out << "<literal node> : " << v.value;
          }
 
          void operator()(variable const & v) const
          {
-            out << "<variable> : " << v.name << std::endl;;
+            out << "<variable> : " << v.name << std::endl;
          }
 
          void operator()(render const & v) const
          {
-            out << "<render> : " << v.name << std::endl;;
+            out << "<render> : " << v.name << std::endl;
          }
 
          void operator()(for_each const & v) const
          {
-            out << "<for_each> : " << std::endl;;
+            out << "<for_each> : " << std::endl;
          }
 
          void operator()(condition const & v) const
