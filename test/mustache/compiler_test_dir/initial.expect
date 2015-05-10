@@ -3,7 +3,8 @@
 ][<render> : escaped_name][<literal node> :  is here
 ][<if> : --------------------------- 
 [<then> : --------------------------- 
-[<for_each> : 
+[<select_context> [foo] :
+[<for_each> :
 [<literal node> : 
 Some cool section ][<render> : whoot][<literal node> :  is here.
 ][<if> : --------------------------- 
@@ -11,7 +12,7 @@ Some cool section ][<render> : whoot][<literal node> :  is here.
 [<UNDEFINED>]
 ]
 [<else> : --------------------------- 
-[<for_each> : 
+[<for_each> :
 [<literal node> : 
 Some cool empty section ][<render> : whoot][<literal node> :  is here.
 ]
@@ -21,6 +22,8 @@ Some cool empty section ][<render> : whoot][<literal node> :  is here.
 [<literal node> :  done.
 ]
 </for_each>]
+
+</select_context>]
 
 ]
 [<else> : --------------------------- 

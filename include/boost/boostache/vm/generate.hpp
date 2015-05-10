@@ -18,8 +18,7 @@ namespace boost { namespace boostache { namespace vm
                 , Template const & templ
                 , Context const & context)
    {
-      vm::detail::engine_visitor_base<Stream,Context> engine(stream,context);
-      engine(templ);
+      vm::detail::generate(stream, templ, context);
    }
 }}}
 

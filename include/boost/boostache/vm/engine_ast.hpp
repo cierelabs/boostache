@@ -20,14 +20,11 @@ namespace boost { namespace boostache { namespace vm { namespace ast
    struct variable;
    struct for_each;
    struct if_then_else;
+   struct select_context;
    struct node_list;
 
    struct undefined {};
 
-   // TODO : MJC add a select primative that will be
-   //        used to decend a context. For example, in an
-   //        associative for each.
-   // ---------------------------------------------------
 
    struct literal
    {
@@ -57,6 +54,7 @@ namespace boost { namespace boostache { namespace vm { namespace ast
       , render
       , boost::recursive_wrapper<for_each>
       , boost::recursive_wrapper<if_then_else>
+      , boost::recursive_wrapper<select_context>
       , boost::recursive_wrapper<node_list> >
    {
       node() : base_type() {}
@@ -65,6 +63,7 @@ namespace boost { namespace boostache { namespace vm { namespace ast
       node(render const & rhs) : base_type(rhs) {}
       node(for_each const & rhs) : base_type(rhs) {}
       node(if_then_else const & rhs) : base_type(rhs) {}
+      node(select_context const & rhs) : base_type(rhs) {}
       node(node_list const & rhs) : base_type(rhs) {}
    };
 
@@ -88,6 +87,12 @@ namespace boost { namespace boostache { namespace vm { namespace ast
       condition condition_;
       node then_;
       node else_;
+   };
+
+   struct select_context
+   {
+      std::string tag;
+      node body;
    };
 
    struct node_list

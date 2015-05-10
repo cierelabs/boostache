@@ -11,6 +11,7 @@
 
 #include <boost/boostache/vm/engine_ast.hpp>
 #include <boost/boostache/vm/detail/foreach.hpp>
+#include <boost/boostache/model/select_traits.hpp>
 
 
 ////////// some test hackery ////////////////////////
@@ -38,6 +39,14 @@ namespace boost { namespace boostache { namespace extension
 
 namespace boost { namespace boostache { namespace vm { namespace detail
 {
+   template <typename Stream, typename Context, typename Category>
+   void select_context( Stream &, ast::select_context const & v
+                      , Context const &, Category);
+
+   template <typename Stream, typename Context>
+   void select_context( Stream & stream, ast::select_context const & v
+                      , Context const & ctx, extension::associative_attribute);
+
    template <typename Stream, typename Context>
    class engine_visitor_base
    {
@@ -86,6 +95,12 @@ namespace boost { namespace boostache { namespace vm { namespace detail
          }
       }
 
+      void operator()(ast::select_context const & v) const
+      {
+         select_context( stream, v, context
+                       , typename extension::select_category<Context>::type{});
+      }
+
       void operator()(ast::node_list const & nodes) const
       {
          for(auto const & node : nodes.nodes)
@@ -102,8 +117,40 @@ namespace boost { namespace boostache { namespace vm { namespace detail
    private:
       Stream & stream;
       Context const & context;
-   };   
+   };
 
+
+   template <typename Stream, typename Template, typename Context>
+   void generate( Stream & stream
+                , Template const & templ
+                , Context const & ctx)
+   {
+      engine_visitor_base<Stream,Context> engine(stream, ctx);
+      engine(templ);
+   }
+
+
+   template <typename Stream, typename Context, typename Category>
+   void select_context( Stream & stream, ast::select_context const & v
+                      , Context const & ctx, Category)
+   {
+      generate(stream, v.body, ctx);
+   }
+
+   template <typename Stream, typename Context>
+   void select_context( Stream & stream, ast::select_context const & v
+                      , Context const & ctx, extension::associative_attribute)
+   {
+      auto iter = ctx.find(v.tag);
+      if(iter != ctx.end())
+      {
+         generate(stream, v.body, iter->second);
+      }
+      else
+      {
+         generate(stream, v.body, ctx);
+      }
+   }
 }}}}
 
 

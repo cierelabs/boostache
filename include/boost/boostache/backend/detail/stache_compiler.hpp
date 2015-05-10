@@ -66,8 +66,17 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
             vm::ast::if_then_else if_block;
             if_block.condition_.name = v.name;
 
-            if(v.is_inverted)  { if_block.else_ = section_body; }
-            else               { if_block.then_ = section_body; }
+            if(v.is_inverted)
+            {
+               if_block.else_ = section_body;
+            }
+            else
+            {
+               vm::ast::select_context select;
+               select.tag = v.name;
+               select.body = section_body;
+               if_block.then_ = select;
+            }
 
             return if_block;
          }

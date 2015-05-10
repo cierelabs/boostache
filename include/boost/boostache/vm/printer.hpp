@@ -47,13 +47,20 @@ namespace boost { namespace boostache { namespace vm { namespace ast
 
          void operator()(for_each const & v) const
          {
-            out << "[<for_each> : " << std::endl;
+            out << "[<for_each> :" << std::endl;
             boost::apply_visitor(*this, v.value);
             out << "\n</for_each>]" << std::endl;
          }
 
          void operator()(condition const & v) const
          {}
+
+         void operator()(select_context const & v) const
+         {
+            out << "[<select_context> [" << v.tag << "] :" << std::endl;
+            boost::apply_visitor(*this, v.body);
+            out << "\n</select_context>]" << std::endl;
+         }
 
          void operator()(if_then_else const & v) const
          {
