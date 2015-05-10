@@ -18,47 +18,94 @@
 
 namespace boost { namespace boostache { namespace extension
 {
+   // --------------------------------------------------------------------------
+   // Test
+   // --------------------------------------------------------------------------
+   template <typename T>
+   bool test(T const & context);
+
 
    template <typename T>
-   bool test(std::string const & name, T const & context);
-
-
-   template <typename T>
-   bool test( std::string const & name, T const & context
+   bool test( T const & context
             , unused_attribute)
    {
       return false;
    }
 
    template <typename T>
-   bool test( std::string const & name, T const & context
+   bool test( T const & context
             , plain_attribute)
    {
       return !!context;
    }
 
    template <typename T>
-   bool test( std::string const & name, T const & context
+   bool test( T const & context
             , container_attribute)
    {
       return !context.empty();
    }
 
    template <typename T>
-   bool test( std::string const & name, T const & context
+   bool test( T const & context
             , optional_attribute)
    {
       return !!context;
    }
 
    template <typename T>
-   bool test( std::string const & name, T const & context
+   bool test( T const & context
             , associative_attribute)
    {
-      auto iter = context.find(name);
+      return !context.empty();
+   }
+
+
+   // --------------------------------------------------------------------------
+   // Test with tag
+   // --------------------------------------------------------------------------
+
+   template <typename T>
+   bool test(T const & context, std::string const & tag);
+
+
+   template <typename T>
+   bool test( T const & context, std::string const & tag
+            , unused_attribute)
+   {
+      return test(context, unused_attribute{});
+   }
+
+   template <typename T>
+   bool test( T const & context, std::string const & tag
+            , plain_attribute)
+   {
+      return test(context, plain_attribute{});
+   }
+
+   template <typename T>
+   bool test( T const & context, std::string const & tag
+            , container_attribute)
+   {
+      return test(context, container_attribute{});
+   }
+
+   template <typename T>
+   bool test( T const & context, std::string const & tag
+            , optional_attribute)
+   {
+      return test(context, optional_attribute{});
+   }
+
+   template <typename T>
+   bool test( T const & context, std::string const & tag
+            , associative_attribute)
+   {
+      auto iter = context.find(tag);
       if(iter!=context.end())
       {
-         return test(name,iter->second);
+         return test( iter->second
+                    , typename test_category<decltype(iter->second)>::type{});
       }
       else
       {
@@ -66,14 +113,22 @@ namespace boost { namespace boostache { namespace extension
       }
    }
 
+
    // --------------------------------------------------------------------------
    // --------------------------------------------------------------------------
 
    template <typename T>
-   bool test(std::string const & name, T const & context)
+   bool test(T const & context)
    {
-      return test( name
-                 , context
+      return test( context
+                 , typename test_category<T>::type{});
+   }
+
+   template <typename T>
+   bool test(T const & context, std::string const & tag)
+   {
+      return test( context
+                 , tag
                  , typename test_category<T>::type{});
    }
 

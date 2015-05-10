@@ -24,7 +24,10 @@ namespace boost { namespace boostache { namespace extension
    }
 
    template <typename T>
-   bool test(std::string const & name, T const & context);
+   bool test(T const & context, std::string const & name);
+
+   template <typename T>
+   bool test(T const & context);
 
    template< typename Stream, typename T >
    void render(Stream & stream, T const & context, std::string const & name);
@@ -52,7 +55,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
       void operator()(ast::literal const & v) const
       {
          using boost::boostache::extension::render;
-         render(stream,v.value);
+         render(stream, v.value);
       }
 
       void operator()(ast::variable const & v) const
@@ -61,19 +64,19 @@ namespace boost { namespace boostache { namespace vm { namespace detail
       void operator()(ast::render const & v) const
       {
          using boost::boostache::extension::render;
-         render(stream,context,v.name);
+         render(stream, context, v.name);
       }
 
       void operator()(ast::for_each const & v) const
       {
          using boost::boostache::vm::detail::foreach;
-         foreach(stream,v,context);
+         foreach(stream, v, context);
       }
 
       void operator()(ast::if_then_else const & v) const
       {
          using boost::boostache::extension::test;
-         if(test(v.condition_.name,context))
+         if(test(context, v.condition_.name))
          {
             boost::apply_visitor(*this, v.then_);
          }

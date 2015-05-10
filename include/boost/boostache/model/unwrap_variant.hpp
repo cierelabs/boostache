@@ -18,22 +18,32 @@
 
 namespace boost { namespace boostache { namespace extension
 {
-
    namespace detail
    {
-      struct unwrap_variant_test
+      struct unwrap_variant_tag_test
       {
          typedef bool result_type;
 
-         unwrap_variant_test(std::string const & n) : name_(n) {}
+         unwrap_variant_tag_test(std::string const & t) : tag_(t) {}
 
          template <typename T>
          bool operator()(T const & context) const
          {
-            return test(name_, context);
+            return test(context, tag_);
          }
 
-         std::string const & name_;
+         std::string const & tag_;
+      };
+
+      struct unwrap_variant_test
+      {
+         typedef bool result_type;
+
+         template <typename T>
+         bool operator()(T const & context) const
+         {
+            return test(context);
+         }
       };
 
       template <typename Stream>
@@ -58,11 +68,20 @@ namespace boost { namespace boostache { namespace extension
 
 
    template <typename T>
-   bool test( std::string const & name, T const & context
+   bool test( T const & context, std::string const & tag
             , variant_attribute)
    {
-      detail::unwrap_variant_test variant_test(name);
-      return boost::apply_visitor(variant_test, context);
+      return boost::apply_visitor( detail::unwrap_variant_tag_test{tag}
+                                 , context);
+   }
+
+
+   template <typename T>
+   bool test( T const & context
+            , variant_attribute)
+   {
+      return boost::apply_visitor( detail::unwrap_variant_test{}
+                                 , context);
    }
 
 
