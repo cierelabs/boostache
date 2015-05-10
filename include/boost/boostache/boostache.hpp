@@ -13,6 +13,8 @@
 #include <boost/boostache/frontend/parse.hpp>
 #include <boost/boostache/backend/stache_compiler.hpp>
 #include <boost/boostache/vm/generate.hpp>
+#include <istream>
+
 
 namespace boost { namespace boostache
 {
@@ -20,6 +22,12 @@ namespace boost { namespace boostache
    inline vm::ast::node load_template(Iterator & begin, Iterator const & end)
    {
       return backend::compile(frontend::parse<Format>(begin,end));
+   }
+
+   template <typename Format>
+   inline vm::ast::node load_template(std::istream & input)
+   {
+      return backend::compile(frontend::parse<Format>(input));
    }
 
    template <typename Stream, typename Context>
