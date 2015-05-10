@@ -13,6 +13,7 @@
 #include <boost/boostache/model/category.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/optional.hpp>
 #include <map>
 #include <vector>
 #include <string>
@@ -24,33 +25,13 @@ namespace boost { namespace boostache { namespace vm
    void generate( Stream & stream
                 , Template const & templ
                 , Context const & context);
+
+   namespace detail
+   {
+      template <typename Stream, typename Node, typename Context>
+      void foreach(Stream & stream, Node const & node, Context const & context);
+   }
 }}}
-
-namespace boost { namespace boostache { namespace vm { namespace detail
-{
-   template <typename Stream, typename Node, typename Context>
-   void foreach(Stream & stream, Node const & node, Context const & context);
-}}}}
-
-///// TESTING HACK!!!!
-// #include <iostream>
-// template <typename Stream, typename Template, typename Context>
-// struct generate_specialization
-// {
-//    static void apply( Stream & stream
-//                     , Template const & templ
-//                     , Context const & context )
-//    {
-//       stream << context;
-//    }
-// };
-
-// template <typename Stream, typename Template, typename Context>
-// void generate(Stream & stream, Template const & templ, Context const & context)
-// {
-//    generate_specialization<Stream,Template,Context>::apply(stream,templ,context);
-// }
-/////////////////////////////////
 
 
 namespace boost { namespace boostache
@@ -61,44 +42,23 @@ namespace boost { namespace boostache
    {};
 }}
 
+
 namespace boost { namespace boostache { namespace extension
 {
-   namespace detail
-   {
-      template <typename Stream, typename Node>
-      struct unwrap_variant_foreach
-      {
-         typedef void result_type;
-
-         unwrap_variant_foreach(Stream & stream, Node const & node) 
-            : stream_(stream), node_(node)
-         {}
-
-         template <typename T>
-         void operator()(T const & context) const
-         {
-            vm::detail::foreach(stream_,node_,context);
-         }
-
-         Stream & stream_;
-         Node const & node_;
-      };
-   }
-
    // -------------------------------------------
    // foreach category
    template <typename T, typename Enable = void>
    struct foreach_category
       : mpl::identity<plain_attribute> {};
 
+   template <>
+   struct foreach_category<std::string>
+      : mpl::identity<plain_attribute> {};
+
    template <typename T>
    struct foreach_category<T,
                            typename enable_if<vm::trait::is_variant<T>>::type>
       : mpl::identity<variant_attribute> {};
-
-   template <>
-   struct foreach_category<std::string>
-      : mpl::identity<plain_attribute> {};
 
    template <typename T>
    struct foreach_category< T
@@ -111,19 +71,63 @@ namespace boost { namespace boostache { namespace extension
       : mpl::identity<container_attribute>
    {};
 
-   // template <typename T>
-   // struct foreach_category<boost::optional<T>>
-   //    : mpl::identity<optional_attribute> {};
+   template <typename T>
+   struct foreach_category<boost::optional<T>>
+      : mpl::identity<optional_attribute> {};
 
    template <typename T>
    struct foreach_category<std::map<std::string,T>>
       : mpl::identity<associative_attribute> {};
+
+
+   namespace detail
+   {
+      template <typename Stream, typename Node>
+      struct unwrap_variant_foreach
+      {
+         typedef void result_type;
+
+         unwrap_variant_foreach(Stream & stream, Node const & node)
+            : stream_(stream), node_(node)
+         {}
+
+         template <typename T>
+         void operator()(T const & context) const
+         {
+            vm::detail::foreach(stream_, node_, context);
+         }
+
+         Stream & stream_;
+         Node const & node_;
+      };
+   }
 
 }}}
 
 
 namespace boost { namespace boostache { namespace vm { namespace detail
 {
+   template <typename Stream, typename Node, typename Context, typename Category>
+   void foreach( Stream & stream
+               , Node const & node
+               , Context const & context
+               , Category)
+   {
+      generate(stream, node.value, context);
+   }
+
+
+   template <typename Stream, typename Node, typename Context>
+   void foreach( Stream & stream
+               , Node const & node
+               , Context const & context
+               , extension::variant_attribute)
+   {
+      extension::detail::unwrap_variant_foreach<Stream,Node> variant_foreach(stream, node);
+      boost::apply_visitor(variant_foreach, context);
+   }
+
+
    template <typename Stream, typename Node, typename Context>
    void foreach( Stream & stream
                , Node const & node
@@ -132,52 +136,36 @@ namespace boost { namespace boostache { namespace vm { namespace detail
    {
       for(auto const & item : context)
       {
-         generate(stream,node.value,item);
+         generate(stream, node.value, item);
       }
    }
+
 
    template <typename Stream, typename Node, typename Context>
    void foreach( Stream & stream
                , Node const & node
-               , Context const & context
-               , extension::associative_attribute)
+               , Context const & ctx
+               , extension::optional_attribute)
    {
-      auto iter = context.find(node.name);
-      if(iter != context.end())
+      if(ctx)
       {
-         foreach(stream,node,iter->second);
+         foreach( stream, node, *ctx
+                , typename extension::foreach_category<decltype(*ctx)>::type{});
       }
       else
       {
-         vm::generate(stream,node.value,context);
+         generate(stream, node.value, ctx);
       }
    }
 
-   template <typename Stream, typename Node, typename Context>
-   void foreach( Stream & stream
-               , Node const & node
-               , Context const & context
-               , extension::plain_attribute)
-   {
-      vm::generate(stream,node.value,context);
-   }
-
-   template <typename Stream, typename Node, typename Context>
-   void foreach( Stream & stream
-               , Node const & node
-               , Context const & context
-               , extension::variant_attribute)
-   {
-      extension::detail::unwrap_variant_foreach<Stream,Node> variant_foreach(stream,node);
-      return boost::apply_visitor(variant_foreach, context);
-   }
 
    /**
-    *  Entry point for foreach is here.
+    *  Entry point for foreach
     */
    template <typename Stream, typename Node, typename Context>
    void foreach(Stream & stream, Node const & node, Context const & context)
    {
+      using boostache::vm::detail::foreach;
       foreach( stream
              , node
              , context

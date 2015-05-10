@@ -24,12 +24,17 @@ project boostache_test
 
 
 {
+   test-suite vm :
+       [ run vm/foreach.cpp ]
+    ;
+
    test-suite boostache/frontend :
        [ run frontend/grammar_basic.cpp ]
     ;
 
    test-suite boostache/model :
        [ run model/traits.cpp ]
+       [ run model/render_traits.cpp ]
        [ run model/unwrap_variant.cpp ]
    ;
 
