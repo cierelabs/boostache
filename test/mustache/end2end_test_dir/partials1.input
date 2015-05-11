@@ -1,0 +1,3 @@
+Hi I am {{me}}.
+{{> next_more}}
+What do I like? {{lpet}}!!

@@ -1,0 +1,13 @@
+Hi I am {{me}}.
+{{# showme}}
+I like {{pet}}.
+{{# another}}
+If you don't see this, something went wrong.
+{{# ok}}
+It is ok to show this.
+{{/ ok}}
+{{# not_ok}}
+But not ok to show this.
+{{/ not_ok}}
+{{/ another}}
+{{/ showme}}

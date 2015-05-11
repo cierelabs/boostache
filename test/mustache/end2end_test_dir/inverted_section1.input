@@ -1,0 +1,13 @@
+Hi I am {{me}}.
+{{# showme}}
+I like {{pet}}.
+{{/ showme}}
+{{^ dontshowme}}
+Hope you can see me.
+{{/ dontshowme}}
+{{^ showme2}}
+not me.
+{{/ showme2}}
+{{#another}}{{^ ok}}
+I'm invisible.
+{{/ ok}}{{/another}}

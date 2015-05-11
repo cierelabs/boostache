@@ -29,14 +29,16 @@ struct my_node_t;
 using map_t = std::map<std::string,my_node_t>;
 using list_t = std::vector<my_node_t>;
 struct my_node_t : boost::spirit::extended_variant<
-     std::string
+     bool
+   , std::string
    , map_t
    , list_t
    >
 {
    my_node_t() : base_type() {}
+   my_node_t(bool rhs) : base_type(rhs) {}
    my_node_t(std::string const & rhs) : base_type(rhs) {}
-   my_node_t(const char * rhs) : base_type(std::string{rhs}) {}
+   my_node_t(char const * rhs) : base_type(std::string{rhs}) {}
    my_node_t(map_t const & rhs) : base_type(rhs) {}
    my_node_t(list_t const & rhs) : base_type(rhs) {}
 };
@@ -57,12 +59,24 @@ std::string print_ast(std::string const & filename)
       {"contacts" , map_t{{"foo","gorp"}}},
       {"foo"      , "bar"},
       {"me"       , "Daniel"},
+      {"pet"      , "turtles"},
+      {"lpet"     , "Turtles"},
       {"people"   , list_t{ map_t{{"name"    , "Tom"},
-                                  {"job"     , "sweeps floors"} },
+                                  {"job"     , "sweep floors"} },
                             map_t{{"name"    , "Sue"},
-                                  {"job"     , "writes code"} }
-                          }
-      }
+                                  {"job"     , "write code"} }
+         }
+      },
+      {"title"      , "Multiple Mustaches"},
+      {"comment"    , "this shouldn't be here"},
+      {"showme"     , true},
+      {"showme2"    , true},
+      {"dontshowme" , false},
+      {"next_more"  , "I like {{pet}}."},
+      {"another"    , map_t{{"name"   , "Sam"},
+                            {"ok"     , true },
+                            {"not_ok" , false}}
+      },
    };
    // ------------------------------------------------------------------
 

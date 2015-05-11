@@ -1,0 +1,7 @@
+Hi I am {{me}}.
+{{# showme}}
+I like {{pet}}.
+{{/ showme}}
+{{# dontshowme}}
+If you see this, something went wrong.
+{{/ dontshowme}}

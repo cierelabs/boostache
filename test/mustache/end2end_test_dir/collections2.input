@@ -1,0 +1,3 @@
+Hi I am {{me}}.
+{{# people}}Hi {{me}}, I am {{name}}, I {{job}}.
+{{/ people}}
