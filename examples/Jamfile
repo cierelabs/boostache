@@ -14,14 +14,11 @@ project boostache_examples
         <include>.
     ;
 
-exe simple_generate
-   : simple_generate.cpp
+exe example1
+   : example1.cpp
    ;
 
-exe simple_generate2
-   : simple_generate2.cpp
+exe example2
+   : example2.cpp
    ;
 
-exe simple_generate3
-   : simple_generate3.cpp
-   ;
