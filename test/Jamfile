@@ -39,18 +39,10 @@ project boostache_test
    ;
 
    test-suite boostache/mustache :
-#      [ run test_dynamic_model.cpp simple_parse ]
-#      [ run test_json_model.cpp simple_parse ]
-#      [ run test_collections.cpp simple_parse ]
-#      [ run test_html_escape.cpp simple_parse ]
-#      [ run test_multiple.cpp simple_parse ]
-#      [ run test_nested_sections.cpp simple_parse ]
-#      [ run test_partials.cpp simple_parse ]
-      [ run mustache/test_sections.cpp ]
-
       [ run mustache/mustache_parser.cpp 
 	    shared/parser_test.cpp
 	]
+
       [ run mustache/mustache_compiler.cpp 
 	    shared/parser_test.cpp
 	]
@@ -58,10 +50,6 @@ project boostache_test
       [ run mustache/mustache_end2end.cpp 
 	    shared/parser_test.cpp
 	]
-
-#      [ run test_change_delimiter.cpp simple_parse ]
-#      [ run test_inverted_sections.cpp simple_parse ]
-#      [ run test_mustache_demo.cpp simple_parse ]
    ;
 
 }
