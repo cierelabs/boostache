@@ -23,4 +23,3 @@ namespace boost { namespace boostache { namespace backend
 }}}
 
 #endif
-

@@ -35,21 +35,18 @@ project boostache_test
    test-suite boostache/model :
        [ run model/traits.cpp ]
        [ run model/render_traits.cpp ]
-       [ run model/unwrap_variant.cpp ]
+#       [ run model/unwrap_variant.cpp ]
    ;
 
    test-suite boostache/mustache :
       [ run mustache/mustache_parser.cpp 
 	    shared/parser_test.cpp
 	]
-
       [ run mustache/mustache_compiler.cpp 
 	    shared/parser_test.cpp
 	]
-
       [ run mustache/mustache_end2end.cpp 
 	    shared/parser_test.cpp
 	]
    ;
-
 }
