@@ -51,30 +51,31 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
           *  conditional that will execute the body if the data element
           *  evaluates to true (or false if marked inverted).
           */
-         vm::ast::node operator()(fe::stache::ast::section const & v) const
+         vm::ast::node operator()(fe::stache::ast::section const & sec) const
          {
             vm::ast::node_list vm_ast;
-            for(auto const & node : v.nodes)
+            for(auto const & node : sec.nodes)
             {
                vm_ast.nodes.push_back(boost::apply_visitor(*this, node));
             }
 
             vm::ast::for_each section_body;
-            section_body.name = v.name;
+            section_body.name = sec.name;
             section_body.value = vm_ast;
 
             vm::ast::if_then_else if_block;
-            if_block.condition_.name = v.name;
+            if_block.condition_.name = sec.name;
 
-            if(v.is_inverted)
+            vm::ast::select_context select;
+            select.tag = sec.name;
+            select.body = section_body;
+
+            if(sec.is_inverted)
             {
-               if_block.else_ = section_body;
+               if_block.else_ = select;
             }
             else
             {
-               vm::ast::select_context select;
-               select.tag = v.name;
-               select.body = section_body;
                if_block.then_ = select;
             }
 
