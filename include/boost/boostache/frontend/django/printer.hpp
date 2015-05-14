@@ -28,7 +28,7 @@ namespace boost { namespace boostache { namespace frontend { namespace django { 
          template <typename T>
          void operator()(T& v) const
          {
-            out << "WHOA! We have an unimplemented type: " 
+            out << "WHOA! We have an unimplemented type: "
                 << typeid(v).name() << std::endl;
          }
 
@@ -60,6 +60,11 @@ namespace boost { namespace boostache { namespace frontend { namespace django { 
                   out << ".";
                }
             }
+         }
+
+         void operator()(if_elif_else const & v) const
+         {
+            // TODO
          }
 
       private:

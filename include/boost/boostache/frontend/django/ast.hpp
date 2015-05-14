@@ -9,6 +9,7 @@
 #ifndef BOOST_BOOSTACHE_FRONT_END_DJANGO_AST_HPP
 #define BOOST_BOOSTACHE_FRONT_END_DJANGO_AST_HPP
 
+#include <boost/optional.hpp>
 #include <boost/spirit/include/support_extended_variant.hpp>
 
 #include <string>
@@ -31,20 +32,37 @@ namespace boost { namespace boostache { namespace frontend { namespace django { 
    struct variable : std::vector<identifier>
    {};
 
+   struct if_elif_else;
+
    struct node : boost::spirit::extended_variant<
         undefined
       , comment
       , literal_text
       , variable
+      , boost::recursive_wrapper<if_elif_else>
       >
    {
       node() : base_type() {}
       node(comment const & rhs) : base_type(rhs) {}
       node(literal_text const & rhs) : base_type(rhs) {}
       node(variable const & rhs) : base_type(rhs) {}
+      node(if_elif_else const & rhs) : base_type(rhs) {}
    };
 
    struct node_list : std::vector<node> {};
+
+   struct condition
+   {
+      variable condition;
+      node_list body;
+   };
+
+   struct if_elif_else
+   {
+      condition if_;
+      std::vector<condition> elif;
+      boost::optional<node_list> else_;
+   };
 
    struct root : node_list {};
 

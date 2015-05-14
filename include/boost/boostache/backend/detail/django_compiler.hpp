@@ -66,6 +66,11 @@ namespace boost { namespace boostache { namespace backend { namespace django_com
             return node_list;
          }
 
+         vm::ast::node operator()(fe::django::ast::if_elif_else const & if_elif_else) const
+         {
+            return vm::ast::literal{"TODO"}; // TODO
+         }
+
          vm::ast::node operator()(fe::django::ast::root const & nodes) const
          {
             vm::ast::node_list node_list;

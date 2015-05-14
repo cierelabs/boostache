@@ -46,6 +46,14 @@ namespace boost { namespace boostache { namespace frontend { namespace django
       qi::rule<Iterator, ast::variable(), qi::space_type>
          variable
          ;
+
+      qi::rule<Iterator, ast::condition(), qi::space_type>
+         condition
+         ;
+
+      qi::rule<Iterator, ast::if_elif_else(), qi::space_type>
+         if_elif_else
+         ;
    };
 }}}}
 

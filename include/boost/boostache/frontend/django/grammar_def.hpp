@@ -28,6 +28,7 @@
 #include <boost/spirit/include/qi_matches.hpp>
 #include <boost/spirit/include/qi_no_skip.hpp>
 #include <boost/spirit/include/qi_omit.hpp>
+#include <boost/spirit/include/qi_optional.hpp>
 #include <boost/spirit/include/qi_plus.hpp>
 #include <boost/spirit/include/qi_sequence.hpp>
 #include <boost/spirit/include/support_argument.hpp>
@@ -54,6 +55,7 @@ namespace boost { namespace boostache { namespace frontend { namespace django
             no_skip[literal_text]
          |  comment
          |  variable
+         |  if_elif_else
          ;
 
       node_list =
@@ -61,7 +63,7 @@ namespace boost { namespace boostache { namespace frontend { namespace django
          ;
 
       literal_text =
-         +(char_ - (lit("{{") | "{%" | "{#"))
+         +(char_ - (lit("{{") | "{%%" | "{#"))
          ;
 
       comment =
@@ -78,6 +80,32 @@ namespace boost { namespace boostache { namespace frontend { namespace django
             lit("{{")
          >> lexeme[identifier % "."]
          >> "}}"
+         ;
+
+      condition =
+            lexeme[identifier % "."]
+         >> "%%}"
+         >> node_list
+         ;
+
+      if_elif_else =
+            lit("{%%")
+         >> "if"
+         >> condition
+         >> *(
+               lit("{%%")
+            >> "elif"
+            >> condition
+         )
+         >> -(
+               lit("{%%")
+            >> "else"
+            >> "%%}"
+            >> node_list
+         )
+         >> "{%%"
+         >> "endif"
+         >> "%%}"
          ;
    };
 }}}}

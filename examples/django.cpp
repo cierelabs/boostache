@@ -44,7 +44,12 @@ int main()
    std::string input(
          "My name is {{another.name}}. "
          "{# This is a comment #}"
-         "I am {{pet}} years old.\n");
+         "I am {{pet}} years old."
+         "{%% if another.notok %%}"
+         "Nope"
+         "{%% else %%}"
+         "Yep"
+         "{%% endif %%}\n");
    // ------------------------------------------------------------------
 
    // ------------------------------------------------------------------
