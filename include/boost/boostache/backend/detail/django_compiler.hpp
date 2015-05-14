@@ -68,7 +68,26 @@ namespace boost { namespace boostache { namespace backend { namespace django_com
 
          vm::ast::node operator()(fe::django::ast::if_elif_else const & if_elif_else) const
          {
-            return vm::ast::literal{"TODO"}; // TODO
+            vm::ast::node_list then_;
+            for(auto const & node : if_elif_else.if_.body)
+            {
+               then_.nodes.push_back(boost::apply_visitor(*this, node));
+            }
+
+            vm::ast::if_then_else if_then_else;
+            if_then_else.condition_.name = if_elif_else.if_.condition.front();
+            if_then_else.then_ = std::move(then_);
+            if(static_cast<bool>(if_elif_else.else_))
+            {
+               vm::ast::node_list else_;
+               for(auto const & node : if_elif_else.else_.get())
+               {
+                  else_.nodes.push_back(boost::apply_visitor(*this, node));
+               }
+               if_then_else.else_ = std::move(else_);
+            }
+
+            return if_then_else;
          }
 
          vm::ast::node operator()(fe::django::ast::root const & nodes) const

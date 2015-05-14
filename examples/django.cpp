@@ -45,10 +45,10 @@ int main()
          "My name is {{another.name}}. "
          "{# This is a comment #}"
          "I am {{pet}} years old."
-         "{%% if another.notok %%}"
-         "Nope"
-         "{%% else %%}"
+         "{%% if dontshowme %%}"
          "Yep"
+         "{%% else %%}"
+         "Nope"
          "{%% endif %%}\n");
    // ------------------------------------------------------------------
 
