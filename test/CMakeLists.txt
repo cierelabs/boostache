@@ -1,4 +1,12 @@
 cmake_minimum_required(VERSION 2.8)
+
+macro(add_boost_test name source)
+add_executable(${name} ${source})
+target_include_directories(${name} PRIVATE ${Boost_INCLUDE_DIRS})
+target_link_libraries(${name} boost_boostache ${Boost_LIBRARIES})
+add_test(${name} ${name})
+endmacro(add_boost_test)
+
 add_subdirectory(frontend)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)

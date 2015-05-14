@@ -17,12 +17,5 @@ endif()
 
 include_directories( include )
 
-macro(add_boost_test name source)
-add_executable(${name} ${source})
-target_include_directories(${name} PRIVATE ${Boost_INCLUDE_DIRS})
-target_link_libraries(${name} boost_boostache ${Boost_LIBRARIES})
-add_test(${name} ${name})
-endmacro(add_boost_test)
-
 add_subdirectory(test)
 add_subdirectory(examples)
