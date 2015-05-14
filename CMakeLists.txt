@@ -6,7 +6,16 @@ set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost 1.53 COMPONENTS unit_test_framework)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DBOOST_SPIRIT_USE_PHOENIX_V3=1")
+
+add_definitions( -DBOOST_SPIRIT_USE_PHOENIX_V3=1 )
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  add_definitions( -std=c++0x -ftemplate-depth=512 -Wno-unused-local-typedefs -Wno-deprecated-declarations )
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  add_definitions( -std=c++11 -ftemplate-depth=512 -stdlib=libc++ )
+endif()
+# Not sure what to do with the <toolset>darwin
+
+include_directories( include )
 
 macro(add_boost_test name source)
 add_executable(${name} ${source})
@@ -15,6 +24,5 @@ target_link_libraries(${name} boost_boostache ${Boost_LIBRARIES})
 add_test(${name} ${name})
 endmacro(add_boost_test)
 
-add_subdirectory(boost)
 add_subdirectory(test)
 add_subdirectory(examples)
