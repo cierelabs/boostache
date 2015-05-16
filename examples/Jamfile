@@ -30,7 +30,3 @@ exe example4
    : example4.cpp
    ;
 
-#exe example5
-#   : example5.pb.cpp example5.cpp
-#   ;
-
