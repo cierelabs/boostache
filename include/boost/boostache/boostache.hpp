@@ -12,7 +12,7 @@
 #include <boost/boostache/vm/engine_ast.hpp>
 #include <boost/boostache/frontend/parse.hpp>
 #include <boost/boostache/backend/stache_compiler.hpp>
-#include <boost/boostache/vm/generate.hpp>
+#include <boost/boostache/vm/generate_extension.hpp>
 #include <istream>
 
 
@@ -35,7 +35,7 @@ namespace boost { namespace boostache
                 , vm::ast::node const & templ
                 , Context const & context)
    {
-      vm::generate(stream,templ,context);
+      extension::generate_dispatcher<Stream, Context>()(stream,templ,context);
    }
 }}
 
