@@ -1,5 +1,5 @@
 /**
- *  \file property_tree_render_extension.hpp
+ *  \file property_tree.hpp
  *
  *  Copyright 2015 Michal Bukovsky
  *
@@ -11,7 +11,6 @@
 #define BOOST_BOOSTACHE_MODEL_EXTENSIONS_PROPERTY_TREE_HPP
 
 #include <boost/optional.hpp>
-#include <boost/property_tree/ptree.hpp>
 #include <boost/boostache/vm/traits.hpp>
 #include <boost/boostache/model/category.hpp>
 #include <boost/boostache/model/render_traits.hpp>
