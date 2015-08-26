@@ -77,7 +77,7 @@ int main()
    // Apply the compiled template and the data model to the generate
    // method
    std::stringstream stream;
-   bstache::generate(stream, templ, invoice);
+   boostache::generate(stream, templ, invoice);
    // ------------------------------------------------------------------
 
    std::cout << stream.str();
