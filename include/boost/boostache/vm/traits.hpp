@@ -23,15 +23,15 @@ namespace boost { namespace boostache { namespace vm { namespace trait
        BOOST_MPL_HAS_XXX_TRAIT_DEF(adapted_variant_tag)
     }
 
-   template <typename T> 
+   template <typename T>
    struct is_variant
       : detail::has_adapted_variant_tag<T>
    {};
 
-   template <typename... T> 
-   struct is_variant< boost::variant<T...> > 
-      : mpl::true_ 
-   {}; 
+   template <typename T0, typename... TN>
+   struct is_variant< boost::variant<T0,TN...> >
+      : mpl::true_
+   {};
 
    using std::begin;
    template< class T
