@@ -13,7 +13,7 @@
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
-#define BOOST_TEST_DYN_LINK
+//#define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_NO_MAIN
 
 #include <boost/filesystem.hpp>
@@ -36,6 +36,7 @@ std::string print_ast(std::string const & filename);
 
 void test_parse(std::string const & filename)
 {
+   BOOST_TEST_MESSAGE("Checking: " << filename);
    auto input_ast = print_ast(filename+".input");
 
    std::ifstream expect_stream(std::string(filename + ".expect").c_str());

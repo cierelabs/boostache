@@ -47,6 +47,7 @@ project boostache_test
 	]
       [ run mustache/mustache_end2end.cpp 
 	    shared/parser_test.cpp
+	: --log_level=message
 	]
    ;
 }

@@ -54,6 +54,9 @@ namespace boost { namespace boostache { namespace vm { namespace detail
       void operator()(ast::undefined) const
       {}
 
+      void operator()(ast::nop) const
+      {}
+
       void operator()(ast::literal const & lit) const
       {
          using boost::boostache::extension::render;

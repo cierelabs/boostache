@@ -25,6 +25,7 @@ namespace boost { namespace boostache { namespace vm { namespace ast
 
    struct undefined {};
 
+   struct nop {};
 
    struct literal
    {
@@ -49,6 +50,7 @@ namespace boost { namespace boostache { namespace vm { namespace ast
 
    struct node : boost::spirit::extended_variant<
         undefined
+      , nop
       , literal
       , variable
       , render
@@ -58,6 +60,7 @@ namespace boost { namespace boostache { namespace vm { namespace ast
       , boost::recursive_wrapper<node_list> >
    {
       node() : base_type() {}
+      node(nop const & rhs) : base_type(rhs) {}
       node(literal const & rhs) : base_type(rhs) {}
       node(variable const & rhs) : base_type(rhs) {}
       node(render const & rhs) : base_type(rhs) {}

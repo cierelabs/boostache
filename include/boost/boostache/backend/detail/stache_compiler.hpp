@@ -13,11 +13,22 @@
 #include <boost/boostache/frontend/stache/ast.hpp>
 #include <boost/boostache/backend/detail/stache_compiler.hpp>
 
+#include <boost/algorithm/string/trim.hpp>
+
 namespace boost { namespace boostache { namespace backend { namespace stache_compiler
 {
    namespace fe = boost::boostache::frontend;
    namespace detail
    {
+      /**
+       *  Check if the string simply contains white-space.
+       */
+      bool is_blank(std::string const & s)
+      {
+         return( s.find_first_not_of(std::string{" \t\r\n"})
+                 ==  std::string::npos );
+      }
+      
       class stache_visit
       {
       public:
@@ -35,6 +46,13 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
 
          vm::ast::node operator()(fe::stache::ast::literal_text const & v) const
          {
+            /**
+             *  In stache, the literals are trimmed if they are just whitespace.
+             */
+            if(is_blank(v))
+            {
+               return vm::ast::nop{};
+            }
             return vm::ast::literal{v};
          }
 
@@ -84,12 +102,13 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
 
          vm::ast::node operator()(fe::stache::ast::comment const & v) const
          {
-            return vm::ast::literal{};
+            return vm::ast::nop{};
          }         
 
          vm::ast::node operator()(fe::stache::ast::partial const & v) const
          {
-            return vm::ast::literal{};
+            // TODO: need to implement partials
+            return vm::ast::nop{};
          }         
 
          vm::ast::node operator()(fe::stache::ast::node_list const & nodes) const

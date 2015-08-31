@@ -30,6 +30,11 @@ namespace boost { namespace boostache { namespace vm { namespace ast
             out << "[<UNDEFINED>]";
          }
 
+         void operator()(nop) const
+         {
+            out << "[<nop>]";
+         }
+
          void operator()(literal const & v) const
          {
             out << "[<literal node> : " << v.value << "]";
