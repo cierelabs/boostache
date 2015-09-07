@@ -1,0 +1,9 @@
+{{lol}}
+{{lol}}
+{{lol}} and {{lol}}
+-----------------------
+rigahello{{#hello}}
+{{#items}}
+name: "{{name}}"
+{{/items}}
+{{/hello}}

@@ -77,6 +77,17 @@ std::string print_ast(std::string const & filename)
                             {"ok"     , true },
                             {"not_ok" , false}}
       },
+      // KingDuckZ add
+      {"hello"      , list_t{ map_t{{"items",
+                                     list_t{ map_t{{"name", "red"}},
+                                             map_t{{"name", "green"}},
+                                             map_t{{"name", "blue"}} } } },
+                              map_t{{"items",
+                                     list_t{ map_t{{"name", "yellow"}},
+                                             map_t{{"name", "black"}},
+                                             map_t{{"name", "white"}} } } } }
+      },
+      {"lol"        , "hahahah" }
    };
    // ------------------------------------------------------------------
 
