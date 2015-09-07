@@ -19,6 +19,9 @@ namespace boost { namespace boostache { namespace vm { namespace detail
    template <typename Stream, typename Template, typename Context>
    struct unwrap_and_select_context;
 
+   template <typename Stream, typename Template>
+   struct unwrap_and_select_context_dispatch;
+
 
    template < typename Stream, typename Template
             , typename Context1, typename Context2
@@ -89,6 +92,21 @@ namespace boost { namespace boostache { namespace vm { namespace detail
    void select_context_dispatch( Stream & stream
                                , ast::select_context const & templ
                                , Context const & ctx
+                               , extension::variant_attribute)
+   {
+      boost::apply_visitor(
+           unwrap_and_select_context_dispatch< Stream
+                                             , ast::select_context>{ stream
+                                                        , templ }
+           , ctx
+         );
+   }
+
+
+   template <typename Stream, typename Context>
+   void select_context_dispatch( Stream & stream
+                               , ast::select_context const & templ
+                               , Context const & ctx
                                , extension::associative_attribute)
    {
       auto iter = ctx.find(templ.tag);
@@ -134,6 +152,26 @@ namespace boost { namespace boostache { namespace vm { namespace detail
       Stream & stream_;
       Template const & templ_;
       Context const & ctx_parent_;
+   };
+
+   template <typename Stream, typename Template>
+   struct unwrap_and_select_context_dispatch
+   {
+      typedef void result_type;
+
+      unwrap_and_select_context_dispatch( Stream & stream, Template const & templ)
+         : stream_(stream), templ_(templ)
+      {}
+
+      template <typename T>
+      void operator()(T const & ctx) const
+      {
+         select_context_dispatch( stream_, templ_, ctx
+                                , typename extension::select_category<T>::type{});
+      }
+
+      Stream & stream_;
+      Template const & templ_;
    };
    // ------------------------------------------------------------------
    // ------------------------------------------------------------------
