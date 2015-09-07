@@ -68,14 +68,14 @@ bool init_unit_test_suite()
    boost::filesystem::directory_iterator end_dir_iter;
 
    std::for_each( dir_iter, end_dir_iter
-               , [&test_files](boost::filesystem::path file)
-                 {
-                    if(file.extension() == ".input")
-                    {
-                       file.replace_extension("");
-                       test_files.push_back(file.string());
-                    }
-                 } );
+                , [&test_files](boost::filesystem::path file)
+                  {
+                     if(file.extension() == ".input")
+                     {
+                        file.replace_extension("");
+                        test_files.push_back(file.string());
+                     }
+                  } );
 
    std::cout << "Found " << test_files.size() << " test cases." << std::endl;
    for(auto & test : test_files)
@@ -92,5 +92,15 @@ bool init_unit_test_suite()
 
 int main(int argc, char* argv[])
 {
-    return boost::unit_test::unit_test_main(init_unit_test_suite, argc, argv);
+   for(int i=0; i<argc; ++i)
+   {
+      std::string arg = argv[i];
+      if(arg.find("--test_path=") == 0)
+      {
+         test_dir = arg.substr(12);
+         break;
+      }
+   }
+
+   return boost::unit_test::unit_test_main(init_unit_test_suite, argc, argv);
 }
