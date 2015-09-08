@@ -4,6 +4,7 @@
  *  Link with shared/parser_test to utilize loading and parsing test files.
  *
  *  Copyright 2015 Michael Caisse : ciere.com
+ *  Copyright 2015 Michele Santullo
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -12,6 +13,7 @@
 #include <boost/spirit/include/support_extended_variant.hpp>
 
 #include <boost/boostache/boostache.hpp>
+#include <boost/boostache/frontend/file_mapper.hpp>
 #include <boost/boostache/frontend/stache/grammar_def.hpp> // need to work out header only syntax
 #include <boost/boostache/stache.hpp>
 #include <boost/boostache/model/stache_model.hpp>
@@ -92,7 +94,7 @@ std::string print_ast(std::string const & filename)
    // ------------------------------------------------------------------
 
    // load and compile the template
-   auto templ = boostache::load_template<boostache::format::stache>(file);
+   auto templ = boostache::load_template<boostache::format::stache>(file, boostache::frontend::file_mapper<char>());
    std::ostringstream stream;
    boostache::generate(stream, templ, data);
    return stream.str();

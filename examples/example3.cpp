@@ -5,6 +5,7 @@
  *  clean things up with a variant.
  *
  *  Copyright 2015 Michael Caisse : ciere.com
+ *  Copyright 2015 Michele Santullo
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -14,6 +15,7 @@
 #include <boost/boostache/boostache.hpp>
 #include <boost/boostache/frontend/stache/grammar_def.hpp> // need to work out header only syntax
 #include <boost/boostache/stache.hpp>
+#include <boost/boostache/frontend/file_mapper.hpp>
 #include <boost/boostache/model/helper.hpp>
 #include <boost/spirit/include/support_extended_variant.hpp>
 #include <string>
@@ -60,7 +62,7 @@ int main()
 {
    // ------------------------------------------------------------------
    // The template describing an invoice.
-   std::string input( 
+   std::string input(
                       "Invoice {{invoice_number}}"
                       "\n"
                       "{{# company}}"
@@ -79,7 +81,7 @@ int main()
    // ------------------------------------------------------------------
    // The data description.
 
-   object_t invoice = 
+   object_t invoice =
       {{"invoice_number", "1234"},
        {"company"       , object_t{{"name"   , "FizSoft"},
                                    {"street" , "42 Level St."},
@@ -93,7 +95,7 @@ int main()
                                            {"description"  , "Computer"},
                                            {"amount"       , "$9"}}   }}
    };
-                                                      
+
    // ------------------------------------------------------------------
 
    // ------------------------------------------------------------------
@@ -101,9 +103,10 @@ int main()
    // This parses the input and compiles the result. The return is the
    // compiled data structure
    using boostache::load_template;
+   using boostache::frontend::file_mapper;
 
    auto iter = input.begin();
-   auto templ = load_template<boostache::format::stache>(iter, input.end());
+   auto templ = load_template<boostache::format::stache>(iter, input.end(), file_mapper<char>());
    // ------------------------------------------------------------------
 
    // ------------------------------------------------------------------

@@ -4,6 +4,7 @@
  *  A slightly more complex example.
  *
  *  Copyright 2015 Michael Caisse : ciere.com
+ *  Copyright 2015 Michele Santullo
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -13,6 +14,7 @@
 #include <boost/boostache/boostache.hpp>
 #include <boost/boostache/frontend/stache/grammar_def.hpp> // need to work out header only syntax
 #include <boost/boostache/stache.hpp>
+#include <boost/boostache/frontend/file_mapper.hpp>
 #include <boost/boostache/model/helper.hpp>
 #include <iostream>
 #include <sstream>
@@ -24,7 +26,7 @@ namespace boostache = boost::boostache;
 // -------------------------------------------------------
 // The data will be an invoice this time. The invoice
 // consists of a list of line items. Each line item
-// can be describes as map of string to strings.
+// can be described as map of string to strings.
 //
 using item_t = std::map<std::string, std::string>;
 using item_list_t = std::vector<item_t>;
@@ -36,7 +38,7 @@ int main()
 {
    // ------------------------------------------------------------------
    // The template describing an invoice.
-   std::string input( 
+   std::string input(
                       "Invoice"
                       "\n"
                       "{{#lines}}"
@@ -49,13 +51,13 @@ int main()
    // ------------------------------------------------------------------
    // The data description. invoice_items is a list of maps that
    // describe each item.
-   item_list_t invoice_items = { 
+   item_list_t invoice_items = {
                                  { {"item_code"    , "1234"},
                                    {"description"  , "teddy bear"},
                                    {"amount"       , "$23"} },
                                  { {"item_code"    , "1235"},
                                    {"description"  , "computer"},
-                                   {"amount"       , "$9"} } 
+                                   {"amount"       , "$9"} }
    };
 
    // we need to put the list into a map so that tag 'lines' can
@@ -70,7 +72,7 @@ int main()
    using boostache::load_template;
 
    auto iter = input.begin();
-   auto templ = load_template<boostache::format::stache>(iter, input.end());
+   auto templ = load_template<boostache::format::stache>(iter, input.end(), boostache::frontend::file_mapper<char>());
    // ------------------------------------------------------------------
 
    // ------------------------------------------------------------------

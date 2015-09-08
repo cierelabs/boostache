@@ -3,6 +3,7 @@
  *
  *  Copyright 2014 Michael Caisse : ciere.com
  *  Copyright 2014 Jeroen Habraken
+ *  Copyright 2015 Michele Santullo
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -34,9 +35,7 @@ namespace boost { namespace boostache { namespace frontend { namespace stache { 
       identifier value;
    };
 
-   struct partial : identifier
-   {};
-
+   struct partial;
    struct section;
 
    struct node : boost::spirit::extended_variant<
@@ -45,7 +44,7 @@ namespace boost { namespace boostache { namespace frontend { namespace stache { 
       , literal_text
       , variable
       , boost::recursive_wrapper<section>
-      , partial
+      , boost::recursive_wrapper<partial>
       >
    {
       node() : base_type() {}
@@ -61,6 +60,12 @@ namespace boost { namespace boostache { namespace frontend { namespace stache { 
    struct section
    {
       bool is_inverted;
+      identifier name;
+      node_list nodes;
+   };
+
+   struct partial
+   {
       identifier name;
       node_list nodes;
    };

@@ -2,6 +2,7 @@
  *  \file boostache.hpp
  *
  *  Copyright 2014 Michael Caisse : ciere.com
+ *  Copyright 2015 Michele Santullo
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -14,20 +15,21 @@
 #include <boost/boostache/backend/stache_compiler.hpp>
 #include <boost/boostache/vm/generate.hpp>
 #include <istream>
+#include <utility>
 
 
 namespace boost { namespace boostache
 {
-   template <typename Format, typename Iterator>
-   inline vm::ast::node load_template(Iterator & begin, Iterator const & end)
+   template <typename Format, typename Iterator, typename PartialFunctor>
+   inline vm::ast::node load_template(Iterator & begin, Iterator const & end, PartialFunctor mapper_type)
    {
-      return backend::compile(frontend::parse<Format>(begin,end));
+      return backend::compile(frontend::parse<Format>(begin,end, std::move(mapper_type)));
    }
 
-   template <typename Format>
-   inline vm::ast::node load_template(std::istream & input)
+   template <typename Format, typename PartialFunctor>
+   inline vm::ast::node load_template(std::istream & input, PartialFunctor mapper_type)
    {
-      return backend::compile(frontend::parse<Format>(input));
+      return backend::compile(frontend::parse<Format>(input, std::move(mapper_type)));
    }
 
    template <typename Stream, typename Context>

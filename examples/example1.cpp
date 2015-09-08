@@ -4,6 +4,7 @@
  *  A simple example of how to use boostache.
  *
  *  Copyright 2015 Michael Caisse : ciere.com
+ *  Copyright 2015 Michele Santullo
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -11,6 +12,7 @@
 #define BOOST_SPIRIT_NO_PREDEFINED_TERMINALS
 
 #include <boost/boostache/boostache.hpp>
+#include <boost/boostache/frontend/file_mapper.hpp>
 #include <boost/boostache/frontend/stache/grammar_def.hpp> // need to work out header only syntax
 #include <boost/boostache/stache.hpp>
 #include <boost/boostache/model/helper.hpp>
@@ -45,7 +47,7 @@ int main()
    using boostache::load_template;
 
    auto iter = input.begin();
-   auto templ = load_template<boostache::format::stache>(iter, input.end());
+   auto templ = load_template<boostache::format::stache>(iter, input.end(), boostache::frontend::file_mapper<char>());
    // ------------------------------------------------------------------
 
    // ------------------------------------------------------------------
