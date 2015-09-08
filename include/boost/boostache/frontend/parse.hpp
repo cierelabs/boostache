@@ -2,7 +2,6 @@
  *  \file parse.hpp
  *
  *  Copyright 2014 Michael Caisse : ciere.com
- *  Copyright 2015 Michele Santullo
  *
  *  Generic parser entry point. Call parse with the input format
  *  as the template parameter:

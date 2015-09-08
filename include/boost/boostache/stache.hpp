@@ -2,7 +2,6 @@
  *  \file stache.hpp
  *
  *  Copyright 2014 Michael Caisse : ciere.com
- *  Copyright 2015 Michele Santullo
  *
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying

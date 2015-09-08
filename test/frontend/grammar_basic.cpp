@@ -2,7 +2,6 @@
  *  \file frontend/grammar_basic.cpp
  *
  *  Copyright 2014 Michael Caisse : ciere.com
- *  Copyright 2015 Michele Santullo
  *
  *  Basic stache gramar test
  *
