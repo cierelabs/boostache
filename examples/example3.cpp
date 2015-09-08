@@ -38,6 +38,8 @@ namespace boostache = boost::boostache;
 // This is fairly simple to do with a variant. We are going
 // to use the spirit version of it because it makes
 // recursive structures easier to describe.
+// We also add a partial at the end. Note that the partial
+// itself can contain more boostache (see footer.mst).
 //
 
 struct value_t;
@@ -63,7 +65,7 @@ int main()
    // ------------------------------------------------------------------
    // The template describing an invoice.
    std::string input(
-                      "Invoice {{invoice_number}}"
+                      "Invoice {{invoice_number}}\n"
                       "\n"
                       "{{# company}}"
                       "Company: {{name}}\n"
@@ -73,7 +75,8 @@ int main()
                       "------------------------------------------------\n"
                       "{{#lines}}"
                       "  {{item_code}}  {{description}}  {{amount}}\n"
-                      "{{/lines}}"
+                      "{{/lines}}\n"
+                      "- {{>footer}} -"
       );
    // ------------------------------------------------------------------
 
@@ -105,8 +108,16 @@ int main()
    using boostache::load_template;
    using boostache::frontend::file_mapper;
 
+   //The file mapper coming with boostache  will try to read from a file
+   //called <work_dir>/<partial_name>.<ext>
+   //By default work_dir is the empty string (current directory), and ext
+   //is ".mustache". In this example we change it to ".mst".
+   //You can customize how partials are resolved by providing your own
+   //mapper.
+   boostache::frontend::file_mapper<char> fmapper(".mst");
+
    auto iter = input.begin();
-   auto templ = load_template<boostache::format::stache>(iter, input.end(), file_mapper<char>());
+   auto templ = load_template<boostache::format::stache>(iter, input.end(), fmapper);
    // ------------------------------------------------------------------
 
    // ------------------------------------------------------------------
