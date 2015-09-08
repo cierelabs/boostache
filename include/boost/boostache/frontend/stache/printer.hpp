@@ -67,7 +67,7 @@ namespace boost { namespace boostache { namespace frontend { namespace stache { 
 
          void operator()(partial const & v) const
          {
-            out << "{{>" << v << "}}";
+            out << "{{>" << v.name << "}}";
          }
 
       private:

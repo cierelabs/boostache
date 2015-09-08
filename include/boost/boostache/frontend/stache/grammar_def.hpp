@@ -3,6 +3,7 @@
  *
  *  Copyright 2014 Michael Caisse : ciere.com
  *  Copyright 2014 Jeroen Habraken
+ *  Copyright 2015 Michele Santullo
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -12,6 +13,7 @@
 
 #include <boost/boostache/frontend/stache/ast_adapted.hpp>
 #include <boost/boostache/frontend/stache/grammar.hpp>
+#include <boost/boostache/frontend/parse.hpp>
 
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/qi_action.hpp>
@@ -31,15 +33,26 @@
 #include <boost/spirit/include/qi_plus.hpp>
 #include <boost/spirit/include/qi_sequence.hpp>
 #include <boost/spirit/include/support_argument.hpp>
+#include <boost/spirit/include/phoenix_operator.hpp>
+#include <boost/spirit/include/phoenix_bind.hpp>
+#include <utility>
 
 namespace boost { namespace boostache { namespace frontend { namespace stache
 {
    namespace qi = boost::spirit::qi;
    namespace spirit = boost::spirit;
+   namespace phx = boost::phoenix;
 
-   template <typename Iterator>
-   grammar<Iterator>::grammar()
-      : grammar::base_type(node_list)
+   template <typename Format, typename Iterator, typename PartialFunctor>
+   grammar<Format, Iterator, PartialFunctor>::grammar(const PartialFunctor& partial_mapper)
+      : grammar<Format, Iterator, PartialFunctor>(PartialFunctor(partial_mapper))
+   {
+   }
+
+   template <typename Format, typename Iterator, typename PartialFunctor>
+   grammar<Format, Iterator, PartialFunctor>::grammar (PartialFunctor&& partial_mapper)
+      : grammar::base_type(node_list),
+      partial_mapper(std::move(partial_mapper))
    {
       spirit::_1_type _1;
       spirit::_a_type _a;
@@ -53,6 +66,7 @@ namespace boost { namespace boostache { namespace frontend { namespace stache
       qi::matches_type matches;
       qi::no_skip_type no_skip;
       qi::omit_type omit;
+      qi::_val_type _val;
 
 
       stache_node =
@@ -122,10 +136,24 @@ namespace boost { namespace boostache { namespace frontend { namespace stache
       partial =
             lit("{{")
          >> '>'
-         >> identifier
+         >> identifier[_val = phx::bind(&grammar<Format, Iterator, PartialFunctor>::on_partial, this, _1, phx::placeholders::_2, phx::placeholders::_3)]
          >> "}}"
          ;
    };
+
+   template <typename Format, typename Iterator, typename PartialFunctor>
+   ast::partial grammar<Format, Iterator, PartialFunctor>::on_partial (const ast::identifier& name, const boost::fusion::unused_type& context, bool& pass) const {
+      grammar<Format, Iterator, PartialFunctor> gramm(partial_mapper);
+      const auto text = partial_mapper(name);
+      auto beg = text.begin();
+
+      ast::partial retval;
+      retval.name = name;
+      retval.nodes = boost::boostache::frontend::parse<Format>(beg, text.end(), partial_mapper);
+      pass = (text.end() == beg);
+
+      return retval;
+   }
 }}}}
 
 #endif

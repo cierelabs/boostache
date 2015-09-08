@@ -12,6 +12,7 @@
 #include <boost/boostache/stache.hpp>
 #include <boost/boostache/frontend/stache/grammar_def.hpp>
 #include <boost/boostache/frontend/parse.hpp>
+#include <boost/boostache/frontend/file_mapper.hpp>
 
 #include <boost/boostache/backend/stache_compiler.hpp>
 #include <boost/boostache/vm/printer.hpp>
@@ -33,7 +34,7 @@ std::string print_ast(std::string const & filename)
    }
 
    std::ifstream istream(filename.c_str());
-   auto ast = fe::parse<boostache::format::stache>(istream);
+   auto ast = fe::parse<boostache::format::stache>(istream, boostache::frontend::file_mapper<char>());
    auto engine_ast = boostache::backend::compile(ast);
 
    std::ostringstream stream;

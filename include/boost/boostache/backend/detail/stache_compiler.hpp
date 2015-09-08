@@ -2,6 +2,7 @@
  *  \file detail/stache_compiler.hpp
  *
  *  Copyright 2014, 2015 Michael Caisse : ciere.com
+ *  Copyright 2015 Michele Santullo
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -28,7 +29,7 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
          return( s.find_first_not_of(std::string{" \t\r\n"})
                  ==  std::string::npos );
       }
-      
+
       class stache_visit
       {
       public:
@@ -103,13 +104,17 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
          vm::ast::node operator()(fe::stache::ast::comment const & v) const
          {
             return vm::ast::nop{};
-         }         
+         }
 
-         vm::ast::node operator()(fe::stache::ast::partial const & v) const
+         vm::ast::node operator()(fe::stache::ast::partial const & p) const
          {
-            // TODO: need to implement partials
-            return vm::ast::nop{};
-         }         
+            vm::ast::node_list node_list;
+            for (auto const & node : p.nodes)
+            {
+               node_list.nodes.push_back(boost::apply_visitor(*this, node));
+            }
+            return node_list;
+         }
 
          vm::ast::node operator()(fe::stache::ast::node_list const & nodes) const
          {

@@ -7,7 +7,7 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost 1.53 COMPONENTS unit_test_framework system filesystem)
 
-add_definitions( -DBOOST_SPIRIT_USE_PHOENIX_V3=1 )
+add_definitions( -DBOOST_SPIRIT_USE_PHOENIX_V3=1 -DBOOST_TEST_ALTERNATIVE_INIT_API )
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   add_definitions( -std=c++0x -ftemplate-depth=512 -Wno-unused-local-typedefs -Wno-deprecated-declarations )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")

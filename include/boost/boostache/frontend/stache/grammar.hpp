@@ -14,17 +14,20 @@
 
 #include <boost/spirit/include/qi_char_class.hpp>
 #include <boost/spirit/include/qi_rule.hpp>
+#include <string>
+#include <boost/fusion/support/unused.hpp>
 
 
 namespace boost { namespace boostache { namespace frontend { namespace stache
 {
    namespace qi = boost::spirit::qi;
 
-   template <typename Iterator>
+   template <typename Format, typename Iterator, typename PartialFunctor>
    struct grammar
       : qi::grammar<Iterator, ast::node_list(), qi::space_type>
    {
-      grammar();
+      explicit grammar(PartialFunctor&& partial_mapper);
+      explicit grammar(const PartialFunctor& partial_mapper);
 
       qi::rule<Iterator, ast::node_list(), qi::space_type>
          node_list
@@ -69,6 +72,11 @@ namespace boost { namespace boostache { namespace frontend { namespace stache
       qi::rule<Iterator, ast::partial(), qi::space_type>
          partial
          ;
+
+   private:
+      ast::partial on_partial (const ast::identifier& name, const boost::fusion::unused_type& context, bool& pass) const;
+
+      PartialFunctor partial_mapper;
    };
 }}}}
 

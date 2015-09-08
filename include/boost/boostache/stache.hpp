@@ -18,8 +18,8 @@ namespace boost { namespace boostache { namespace format
 {
    struct stache
    {
-      template <typename Iterator>
-      using grammar_t = frontend::stache::grammar<Iterator>;
+      template <typename Iterator, typename PartialFunctor>
+      using grammar_t = frontend::stache::grammar<stache, Iterator, PartialFunctor>;
 
       using ast_t = frontend::stache::ast::root;
       using skipper_t = boost::spirit::qi::space_type;

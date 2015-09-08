@@ -14,6 +14,7 @@
 #include <boost/boostache/stache.hpp>
 #include <boost/boostache/frontend/stache/grammar_def.hpp>
 #include <boost/boostache/frontend/stache/printer.hpp>
+#include <boost/boostache/frontend/file_mapper.hpp>
 
 #include <sstream>
 #include <string>
@@ -41,7 +42,7 @@ BOOST_AUTO_TEST_CASE(stache_parse_test)
       );
 
    auto iter = input.begin();
-   auto ast = parse<boostache::format::stache>(iter,input.end());
+   auto ast = parse<boostache::format::stache>(iter,input.end(), boostache::frontend::file_mapper<char>());
 
    // we expect everything got parsed
    BOOST_CHECK(iter==input.end());

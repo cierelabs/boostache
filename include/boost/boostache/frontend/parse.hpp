@@ -17,15 +17,16 @@
 #include <boost/spirit/include/qi_parse.hpp>
 #include <boost/spirit/include/support_istream_iterator.hpp>
 #include <iostream>
+#include <utility>
 
 namespace boost { namespace boostache { namespace frontend
 {
-   template <typename Format, typename Iterator>
-   typename Format::ast_t parse(Iterator & begin, Iterator const & end)
+   template <typename Format, typename Iterator, typename PartialFunctor>
+   typename Format::ast_t parse(Iterator & begin, Iterator const & end, PartialFunctor mapper_type)
    {
       typename Format::ast_t ast;
-      typename Format::template grammar_t<Iterator> grammar;
-      
+      typename Format::template grammar_t<Iterator, PartialFunctor> grammar(std::move(mapper_type));
+
       // TODO mjc : should throw with parse error location
       if(!boost::spirit::qi::phrase_parse( begin, end
                                          , grammar
@@ -38,14 +39,15 @@ namespace boost { namespace boostache { namespace frontend
    }
 
 
-   template <typename Format>
-   typename Format::ast_t parse(std::istream& input)
+   template <typename Format, typename PartialFunctor>
+   typename Format::ast_t parse(std::istream& input, PartialFunctor mapper_type)
    {
       // TODO mjc : store/restore ios state?
       input.unsetf(std::ios::skipws);
       boost::spirit::istream_iterator iter{input};
       return parse<Format>( iter
-                          , boost::spirit::istream_iterator{} );
+                          , boost::spirit::istream_iterator{}
+                          , std::move(mapper_type) );
    }
 }}}
 

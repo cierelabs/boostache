@@ -14,6 +14,7 @@
 #include <boost/boostache/boostache.hpp>
 #include <boost/boostache/frontend/stache/grammar_def.hpp> // need to work out header only syntax
 #include <boost/boostache/stache.hpp>
+#include <boost/boostache/frontend/file_mapper.hpp>
 #include <boost/boostache/model/helper.hpp>
 #include <boost/spirit/include/support_extended_variant.hpp>
 #include <string>
@@ -36,6 +37,8 @@ namespace boostache = boost::boostache;
 // This is fairly simple to do with a variant. We are going
 // to use the spirit version of it because it makes
 // recursive structures easier to describe.
+// We also add a partial at the end. Note that the partial
+// itself can contain more boostache (see footer.mst).
 //
 
 struct value_t;
@@ -60,8 +63,8 @@ int main()
 {
    // ------------------------------------------------------------------
    // The template describing an invoice.
-   std::string input( 
-                      "Invoice {{invoice_number}}"
+   std::string input(
+                      "Invoice {{invoice_number}}\n"
                       "\n"
                       "{{# company}}"
                       "Company: {{name}}\n"
@@ -71,7 +74,8 @@ int main()
                       "------------------------------------------------\n"
                       "{{#lines}}"
                       "  {{item_code}}  {{description}}  {{amount}}\n"
-                      "{{/lines}}"
+                      "{{/lines}}\n"
+                      "- {{>footer}} -"
       );
    // ------------------------------------------------------------------
 
@@ -79,7 +83,7 @@ int main()
    // ------------------------------------------------------------------
    // The data description.
 
-   object_t invoice = 
+   object_t invoice =
       {{"invoice_number", "1234"},
        {"company"       , object_t{{"name"   , "FizSoft"},
                                    {"street" , "42 Level St."},
@@ -93,7 +97,7 @@ int main()
                                            {"description"  , "Computer"},
                                            {"amount"       , "$9"}}   }}
    };
-                                                      
+
    // ------------------------------------------------------------------
 
    // ------------------------------------------------------------------
@@ -101,9 +105,18 @@ int main()
    // This parses the input and compiles the result. The return is the
    // compiled data structure
    using boostache::load_template;
+   using boostache::frontend::file_mapper;
+
+   //The file mapper coming with boostache  will try to read from a file
+   //called <work_dir>/<partial_name>.<ext>
+   //By default work_dir is the empty string (current directory), and ext
+   //is ".mustache". In this example we change it to ".mst".
+   //You can customize how partials are resolved by providing your own
+   //mapper.
+   boostache::frontend::file_mapper<char> fmapper(".mst");
 
    auto iter = input.begin();
-   auto templ = load_template<boostache::format::stache>(iter, input.end());
+   auto templ = load_template<boostache::format::stache>(iter, input.end(), fmapper);
    // ------------------------------------------------------------------
 
    // ------------------------------------------------------------------
