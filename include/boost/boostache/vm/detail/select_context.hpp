@@ -97,7 +97,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
       boost::apply_visitor(
            unwrap_and_select_context_dispatch< Stream
                                              , ast::select_context>{ stream
-                                                        , templ }
+                                                                   , templ }
            , ctx
          );
    }

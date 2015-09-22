@@ -55,7 +55,7 @@ namespace boost { namespace boostache { namespace extension
       : mpl::identity<associative_attribute> {};
 
    template <typename T>
-   using test_category_t = template test_category<T>::type;
+   using test_category_t = typename test_category<T>::type;
 }}}
 
 #endif

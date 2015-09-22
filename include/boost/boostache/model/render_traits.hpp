@@ -40,8 +40,7 @@ namespace boost { namespace boostache { namespace extension
    struct render_category< T
                          , vm::trait::enable_if_sequence_not_map_t<T>
                          >
-      : mpl::identity<sequence_attribute>
-   {};
+      : mpl::identity<sequence_attribute> {};
 
    template <typename T>
    using render_category_t = typename render_category<T>::type;
