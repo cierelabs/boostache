@@ -54,6 +54,8 @@ namespace boost { namespace boostache { namespace extension
    struct test_category<std::map<std::string,T>>
       : mpl::identity<associative_attribute> {};
 
+   template <typename T>
+   using test_category_t = template test_category<T>::type;
 }}}
 
 #endif

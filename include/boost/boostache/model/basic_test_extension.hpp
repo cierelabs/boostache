@@ -105,7 +105,7 @@ namespace boost { namespace boostache { namespace extension
       if(iter!=context.end())
       {
          return test( iter->second
-                    , typename test_category<decltype(iter->second)>::type{});
+                    , test_category_t<decltype(iter->second)>{});
       }
       else
       {
@@ -121,7 +121,7 @@ namespace boost { namespace boostache { namespace extension
    bool test(T const & context)
    {
       return test( context
-                 , typename test_category<T>::type{});
+                 , test_category_t<T>{});
    }
 
    template <typename T>
@@ -129,7 +129,7 @@ namespace boost { namespace boostache { namespace extension
    {
       return test( context
                  , tag
-                 , typename test_category<T>::type{});
+                 , test_category_t<T>{});
    }
 
 }}}

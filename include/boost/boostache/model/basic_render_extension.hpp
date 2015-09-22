@@ -89,7 +89,7 @@ namespace boost { namespace boostache { namespace extension
       render( stream
             , context
             , name
-            , typename render_category<T>::type{} );
+            , render_category_t<T>{} );
    }
 
 }}}
