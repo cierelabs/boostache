@@ -70,12 +70,12 @@ constexpr bool is_associative_attribute(boostache::extension::associative_attrib
 }
 
 template <typename T>
-constexpr bool is_container_attribute(T const &)
+constexpr bool is_sequence_attribute(T const &)
 {
    return false;
 }
 
-constexpr bool is_container_attribute(boostache::extension::container_attribute const &)
+constexpr bool is_sequence_attribute(boostache::extension::sequence_attribute const &)
 {
    return true;
 }
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE(map1_render_trait)
       );
 
    BOOST_CHECK(
-      ! is_container_attribute(
+      ! is_sequence_attribute(
          boostache::extension::render_category<map1_t>::type{} )
       );
 }
@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE(map2_render_trait)
       );
 
    BOOST_CHECK(
-      ! is_container_attribute(
+      ! is_sequence_attribute(
          boostache::extension::render_category<map2_t>::type{} )
       );
 }

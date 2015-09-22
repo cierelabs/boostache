@@ -54,7 +54,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
    void select_context( Stream & stream, Template const & templ
                       , Context1 const & /*ctx_parent*/
                       , Context2 const & ctx_child
-                      , extension::container_attribute)
+                      , extension::sequence_attribute)
    {
       generate(stream, templ, ctx_child);
    }

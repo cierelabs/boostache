@@ -26,29 +26,25 @@ namespace boost { namespace boostache { namespace extension
       : mpl::identity<plain_attribute> {};
 
    template <typename T>
-   struct test_category<T,
-                        typename enable_if<vm::trait::is_variant<T>>::type>
+   struct test_category< T
+                       , vm::trait::enable_if_is_variant_t<T>
+                       >
       : mpl::identity<variant_attribute> {};
 
    template <>
    struct test_category<std::string>
-      : mpl::identity<container_attribute> {};
+      : mpl::identity<sequence_attribute> {};
 
    template <typename T>
    struct test_category< T
-                       , typename std::enable_if<
-                            vm::trait::has_begin<
-                               typename vm::trait::not_a_map<T>::type 
-                               >::value 
-                            >::type
-                        >
-      : mpl::identity<container_attribute>
-   {};
+                       , vm::trait::enable_if_sequence_not_map_t<T>
+                       >
+      : mpl::identity<sequence_attribute> {};
 
    // template <typename T>
    // struct test_category<T,
    //                      decltype(T::empty())>
-   //    : mpl::identity<container_attribute> {};
+   //    : mpl::identity<sequence_attribute> {};
 
    template <typename T>
    struct test_category<boost::optional<T>>

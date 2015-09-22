@@ -26,7 +26,7 @@ namespace boost { namespace boostache { namespace extension
 {
    // template <typename T>
    // struct test_category<std::list<T>> 
-   //    : mpl::identity<container_attribute>
+   //    : mpl::identity<sequence_attribute>
    // {};
 }}}
 // ---------------------------------------------------------

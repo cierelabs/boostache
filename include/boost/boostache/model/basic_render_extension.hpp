@@ -71,7 +71,7 @@ namespace boost { namespace boostache { namespace extension
            , typename T
            >
    void render( Stream && stream, T const & context, std::string const & name
-              , container_attribute)
+              , sequence_attribute)
    {
       for(auto const & item : context)
       {

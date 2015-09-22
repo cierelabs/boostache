@@ -12,8 +12,8 @@
 #include <boost/boostache/vm/engine_ast.hpp>
 #include <boost/boostache/frontend/stache/ast.hpp>
 #include <boost/boostache/backend/detail/stache_compiler.hpp>
-
 #include <boost/algorithm/string/trim.hpp>
+
 
 namespace boost { namespace boostache { namespace backend { namespace stache_compiler
 {
@@ -32,7 +32,7 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
       class stache_visit
       {
       public:
-         typedef vm::ast::node result_type;
+         using result_type = vm::ast::node;
 
          stache_visit(std::ostream& out)
             : out(out)
@@ -144,4 +144,3 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
 }}}}
 
 #endif
-
