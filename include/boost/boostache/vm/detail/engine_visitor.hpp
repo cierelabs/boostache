@@ -93,9 +93,8 @@ namespace boost { namespace boostache { namespace vm { namespace detail
 
       void operator()(ast::select_context const & select_ctx) const
       {
-         select_context_dispatch(
-            stream, select_ctx, context
-          , typename extension::select_category<Context>::type{} );
+         select_context_dispatch( stream, select_ctx, context
+                                , extension::select_category_t<Context>{} );
       }
 
       void operator()(ast::node_list const & nodes) const

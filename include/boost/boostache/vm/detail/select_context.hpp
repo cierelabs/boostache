@@ -117,10 +117,10 @@ namespace boost { namespace boostache { namespace vm { namespace detail
          //           << " ctx_child "
          //           << typeid(iter->second).name()
          //           << " category "
-         //           << typeid(typename extension::select_category<decltype(iter->second)>::type{}).name();
+         //           << typeid(extension::select_category_t<decltype(iter->second)>{}).name();
             
          select_context( stream, templ.body, ctx, iter->second
-                       , typename extension::select_category<decltype(iter->second)>::type{});
+                       , extension::select_category_t<decltype(iter->second)>{});
       }
       else
       {
@@ -146,7 +146,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
       void operator()(T const & ctx_child) const
       {
          select_context( stream_, templ_, ctx_parent_, ctx_child
-                       , typename extension::select_category<T>::type{});
+                       , extension::select_category_t<T>{});
       }
 
       Stream & stream_;
@@ -167,7 +167,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
       void operator()(T const & ctx) const
       {
          select_context_dispatch( stream_, templ_, ctx
-                                , typename extension::select_category<T>::type{});
+                                , extension::select_category_t<T>{});
       }
 
       Stream & stream_;
