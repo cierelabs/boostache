@@ -28,6 +28,14 @@ namespace boost { namespace boostache { namespace frontend { namespace stache { 
    struct literal_text : std::string
    {};
 
+   struct blank_text : std::string
+   {};
+
+   struct eol : std::string
+   {
+      using std::string::string;
+   };
+
    struct variable
    {
       bool is_unescaped;
@@ -43,6 +51,8 @@ namespace boost { namespace boostache { namespace frontend { namespace stache { 
         undefined
       , comment
       , literal_text
+      , blank_text
+      , eol
       , variable
       , boost::recursive_wrapper<section>
       , partial
@@ -51,6 +61,8 @@ namespace boost { namespace boostache { namespace frontend { namespace stache { 
       node() : base_type() {}
       node(comment const & rhs) : base_type(rhs) {}
       node(literal_text const & rhs) : base_type(rhs) {}
+      node(blank_text const & rhs) : base_type(rhs) {}
+      node(eol const & rhs) : base_type(rhs) {}
       node(variable const & rhs) : base_type(rhs) {}
       node(section const & rhs) : base_type(rhs) {}
       node(partial const & rhs) : base_type(rhs) {}

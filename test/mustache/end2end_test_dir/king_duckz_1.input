@@ -1,8 +1,8 @@
-{{lol}}
-{{lol}}
-{{lol}} and {{lol}}
+{{lol  }}
+{{  lol}}
+{{ lol  }} and {{lol}}
 -----------------------
-rigahello{{#hello}}
+  rigahello{{#hello}}
 {{#items}}
 name: "{{name}}"
 {{/items}}

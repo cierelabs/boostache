@@ -35,7 +35,7 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
          typedef vm::ast::node result_type;
 
          stache_visit(std::ostream& out)
-            : out(out)
+            : out(out), output_eol(false)
          {}
 
          vm::ast::node operator()(fe::stache::ast::undefined) const
@@ -49,11 +49,27 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
             /**
              *  In stache, the literals are trimmed if they are just whitespace.
              */
-            if(is_blank(v))
-            {
-               return vm::ast::nop{};
-            }
+            // if(is_blank(v))
+            // {
+            //    return vm::ast::nop{};
+            // }
             return vm::ast::literal{v};
+         }
+
+         vm::ast::node operator()(fe::stache::ast::blank_text const & v) const
+         {
+            return vm::ast::literal{v+"blank"};
+         }
+
+         vm::ast::node operator()(fe::stache::ast::eol const & v) const
+         {
+            if(output_eol)
+            {
+               output_eol = false;
+               return vm::ast::literal{v+"eol"};
+            }
+            
+            return vm::ast::nop{};
          }
 
          vm::ast::node operator()(fe::stache::ast::variable const & v) const
@@ -133,6 +149,7 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
 
       private:
          std::ostream& out;
+         bool output_eol;
       };
    }
 

@@ -27,7 +27,9 @@
 #include <boost/spirit/include/qi_lit.hpp>
 #include <boost/spirit/include/qi_matches.hpp>
 #include <boost/spirit/include/qi_no_skip.hpp>
+#include <boost/spirit/include/qi_skip.hpp>
 #include <boost/spirit/include/qi_omit.hpp>
+#include <boost/spirit/include/qi_eol.hpp>
 #include <boost/spirit/include/qi_plus.hpp>
 #include <boost/spirit/include/qi_sequence.hpp>
 #include <boost/spirit/include/support_argument.hpp>
@@ -44,19 +46,24 @@ namespace boost { namespace boostache { namespace frontend { namespace stache
       spirit::_1_type _1;
       spirit::_a_type _a;
       spirit::_r1_type _r1;
+      spirit::eol_type eol;
       qi::alnum_type alnum;
       qi::alpha_type alpha;
+      qi::blank_type blank;
       qi::attr_type attr;
       qi::char_type char_;
       qi::lexeme_type lexeme;
       qi::lit_type lit;
       qi::matches_type matches;
       qi::no_skip_type no_skip;
+      qi::skip_type skip;
       qi::omit_type omit;
 
 
       stache_node =
-            no_skip[literal_text]
+            end_of_line
+         |  blank_text
+         |  no_skip[literal_text]
          |  comment
          |  variable
          |  variable_unescaped
@@ -70,7 +77,15 @@ namespace boost { namespace boostache { namespace frontend { namespace stache
          ;
 
       literal_text =
-         +(char_ - "{{")
+         +(char_ - (eol|"{{"))
+         ;
+
+      blank_text =
+         no_skip[+blank]
+         ;
+
+      end_of_line %=
+         no_skip[eol >> attr(ast::eol{"\n\r"})]
          ;
 
       comment =
@@ -86,16 +101,22 @@ namespace boost { namespace boostache { namespace frontend { namespace stache
 
       variable =
             lit("{{")
-         >> matches['&']
-         >> identifier
-         >> "}}"
+         >> skip(qi::space_type{})
+            [
+                  matches['&']
+               >> identifier
+               >> "}}"
+            ]
          ;
 
       variable_unescaped =
             lit("{{{")
-         >> attr(true)
-         >> identifier
-         >> "}}}"
+         >> skip(qi::space_type{})
+            [
+                  attr(true)
+               >> identifier
+               >> "}}}"
+            ]
          ;
 
       section %=
@@ -110,6 +131,7 @@ namespace boost { namespace boostache { namespace frontend { namespace stache
          >> (lit('#') | '^')
          >> identifier
          >> "}}"
+//         >> omit[ no_skip[ (*char_(" ") >> eol) ] ]
          ;
 
       section_end =
@@ -117,6 +139,7 @@ namespace boost { namespace boostache { namespace frontend { namespace stache
          >> '/'
          >> lit(_r1)
          >> "}}"
+//         >> omit[ no_skip[ (*char_(" ") >> eol) ] ]
          ;
 
       partial =
