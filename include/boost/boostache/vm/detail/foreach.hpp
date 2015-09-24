@@ -11,6 +11,7 @@
 
 #include <boost/boostache/vm/traits.hpp>
 #include <boost/boostache/model/category.hpp>
+#include <boost/boostache/detail/unwrap_variant_visitor.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/optional.hpp>
@@ -78,28 +79,6 @@ namespace boost { namespace boostache { namespace extension
    template <typename T>
    using foreach_category_t = typename foreach_category<T>::type;
 
-   namespace detail
-   {
-      template <typename Stream, typename Node>
-      struct unwrap_variant_foreach
-      {
-         typedef void result_type;
-
-         unwrap_variant_foreach(Stream & stream, Node const & node)
-            : stream_(stream), node_(node)
-         {}
-
-         template <typename T>
-         void operator()(T const & context) const
-         {
-            vm::detail::foreach(stream_, node_, context);
-         }
-
-         Stream & stream_;
-         Node const & node_;
-      };
-   }
-
 }}}
 
 
@@ -121,8 +100,13 @@ namespace boost { namespace boostache { namespace vm { namespace detail
                , Context const & context
                , extension::variant_attribute)
    {
-      extension::detail::unwrap_variant_foreach<Stream,Node> variant_foreach(stream, node);
-      boost::apply_visitor(variant_foreach, context);
+      boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor(
+                               [&stream,&node](auto ctx)
+                               {
+                                  vm::detail::foreach(stream, node, ctx);
+                               }
+                            )
+                          , context);
    }
 
 
