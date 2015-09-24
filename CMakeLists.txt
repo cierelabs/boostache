@@ -16,7 +16,7 @@ macro(add_boost_test name source)
    target_include_directories(${name} PRIVATE ${Boost_INCLUDE_DIRS})
    target_link_libraries(${name} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${Boost_LIBRARIES})
 
-   add_test(${name} ${name})
+   add_test(NAME ${name} COMMAND ${name} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 endmacro(add_boost_test)
 
 add_subdirectory(examples)
