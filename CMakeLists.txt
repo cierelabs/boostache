@@ -9,9 +9,9 @@ find_package(Boost 1.53 COMPONENTS unit_test_framework system filesystem)
 
 add_definitions( -DBOOST_SPIRIT_USE_PHOENIX_V3=1 )
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  add_definitions( -std=c++0x -ftemplate-depth=512 -Wno-unused-local-typedefs -Wno-deprecated-declarations )
+  add_definitions( -std=c++14 -ftemplate-depth=512 -Wno-unused-local-typedefs -Wno-deprecated-declarations )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  add_definitions( -std=c++11 -ftemplate-depth=512 -stdlib=libc++ )
+  add_definitions( -std=c++14 -ftemplate-depth=512 -stdlib=libc++ )
 endif()
 # Not sure what to do with the <toolset>darwin
 
