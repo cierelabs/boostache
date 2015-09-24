@@ -9,7 +9,6 @@
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#include <boost/test/unit_test.hpp>
 #include <boost/boostache/stache.hpp>
 #include <boost/boostache/frontend/stache/grammar_def.hpp>
 #include <boost/boostache/frontend/stache/ast.hpp>
@@ -18,6 +17,9 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+
+#define BOOST_TEST_MAIN
+#include <boost/test/unit_test.hpp>
 
 namespace bstache = boost::boostache;
 namespace fe = boost::boostache::frontend;
