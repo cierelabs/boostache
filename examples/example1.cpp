@@ -43,9 +43,10 @@ int main()
    // This parses the input and compiles the result. The return is the
    // compiled data structure
    using boostache::load_template;
+   using boostache::format::stache;
 
    auto iter = input.begin();
-   auto templ = load_template<boostache::format::stache>(iter, input.end());
+   auto templ = load_template<stache>(iter, input.end());
    // ------------------------------------------------------------------
 
    // ------------------------------------------------------------------

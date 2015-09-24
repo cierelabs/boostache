@@ -75,6 +75,8 @@ namespace boost { namespace boostache { namespace extension
    struct foreach_category<std::map<std::string,T>>
       : mpl::identity<associative_attribute> {};
 
+   template <typename T>
+   using foreach_category_t = typename foreach_category<T>::type;
 
    namespace detail
    {
@@ -146,7 +148,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
       if(ctx)
       {
          foreach( stream, node, *ctx
-                , typename extension::foreach_category<decltype(*ctx)>::type{});
+                , extension::foreach_category_t<decltype(*ctx)>{});
       }
       else
       {
@@ -165,7 +167,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
       foreach( stream
              , node
              , context
-             , typename extension::foreach_category<Context>::type{});
+             , extension::foreach_category_t<Context>{});
    }
    
 }}}}
