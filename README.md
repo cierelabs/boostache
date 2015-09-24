@@ -9,7 +9,7 @@ Disclaimer: Boostache is NOT an official Boost library
 Status
 ==============
 
-This library is starting to get some attention again. Usage, build, and refernce docs coming. Examples too!
+This library is starting to get some attention again. Usage, build, and reference docs coming. Examples too!
 
 The CI status:
 
