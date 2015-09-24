@@ -8,7 +8,6 @@
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
-#include <boost/test/unit_test.hpp>
 #include <boost/spirit/include/support_extended_variant.hpp>
 
 #include <boost/boostache/boostache.hpp>
@@ -20,6 +19,9 @@
 #include <fstream>
 #include <map>
 #include <vector>
+
+#define BOOST_TEST_MAIN
+#include <boost/test/unit_test.hpp>
 
 namespace boostache = boost::boostache;
 namespace fe = boost::boostache::frontend;
