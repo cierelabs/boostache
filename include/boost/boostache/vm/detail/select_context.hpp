@@ -11,18 +11,11 @@
 
 #include <boost/boostache/vm/engine_ast.hpp>
 #include <boost/boostache/model/select_traits.hpp>
+#include <boost/boostache/detail/unwrap_variant_visitor.hpp>
 
 
 namespace boost { namespace boostache { namespace vm { namespace detail
 {
-
-   template <typename Stream, typename Template, typename Context>
-   struct unwrap_and_select_context;
-
-   template <typename Stream, typename Template>
-   struct unwrap_and_select_context_dispatch;
-
-
    template < typename Stream, typename Template
             , typename Context1, typename Context2
             , typename CategoryChild
@@ -54,7 +47,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
    void select_context( Stream & stream, Template const & templ
                       , Context1 const & /*ctx_parent*/
                       , Context2 const & ctx_child
-                      , extension::container_attribute)
+                      , extension::sequence_attribute)
    {
       generate(stream, templ, ctx_child);
    }
@@ -69,13 +62,13 @@ namespace boost { namespace boostache { namespace vm { namespace detail
                       , extension::variant_attribute)
    {
       boost::apply_visitor(
-           unwrap_and_select_context< Stream
-                                    , Template
-                                    , Context1>{ stream
-                                               , templ
-                                               , ctx_parent}
-           , ctx_child
-         );
+         boostache::detail::make_unwrap_variant_visitor(
+            [&stream,&templ,&ctx_parent](auto ctx)
+            {
+               select_context( stream, templ, ctx_parent, ctx
+                             , extension::select_category_t<decltype(ctx)>{});
+            })
+          , ctx_child);
    }
 
 
@@ -95,11 +88,13 @@ namespace boost { namespace boostache { namespace vm { namespace detail
                                , extension::variant_attribute)
    {
       boost::apply_visitor(
-           unwrap_and_select_context_dispatch< Stream
-                                             , ast::select_context>{ stream
-                                                        , templ }
-           , ctx
-         );
+         boostache::detail::make_unwrap_variant_visitor(
+            [&stream,&templ](auto ctx)
+            {
+               select_context_dispatch( stream, templ, ctx
+                                      , extension::select_category_t<decltype(ctx)>{});
+            })
+          , ctx);
    }
 
 
@@ -117,62 +112,16 @@ namespace boost { namespace boostache { namespace vm { namespace detail
          //           << " ctx_child "
          //           << typeid(iter->second).name()
          //           << " category "
-         //           << typeid(typename extension::select_category<decltype(iter->second)>::type{}).name();
+         //           << typeid(extension::select_category_t<decltype(iter->second)>{}).name();
             
          select_context( stream, templ.body, ctx, iter->second
-                       , typename extension::select_category<decltype(iter->second)>::type{});
+                       , extension::select_category_t<decltype(iter->second)>{});
       }
       else
       {
          generate(stream, templ.body, ctx);
       }
    }
-
-
-   // ------------------------------------------------------------------
-   // unwrap
-   // ------------------------------------------------------------------
-   template <typename Stream, typename Template, typename Context>
-   struct unwrap_and_select_context
-   {
-      typedef void result_type;
-
-      unwrap_and_select_context( Stream & stream, Template const & templ
-                               , Context const & ctx_parent)
-         : stream_(stream), templ_(templ), ctx_parent_(ctx_parent)
-      {}
-
-      template <typename T>
-      void operator()(T const & ctx_child) const
-      {
-         select_context( stream_, templ_, ctx_parent_, ctx_child
-                       , typename extension::select_category<T>::type{});
-      }
-
-      Stream & stream_;
-      Template const & templ_;
-      Context const & ctx_parent_;
-   };
-
-   template <typename Stream, typename Template>
-   struct unwrap_and_select_context_dispatch
-   {
-      typedef void result_type;
-
-      unwrap_and_select_context_dispatch( Stream & stream, Template const & templ)
-         : stream_(stream), templ_(templ)
-      {}
-
-      template <typename T>
-      void operator()(T const & ctx) const
-      {
-         select_context_dispatch( stream_, templ_, ctx
-                                , typename extension::select_category<T>::type{});
-      }
-
-      Stream & stream_;
-      Template const & templ_;
-   };
    // ------------------------------------------------------------------
    // ------------------------------------------------------------------
 

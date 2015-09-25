@@ -11,6 +11,7 @@
 
 #include <boost/boostache/vm/traits.hpp>
 #include <boost/boostache/model/category.hpp>
+#include <boost/boostache/detail/unwrap_variant_visitor.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/optional.hpp>
@@ -56,20 +57,16 @@ namespace boost { namespace boostache { namespace extension
       : mpl::identity<plain_attribute> {};
 
    template <typename T>
-   struct foreach_category<T,
-                           typename enable_if<vm::trait::is_variant<T>>::type>
+   struct foreach_category< T
+                          , vm::trait::enable_if_is_variant_t<T>
+                          >
       : mpl::identity<variant_attribute> {};
 
    template <typename T>
    struct foreach_category< T
-                          , typename std::enable_if<
-                               vm::trait::has_begin<
-                                  typename vm::trait::not_a_map<T>::type
-                                  >::value
-                               >::type
-                            >
-      : mpl::identity<container_attribute>
-   {};
+                          , vm::trait::enable_if_sequence_not_map_t<T>
+                          >
+      : mpl::identity<sequence_attribute> {};
 
    template <typename T>
    struct foreach_category<boost::optional<T>>
@@ -79,28 +76,8 @@ namespace boost { namespace boostache { namespace extension
    struct foreach_category<std::map<std::string,T>>
       : mpl::identity<associative_attribute> {};
 
-
-   namespace detail
-   {
-      template <typename Stream, typename Node>
-      struct unwrap_variant_foreach
-      {
-         typedef void result_type;
-
-         unwrap_variant_foreach(Stream & stream, Node const & node)
-            : stream_(stream), node_(node)
-         {}
-
-         template <typename T>
-         void operator()(T const & context) const
-         {
-            vm::detail::foreach(stream_, node_, context);
-         }
-
-         Stream & stream_;
-         Node const & node_;
-      };
-   }
+   template <typename T>
+   using foreach_category_t = typename foreach_category<T>::type;
 
 }}}
 
@@ -123,8 +100,13 @@ namespace boost { namespace boostache { namespace vm { namespace detail
                , Context const & context
                , extension::variant_attribute)
    {
-      extension::detail::unwrap_variant_foreach<Stream,Node> variant_foreach(stream, node);
-      boost::apply_visitor(variant_foreach, context);
+      boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor(
+                               [&stream,&node](auto ctx)
+                               {
+                                  vm::detail::foreach(stream, node, ctx);
+                               }
+                            )
+                          , context);
    }
 
 
@@ -132,7 +114,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
    void foreach( Stream & stream
                , Node const & node
                , Context const & context
-               , extension::container_attribute)
+               , extension::sequence_attribute)
    {
       for(auto const & item : context)
       {
@@ -150,7 +132,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
       if(ctx)
       {
          foreach( stream, node, *ctx
-                , typename extension::foreach_category<decltype(*ctx)>::type{});
+                , extension::foreach_category_t<decltype(*ctx)>{});
       }
       else
       {
@@ -169,7 +151,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
       foreach( stream
              , node
              , context
-             , typename extension::foreach_category<Context>::type{});
+             , extension::foreach_category_t<Context>{});
    }
    
 }}}}

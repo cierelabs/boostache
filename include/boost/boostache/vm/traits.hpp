@@ -13,15 +13,16 @@
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/variant/variant.hpp>
 #include <map>
+#include <type_traits>
 
 
 namespace boost { namespace boostache { namespace vm { namespace trait
 {
-    namespace detail
-    {
-       // this trait is enabled for the Spirit extended variant
-       BOOST_MPL_HAS_XXX_TRAIT_DEF(adapted_variant_tag)
-    }
+   namespace detail
+   {
+      // this trait is enabled for the Spirit extended variant
+      BOOST_MPL_HAS_XXX_TRAIT_DEF(adapted_variant_tag)
+   }
 
    template <typename T>
    struct is_variant
@@ -32,6 +33,9 @@ namespace boost { namespace boostache { namespace vm { namespace trait
    struct is_variant< boost::variant<T0,TN...> >
       : mpl::true_
    {};
+
+   template <typename T>
+   using enable_if_is_variant_t = typename std::enable_if<is_variant<T>::value>::type;
 
    using std::begin;
    template< class T
@@ -44,16 +48,30 @@ namespace boost { namespace boostache { namespace vm { namespace trait
    template<class T>
    using has_begin = decltype(has_begin_test(std::declval<T>()));
 
+   template<class T>
+   using has_begin_t = typename has_begin<T>::type;
+
 
    template<class T>
-   struct not_a_map
-   {
-      using type = T;
-   };
+   struct is_map
+      : mpl::false_
+   {};
 
    template<class T1,class T2>
-   struct not_a_map<std::map<T1,T2>>
+   struct is_map<std::map<T1,T2>>
+      : mpl::true_
    {};
+
+   template <typename T>
+   using is_map_t = typename is_map<T>::type;
+
+   template <typename T>
+   using enable_if_sequence_not_map_t =
+      typename std::enable_if<
+         std::integral_constant< bool
+                               , vm::trait::has_begin<T>::value
+                                 & !vm::trait::is_map<T>::value >::value
+      >::type;
 
 }}}}
 

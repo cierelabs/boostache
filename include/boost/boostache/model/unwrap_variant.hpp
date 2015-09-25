@@ -14,64 +14,21 @@
 
 #include <boost/boostache/vm/traits.hpp>
 #include <boost/boostache/model/category.hpp>
+#include <boost/boostache/detail/unwrap_variant_visitor.hpp>
 
 
 namespace boost { namespace boostache { namespace extension
 {
-   namespace detail
-   {
-      struct unwrap_variant_tag_test
-      {
-         typedef bool result_type;
-
-         unwrap_variant_tag_test(std::string const & t) : tag_(t) {}
-
-         template <typename T>
-         bool operator()(T const & context) const
-         {
-            return test(context, tag_);
-         }
-
-         std::string const & tag_;
-      };
-
-      struct unwrap_variant_test
-      {
-         typedef bool result_type;
-
-         template <typename T>
-         bool operator()(T const & context) const
-         {
-            return test(context);
-         }
-      };
-
-      template <typename Stream>
-      struct unwrap_variant_render
-      {
-         typedef void result_type;
-
-         unwrap_variant_render(Stream & s, std::string const & n) 
-            : stream_(s), name_(n) 
-         {}
-
-         template <typename T>
-         void operator()(T const & context) const
-         {
-            render(stream_,context,name_);
-         }
-
-         Stream & stream_;
-         std::string const & name_;
-      };
-   }
-
-
    template <typename T>
    bool test( T const & context, std::string const & tag
             , variant_attribute)
    {
-      return boost::apply_visitor( detail::unwrap_variant_tag_test{tag}
+      return boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor<bool>(
+                                      [&tag](auto ctx)
+                                      {
+                                         return test(ctx, tag);
+                                      }
+                                   )
                                  , context);
    }
 
@@ -80,7 +37,12 @@ namespace boost { namespace boostache { namespace extension
    bool test( T const & context
             , variant_attribute)
    {
-      return boost::apply_visitor( detail::unwrap_variant_test{}
+      return boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor<bool>(
+                                      [](auto ctx)
+                                      {
+                                         return test(ctx);
+                                      }
+                                   )
                                  , context);
    }
 
@@ -89,8 +51,13 @@ namespace boost { namespace boostache { namespace extension
    void render( Stream & stream, T const & context, std::string const & name
               , variant_attribute)
    {
-      detail::unwrap_variant_render<Stream> variant_render(stream,name);
-      return boost::apply_visitor(variant_render, context);
+      return boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor(
+                                      [&stream,&name](auto ctx)
+                                      {
+                                         render(stream,ctx,name);
+                                      }
+                                   )
+                                 , context);
    }
 
 }}}

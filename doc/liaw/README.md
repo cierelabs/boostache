@@ -2,7 +2,7 @@ Title: 2014 Library in a Week - c++ templating engine
 
 Library in a week 2014 will attempt to build a C++ template engine library.  Templating 
 engines are very popular libraries that provide a way to separate an application 
-from ouput.  Often the output is a html or text that may be developed by an 
+from output.  Often the output is a html or text that may be developed by an 
 non-programmer or other development team.
 
 
@@ -31,14 +31,14 @@ Consider the following program which uses the ctemplate library:
 In this example the output is simple text, but the template file could be replaced
 with html or json and the application would not need to be changed.
 
-A templating engine has two languages - the markup langauge the allows 
-a text template to be filled in by an application and the library langauge 
+A templating engine has two languages - the markup language the allows 
+a text template to be filled in by an application and the library language 
 for the application to be developed.  In our case the library language will
 be C++11.
 
-The workshop will work like this.  On day 1 I will provide motiviation
+The workshop will work like this.  On day 1 I will provide motivation
 and an overview of the library development. We will split into individuals
-and groups to attack various aspects of the library and markup languge 
+and groups to attack various aspects of the library and markup language 
 design.  Some groups may look at existing libraries for inspiration providing
 presentations on the best aspects of the other libraries. From that point
 forward it will be up to the group to direct the remainder of the workshop.

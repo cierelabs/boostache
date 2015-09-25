@@ -23,8 +23,8 @@ namespace boost { namespace boostache { namespace extension
       : mpl::identity<plain_attribute> {};
 
    template <typename T>
-   struct render_category<T,
-                          typename enable_if<vm::trait::is_variant<T>>::type>
+   struct render_category< T
+                         , vm::trait::enable_if_is_variant_t<T> >
       : mpl::identity<variant_attribute> {};
 
    template <typename T>
@@ -36,17 +36,14 @@ namespace boost { namespace boostache { namespace extension
    struct render_category<std::map<std::string,T>>
       : mpl::identity<associative_attribute> {};
 
-
    template <typename T>
    struct render_category< T
-                         , typename std::enable_if<
-                              vm::trait::has_begin<
-                                 typename vm::trait::not_a_map<T>::type 
-                                 >::value 
-                              >::type
-                           >
-      : mpl::identity<container_attribute>
-   {};
+                         , vm::trait::enable_if_sequence_not_map_t<T>
+                         >
+      : mpl::identity<sequence_attribute> {};
+
+   template <typename T>
+   using render_category_t = typename render_category<T>::type;
 
 }}}
 

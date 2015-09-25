@@ -12,8 +12,8 @@
 #include <boost/boostache/vm/engine_ast.hpp>
 #include <boost/boostache/frontend/stache/ast.hpp>
 #include <boost/boostache/backend/detail/stache_compiler.hpp>
-
 #include <boost/algorithm/string/trim.hpp>
+
 
 namespace boost { namespace boostache { namespace backend { namespace stache_compiler
 {
@@ -32,7 +32,7 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
       class stache_visit
       {
       public:
-         typedef vm::ast::node result_type;
+         using result_type = vm::ast::node;
 
          stache_visit(std::ostream& out)
             : out(out), output_eol(false)
@@ -93,23 +93,23 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
                vm_ast.nodes.push_back(boost::apply_visitor(*this, node));
             }
 
-            vm::ast::for_each section_body;
-            section_body.name = sec.name;
-            section_body.value = vm_ast;
-
             vm::ast::if_then_else if_block;
             if_block.condition_.name = sec.name;
-
-            vm::ast::select_context select;
-            select.tag = sec.name;
-            select.body = section_body;
-
+            
             if(sec.is_inverted)
             {
-               if_block.else_ = select;
+               if_block.else_ = vm_ast;
             }
             else
             {
+               vm::ast::for_each section_body;
+               section_body.name = sec.name;
+               section_body.value = vm_ast;
+               
+               vm::ast::select_context select;
+               select.tag = sec.name;
+               select.body = section_body;
+               
                if_block.then_ = select;
             }
 
@@ -161,4 +161,3 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
 }}}}
 
 #endif
-

@@ -12,12 +12,9 @@ Some cool section ][<render> : whoot][<literal node> :  is here.
 [<UNDEFINED>]
 ]
 [<else> : --------------------------- 
-[<for_each> :
 [<literal node> : 
 Some cool empty section ][<render> : whoot][<literal node> :  is here.
 ]
-</for_each>]
-
 </if>]
 [<literal node> :  done.
 ]
