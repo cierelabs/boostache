@@ -12,15 +12,9 @@ Some cool section ][<render> : whoot][<literal node> :  is here.
 [<UNDEFINED>]
 ]
 [<else> : --------------------------- 
-[<select_context> [bar] :
-[<for_each> :
 [<literal node> : 
 Some cool empty section ][<render> : whoot][<literal node> :  is here.
 ]
-</for_each>]
-
-</select_context>]
-
 </if>]
 [<literal node> :  done.
 ]
