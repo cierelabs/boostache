@@ -58,6 +58,7 @@ std::string print_ast(std::string const & filename)
    map_t data = {
       {"contacts" , map_t{{"foo","gorp"}}},
       {"foo"      , "bar"},
+      {"string"   , "---"},
       {"me"       , "Daniel"},
       {"pet"      , "turtles"},
       {"lpet"     , "Turtles"},

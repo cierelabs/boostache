@@ -28,14 +28,62 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
          return( s.find_first_not_of(std::string{" \t\r\n"})
                  ==  std::string::npos );
       }
+
+      class state
+      {
+      public:
+         void add_ws(std::string const & ws)
+         {
+            white_space += ws;
+         }
+
+         void add_eol(std::string const & ws)
+         {
+            if(!tag_count)
+            {
+               white_space.clear();
+            }
+            else
+            {
+               white_space += ws;
+            }
+
+            tag_count = 0;
+         }
+
+         std::string get_ws()
+         {
+            std::string ws;
+            std::swap(ws,white_space);
+            return ws;
+         }
+
+         void flush_ws()
+         {
+            white_space.clear();
+         }
+
+         void standalone_tag()
+         {
+         }
+
+         void tag()
+         {
+            ++tag_count;
+         }
+
+      private:
+         std::string white_space;
+         int tag_count = 0;
+      };
       
       class stache_visit
       {
       public:
          using result_type = vm::ast::node;
 
-         stache_visit(std::ostream& out)
-            : out(out), output_eol(false)
+         stache_visit(std::ostream& out, state & s)
+            : out(out), state_(s)
          {}
 
          vm::ast::node operator()(fe::stache::ast::undefined) const
@@ -53,28 +101,46 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
             // {
             //    return vm::ast::nop{};
             // }
-            return vm::ast::literal{v};
+            state_.tag();
+            return vm::ast::literal{state_.get_ws()+v};
          }
 
          vm::ast::node operator()(fe::stache::ast::blank_text const & v) const
          {
-            return vm::ast::literal{v+"blank"};
+            state_.add_ws(v);
+            //return vm::ast::literal{"<blank>"};
+            return vm::ast::nop{};
          }
 
          vm::ast::node operator()(fe::stache::ast::eol const & v) const
          {
-            if(output_eol)
+            state_.add_eol(v);
+            auto ws = state_.get_ws();
+            if(!ws.empty())
             {
-               output_eol = false;
-               return vm::ast::literal{v+"eol"};
+               return vm::ast::literal{ws};
             }
-            
-            return vm::ast::nop{};
+            else
+            {
+               return vm::ast::nop{};
+            }
          }
 
          vm::ast::node operator()(fe::stache::ast::variable const & v) const
          {
-            return vm::ast::render{v.value};
+            state_.tag();
+            std::string white_space{state_.get_ws()};
+            if(white_space.empty())
+            {
+               return vm::ast::render{v.value};
+            }
+            else
+            {
+               vm::ast::node_list vm_ast;
+               vm_ast.nodes.push_back(vm::ast::literal{std::move(white_space)});
+               vm_ast.nodes.push_back(vm::ast::render{v.value});
+               return vm_ast;
+            }
          }
 
          /**
@@ -87,6 +153,7 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
           */
          vm::ast::node operator()(fe::stache::ast::section const & sec) const
          {
+            state_.standalone_tag();
             vm::ast::node_list vm_ast;
             for(auto const & node : sec.nodes)
             {
@@ -118,12 +185,14 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
 
          vm::ast::node operator()(fe::stache::ast::comment const & v) const
          {
+            state_.standalone_tag();
             return vm::ast::nop{};
          }         
 
          vm::ast::node operator()(fe::stache::ast::partial const & v) const
          {
             // TODO: need to implement partials
+            state_.standalone_tag();
             return vm::ast::nop{};
          }         
 
@@ -149,13 +218,14 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
 
       private:
          std::ostream& out;
-         bool output_eol;
+         state & state_;
       };
    }
 
    inline vm::ast::node compile(fe::stache::ast::root const & ast)
    {
-      detail::stache_visit visit(std::cout);
+      detail::state s{};
+      detail::stache_visit visit(std::cout,s);
       return visit(ast);
    }
 }}}}

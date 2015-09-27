@@ -1,0 +1,37 @@
+12345{{! Comment Block! }}67890
+~~~
+|
+12345{{!
+  This is a
+  multi-line comment...
+}}67890
+~~~
+|
+Begin.
+{{! Comment Block! }}
+End.
+~~~
+|
+Begin.
+  {{! Indented Comment Block! }}
+End.
+~~~
+  {{! I'm Still Standalone }}
+!
+~~~
+|
+Begin.
+{{!
+Multiline
+comment
+!
+}}
+End.
+~~~
+  12 {{! 34 }}
+~~~
+12345 {{! Comment Block! }} 67890
+~~~
+|
+   {{! comment 1 }}   {{! comment 2 }}
+test

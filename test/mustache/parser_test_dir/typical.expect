@@ -1,5 +1,5 @@
-Hello {{name}}
-You have just won {{value}} dollars!
-{{#in_ca}}
-Well, {{taxed_value}} dollars, after taxes.
-{{/in_ca}}
+Hello {{name}}<eol>
+You have just won {{value}}<blank_text> dollars!<eol>
+{{#in_ca}}<eol>
+Well, {{taxed_value}}<blank_text> dollars, after taxes.<eol>
+{{/in_ca}}<eol>

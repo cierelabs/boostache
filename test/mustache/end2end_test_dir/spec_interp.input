@@ -1,0 +1,6 @@
+|{{ string }}|
+~~~
+  {{{string}}}
+~~~
+  {{{string}}}  {{! some comment }}
+~~~

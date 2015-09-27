@@ -84,8 +84,10 @@ namespace boost { namespace boostache { namespace frontend { namespace stache
          no_skip[+blank]
          ;
 
-      end_of_line %=
-         no_skip[eol >> attr(ast::eol{"\n\r"})]
+      end_of_line =
+            char_('\n')
+         >> (   (char_("\r") >> attr(ast::eol{"\n\r"}))
+              | attr(ast::eol{"\n"}) );
          ;
 
       comment =
@@ -128,25 +130,34 @@ namespace boost { namespace boostache { namespace frontend { namespace stache
 
       section_begin =
             lit("{{")
-         >> (lit('#') | '^')
-         >> identifier
-         >> "}}"
+         >> skip(qi::space_type{})
+            [
+                  (lit('#') | '^')
+               >> identifier
+               >> "}}"
 //         >> omit[ no_skip[ (*char_(" ") >> eol) ] ]
+            ]
          ;
 
       section_end =
             lit("{{")
-         >> '/'
-         >> lit(_r1)
-         >> "}}"
+         >> skip(qi::space_type{})
+            [
+                  '/'
+               >> lit(_r1)
+               >> "}}"
+            ]
 //         >> omit[ no_skip[ (*char_(" ") >> eol) ] ]
          ;
 
       partial =
             lit("{{")
-         >> '>'
-         >> identifier
-         >> "}}"
+         >> skip(qi::space_type{})
+            [
+                  '>'
+               >> identifier
+               >> "}}"
+            ]
          ;
    };
 }}}}

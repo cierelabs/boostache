@@ -1,0 +1,12 @@
+|
+| This Is
+   {{#showme}}
+|
+   {{/showme}}
+| A Line
+~~~
+|
+| This Is
+   {{#showme}}  {{string  }} {{/showme}}
+| A Line
+~~~

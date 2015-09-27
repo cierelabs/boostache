@@ -1,7 +1,7 @@
 /**
  *  \file stache_printer.hpp
  *
- *  Copyright 2014 Michael Caisse : ciere.com
+ *  Copyright 2014, 2015 Michael Caisse : ciere.com
  *  Copyright 2014 Jeroen Habraken
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -31,8 +31,19 @@ namespace boost { namespace boostache { namespace frontend { namespace stache { 
             out << "WHOA! we have an undefined" << std::endl;
          }
 
+         void operator()(blank_text const & v) const
+         {
+            out << "<blank_text>" << v;
+         }
+
+         void operator()(eol const & v) const
+         {
+            out << "<eol>" << v;
+         }
+
          void operator()(comment) const
          {
+            out << "<comment>";
          }
 
          void operator()(literal_text const & v) const

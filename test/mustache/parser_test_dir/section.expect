@@ -1,6 +1,6 @@
-{{#repo}}
-  <b>{{name}}</b>
-{{/repo}}
-{{^repo}}
-  No repos :(
-{{/repo}}
+{{#repo}}<eol>
+<blank_text>  <b>{{name}}</b><eol>
+{{/repo}}<eol>
+{{^repo}}<eol>
+<blank_text>  No repos :(<eol>
+{{/repo}}<eol>

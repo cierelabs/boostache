@@ -49,6 +49,27 @@ void test_parse(std::string const & filename)
    std::string expected( std::istreambuf_iterator<char>{expect_stream}
                        , std::istreambuf_iterator<char>{});
 
+   auto diff_iters = std::mismatch(input_ast.begin(), input_ast.end(),
+                                   expected.begin(), expected.end());
+
+   if(std::get<0>(diff_iters) != input_ast.end())
+   {
+      auto iter = std::get<0>(diff_iters);
+      std::cout << "generated difference at:\n"
+                << "   offset: " << std::distance(input_ast.begin(), iter) << "\n"
+                << "   value: " << *iter << "\n"
+                << "   value: 0x" << std::hex << int(*iter) << std::dec << "\n";
+   }
+
+   if(std::get<1>(diff_iters) != expected.end())
+   {
+      auto iter = std::get<1>(diff_iters);
+      std::cout << "expected difference at:\n"
+                << "   offset: " << std::distance(expected.begin(), iter) << "\n"
+                << "   value: " << *iter << "\n"
+                << "   value: 0x" << std::hex << int(*iter) << std::dec << "\n";
+   }
+   
    BOOST_CHECK_EQUAL(input_ast,expected);
 }
 

@@ -1,22 +1,20 @@
-[<literal node> : Hello world 
-][<render> : name][<literal node> :  is here.
-][<render> : escaped_name][<literal node> :  is here
+[<literal node> : Hello world ][<literal node> : 
+][<render> : name][<nop>][<literal node> :  is here.][<literal node> : 
+][<render> : escaped_name][<nop>][<literal node> :  is here][<literal node> : 
 ][<if> : --------------------------- 
 [<then> : --------------------------- 
 [<select_context> [foo] :
 [<for_each> :
-[<literal node> : 
-Some cool section ][<render> : whoot][<literal node> :  is here.
+[<nop>][<literal node> : Some cool section ][<render> : whoot][<nop>][<literal node> :  is here.][<literal node> : 
 ][<if> : --------------------------- 
 [<then> : --------------------------- 
 [<UNDEFINED>]
 ]
 [<else> : --------------------------- 
-[<literal node> : 
-Some cool empty section ][<render> : whoot][<literal node> :  is here.
+[<nop>][<literal node> : Some cool empty section ][<render> : whoot][<nop>][<literal node> :  is here.][<literal node> : 
 ]
 </if>]
-[<literal node> :  done.
+[<nop>][<literal node> :  done.][<literal node> : 
 ]
 </for_each>]
 
@@ -26,5 +24,5 @@ Some cool empty section ][<render> : whoot][<literal node> :  is here.
 [<else> : --------------------------- 
 [<UNDEFINED>]
 </if>]
-[<literal node> :  done.
+[<nop>][<literal node> :  done.][<literal node> : 
 ]
