@@ -101,7 +101,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
                , extension::variant_attribute)
    {
       boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor(
-                               [&stream,&node](auto ctx)
+                               [&stream,&node](Context const & ctx)
                                {
                                   vm::detail::foreach(stream, node, ctx);
                                }
