@@ -17,6 +17,7 @@
 
 #include <sstream>
 #include <string>
+#include <boost/algorithm/cxx14/mismatch.hpp>
 
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
@@ -62,7 +63,7 @@ BOOST_AUTO_TEST_CASE(stache_parse_test)
       );
 
    auto input_ast = stream.str();
-   auto diff_iters = std::mismatch(input_ast.begin(), input_ast.end(),
+   auto diff_iters = boost::algorithm::mismatch(input_ast.begin(), input_ast.end(),
                                    expected.begin(), expected.end());
 
    if(std::get<0>(diff_iters) != input_ast.end())
