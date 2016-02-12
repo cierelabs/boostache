@@ -63,7 +63,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
    {
       boost::apply_visitor(
          boostache::detail::make_unwrap_variant_visitor(
-            [&stream,&templ,&ctx_parent](auto ctx)
+            [&stream,&templ,&ctx_parent](Context2 const & ctx)
             {
                select_context( stream, templ, ctx_parent, ctx
                              , extension::select_category_t<decltype(ctx)>{});
@@ -89,7 +89,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
    {
       boost::apply_visitor(
          boostache::detail::make_unwrap_variant_visitor(
-            [&stream,&templ](auto ctx)
+            [&stream,&templ](Context const & ctx)
             {
                select_context_dispatch( stream, templ, ctx
                                       , extension::select_category_t<decltype(ctx)>{});
