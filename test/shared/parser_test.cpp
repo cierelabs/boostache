@@ -19,6 +19,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/parameterized_test.hpp>
+#include <boost/algorithm/cxx14/mismatch.hpp>
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -49,7 +50,7 @@ void test_parse(std::string const & filename)
    std::string expected( std::istreambuf_iterator<char>{expect_stream}
                        , std::istreambuf_iterator<char>{});
 
-   auto diff_iters = std::mismatch(input_ast.begin(), input_ast.end(),
+   auto diff_iters = boost::algorithm::mismatch(input_ast.begin(), input_ast.end(),
                                    expected.begin(), expected.end());
 
    if(std::get<0>(diff_iters) != input_ast.end())
