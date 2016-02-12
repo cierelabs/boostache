@@ -24,7 +24,7 @@ namespace boost { namespace boostache { namespace extension
             , variant_attribute)
    {
       return boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor<bool>(
-                                      [&tag](auto ctx)
+                                      [&tag](T const & ctx)
                                       {
                                          return test(ctx, tag);
                                       }
@@ -38,7 +38,7 @@ namespace boost { namespace boostache { namespace extension
             , variant_attribute)
    {
       return boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor<bool>(
-                                      [](auto ctx)
+                                      [](T const & ctx)
                                       {
                                          return test(ctx);
                                       }
@@ -51,8 +51,8 @@ namespace boost { namespace boostache { namespace extension
    void render( Stream & stream, T const & context, std::string const & name
               , variant_attribute)
    {
-      return boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor(
-                                      [&stream,&name](auto ctx)
+      boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor(
+                                      [&stream,&name](T const& ctx)
                                       {
                                          render(stream,ctx,name);
                                       }
