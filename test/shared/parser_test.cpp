@@ -80,6 +80,7 @@ bool init_unit_test_suite()
 {
    if(!boost::filesystem::is_directory(test_dir.c_str()))
    {
+      std::cerr << "unable to open directory: " << test_dir << std::endl;
       return false;
    }
 

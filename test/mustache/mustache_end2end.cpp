@@ -68,6 +68,11 @@ std::string print_ast(std::string const & filename)
                                   {"job"     , "write code"} }
          }
       },
+      {"colours"    , list_t{ "blue", "red", "green", "yellow" }},
+      {"lists"      , list_t{ list_t{ "dog", "cat", "mouse"},
+                              list_t{ "small", "medium", "large"},
+                              list_t{ "earth", "wind", "fire", "water"} }
+      },
       {"title"      , "Multiple Mustaches"},
       {"comment"    , "this shouldn't be here"},
       {"showme"     , true},
