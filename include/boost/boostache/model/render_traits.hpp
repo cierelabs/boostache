@@ -22,6 +22,10 @@ namespace boost { namespace boostache { namespace extension
    struct render_category
       : mpl::identity<plain_attribute> {};
 
+   template <>
+   struct render_category<std::string>
+      : mpl::identity<plain_attribute> {};
+
    template <typename T>
    struct render_category< T
                          , vm::trait::enable_if_is_variant_t<T> >
