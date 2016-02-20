@@ -92,7 +92,19 @@ namespace boost { namespace boostache { namespace vm { namespace detail
    {
       generate(stream, node.value, context);
    }
-
+#ifdef BOOSTACHE_USE_CPP11
+   template<class Stream,class Node>
+   struct Cpp11GenericLamdaSimulation_foreach
+   {
+       Stream& stream;
+       const Node& node;
+       Cpp11GenericLamdaSimulation_foreach(Stream& stream,const Node& node):stream(stream),node(node){}
+       template<class T>
+       void operator()(const T& ctx)const{
+           vm::detail::foreach(stream, node, ctx);
+       }
+   };
+#endif
 
    template <typename Stream, typename Node, typename Context>
    void foreach( Stream & stream
@@ -101,10 +113,14 @@ namespace boost { namespace boostache { namespace vm { namespace detail
                , extension::variant_attribute)
    {
       boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor(
-                               [&stream,&node](Context const & ctx)
+                          #ifdef BOOSTACHE_USE_CPP11
+                               Cpp11GenericLamdaSimulation_foreach<Stream,Node>(stream,node)
+                          #else
+                                [&stream,&node](auto ctx)
                                {
                                   vm::detail::foreach(stream, node, ctx);
                                }
+                          #endif
                             )
                           , context);
    }
