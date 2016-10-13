@@ -51,8 +51,21 @@ namespace boost { namespace boostache { namespace vm { namespace detail
    {
       generate(stream, templ, ctx_child);
    }
-
-
+#ifdef BOOSTACHE_USE_CPP11
+   template<class Stream,class Temp, class ParentContext>
+   struct Cpp11GenericLamdaSimulation_select_with_parent_ctx
+   {
+       Stream& stream;
+       const Temp& templ;
+       const ParentContext& ctx_parent;
+       Cpp11GenericLamdaSimulation_select_with_parent_ctx(Stream& stream,const Temp& temp,const ParentContext& ctx_parent):stream(stream),templ(temp),ctx_parent(ctx_parent){}
+       template<class T>
+       void operator()(const T& ctx)const{
+           select_context( stream, templ, ctx_parent, ctx
+                         , extension::select_category_t<decltype(ctx)>{});
+       }
+   };
+#endif
    template < typename Stream, typename Template
             , typename Context1, typename Context2
             >
@@ -63,11 +76,16 @@ namespace boost { namespace boostache { namespace vm { namespace detail
    {
       boost::apply_visitor(
          boostache::detail::make_unwrap_variant_visitor(
+            #ifdef BOOSTACHE_USE_CPP11
+                Cpp11GenericLamdaSimulation_select_with_parent_ctx<Stream,Template,Context1>(stream,templ,ctx_parent)
+            #else
             [&stream,&templ,&ctx_parent](auto ctx)
             {
                select_context( stream, templ, ctx_parent, ctx
                              , extension::select_category_t<decltype(ctx)>{});
-            })
+            }
+            #endif
+      )
           , ctx_child);
    }
 
@@ -80,6 +98,20 @@ namespace boost { namespace boostache { namespace vm { namespace detail
       generate(stream, templ.body, ctx);
    }
 
+#ifdef BOOSTACHE_USE_CPP11
+   template<class Stream,class Temp>
+   struct Cpp11GenericLamdaSimulation_select
+   {
+       Stream& stream;
+       const Temp& templ;
+       Cpp11GenericLamdaSimulation_select(Stream& stream,const Temp& temp):stream(stream),templ(temp){}
+       template<class T>
+       void operator()(const T& ctx)const{
+           select_context_dispatch( stream, templ, ctx
+                                  , extension::select_category_t<decltype(ctx)>{});
+       }
+   };
+#endif
 
    template <typename Stream, typename Context>
    void select_context_dispatch( Stream & stream
@@ -89,11 +121,16 @@ namespace boost { namespace boostache { namespace vm { namespace detail
    {
       boost::apply_visitor(
          boostache::detail::make_unwrap_variant_visitor(
-            [&stream,&templ](auto ctx)
+                #ifdef BOOSTACHE_USE_CPP11
+                   Cpp11GenericLamdaSimulation_select<Stream,ast::select_context>(stream,templ)
+                #else
+                    [&stream,&templ](auto ctx)
             {
                select_context_dispatch( stream, templ, ctx
                                       , extension::select_category_t<decltype(ctx)>{});
-            })
+            }
+                #endif
+      )
           , ctx);
    }
 
