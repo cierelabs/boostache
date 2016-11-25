@@ -106,7 +106,7 @@ namespace boost { namespace boostache { namespace frontend { namespace stache
          >> skip(qi::space_type{})
             [
                   matches['&']
-               >> identifier
+               >> ("." | identifier)
                >> "}}"
             ]
          ;
@@ -133,7 +133,7 @@ namespace boost { namespace boostache { namespace frontend { namespace stache
          >> skip(qi::space_type{})
             [
                   (lit('#') | '^')
-               >> identifier
+                  >> (("." >> attr(std::string("."))) | identifier)
                >> "}}"
 //         >> omit[ no_skip[ (*char_(" ") >> eol) ] ]
             ]

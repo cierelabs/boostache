@@ -1,0 +1,4 @@
+Some colours:
+{{# colours}}
+ - {{.}}
+{{/ colours}}
