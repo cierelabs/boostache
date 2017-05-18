@@ -75,7 +75,7 @@ namespace boost { namespace boostache { namespace backend { namespace django_com
             }
 
             vm::ast::if_then_else if_then_else;
-            if_then_else.condition_.name = if_elif_else.if_.condition.front();
+            if_then_else.condition_.name = if_elif_else.if_.condition_.front();
             if_then_else.then_ = std::move(then_);
             if(static_cast<bool>(if_elif_else.else_))
             {
@@ -90,7 +90,33 @@ namespace boost { namespace boostache { namespace backend { namespace django_com
             return if_then_else;
          }
 
-         vm::ast::node operator()(fe::django::ast::root const & nodes) const
+		 vm::ast::node operator()(fe::django::ast::for_in const & for_in) const
+		 {
+			 vm::ast::node_list vm_ast;
+			 for (auto const & node : for_in.body)
+			 {
+				 vm_ast.nodes.push_back(boost::apply_visitor(*this, node));
+			 }
+
+			 vm::ast::for_each for_each_;
+//			 for_each_.name = (*this)(for_in.set);
+			 for_each_.value = vm_ast;
+
+			 vm::ast::node body = for_each_;
+			 for (auto iter = for_in.set.begin(); iter != for_in.set.end(); ++iter)
+			 {
+				 vm::ast::select_context select;
+				 select.tag = *iter;
+				 select.body = std::move(body);
+				 body = std::move(select);
+			 }
+			 return body;
+
+			 //out << "WHOA! for_in not yet implemented" << std::endl;
+			 //return vm::ast::node{};
+		 }
+
+		 vm::ast::node operator()(fe::django::ast::root const & nodes) const
          {
             vm::ast::node_list node_list;
             for(auto const & node : nodes)

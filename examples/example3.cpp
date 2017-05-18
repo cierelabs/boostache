@@ -56,7 +56,7 @@ struct value_t : boost::spirit::extended_variant< std::string
 // -------------------------------------------------------
 
 
-int main()
+int example3()
 {
    // ------------------------------------------------------------------
    // The template describing an invoice.
@@ -65,7 +65,17 @@ int main()
                       "\n"
                       "{{# company}}"
                       "Company: {{name}}\n"
-                      "         {{street}}\n"
+	   "Invoice again: {{invoice_number}}\n"
+	   "{{#invoice_number}}\n"
+	   "has invoice\n"
+	   "{{/invoice_number}}\n"
+	   "{{#paied}}\n"
+	   "has paied\n"
+	   "{{/paied}}\n"
+	   "{{^paied}}\n"
+	   "has not paied\n"
+	   "{{/paied}}\n"
+	   "         {{street}}\n"
                       "         {{city}}, {{state}}  {{zip}}\n"
                       "{{/ company}}"
                       "------------------------------------------------\n"
@@ -114,4 +124,6 @@ int main()
    // ------------------------------------------------------------------
 
    std::cout << stream.str();
+
+   return 0;
 }

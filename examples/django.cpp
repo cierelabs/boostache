@@ -37,7 +37,7 @@ struct my_node_t : boost::spirit::extended_variant<
    my_node_t(list_t const & rhs) : base_type(rhs) {}
 };
 
-int main()
+int django()
 {
    // ------------------------------------------------------------------
    // Describe the input template. We are going to use django format.
@@ -45,6 +45,9 @@ int main()
          "My name is {{another.name}}. "
          "{# This is a comment #}"
          "I am {{pet}} years old."
+		"{%% for contact in people %%}"
+	   "a contact {{contract.name}}\n"
+	   "{%% endfor %%}"
          "{%% if dontshowme %%}"
          "Yep"
          "{%% else %%}"
@@ -97,4 +100,6 @@ int main()
 
    // print the result
    std::cout << stream.str();
+
+   return 0;
 }
