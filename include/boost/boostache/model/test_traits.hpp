@@ -2,6 +2,7 @@
  *  \file test_traits.hpp
  *
  *  Copyright 2014, 2015 Michael Caisse : ciere.com
+ *  Copyright 2017 Tobias Loew : die-loews.de
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -11,6 +12,7 @@
 
 #include <boost/optional.hpp>
 #include <boost/boostache/vm/traits.hpp>
+#include <boost/boostache/vm/detail/stacked_context.hpp>
 #include <boost/boostache/model/category.hpp>
 #include <type_traits>
 #include <map>

@@ -11,6 +11,7 @@
 
 #include <boost/optional.hpp>
 #include <boost/boostache/vm/traits.hpp>
+#include <boost/boostache/vm/detail/stacked_context.hpp>
 #include <boost/boostache/model/category.hpp>
 #include <type_traits>
 #include <map>
