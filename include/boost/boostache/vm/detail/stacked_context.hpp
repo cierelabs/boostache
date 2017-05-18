@@ -9,10 +9,6 @@
 #ifndef BOOST_BOOSTACHE_VM_DETAIL_STACKED_CONTEXT_HPP
 #define BOOST_BOOSTACHE_VM_DETAIL_STACKED_CONTEXT_HPP
 
-#include <boost/boostache/vm/engine_ast.hpp>
-#include <boost/boostache/model/select_traits.hpp>
-#include <boost/boostache/detail/unwrap_variant_visitor.hpp>
-
 
 namespace boost { namespace boostache { namespace vm { namespace detail
 {
