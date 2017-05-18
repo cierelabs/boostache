@@ -55,7 +55,8 @@ namespace boost { namespace boostache { namespace frontend { namespace django
             no_skip[literal_text]
          |  comment
          |  variable
-         |  if_elif_else
+		 | if_elif_else
+		 |  for_in
          ;
 
       node_list =
@@ -107,6 +108,19 @@ namespace boost { namespace boostache { namespace frontend { namespace django
          >> "endif"
          >> "%%}"
          ;
+
+	  for_in =
+		  lit("{%%")
+		  >> "for"
+		  >> identifier
+		  >> "in"
+		  >> lexeme[identifier % "."]
+		  >> "%%}"
+		  >> node_list
+		  >> "{%%"
+		  >> "endfor"
+		  >> "%%}"
+		  ;
    };
 }}}}
 

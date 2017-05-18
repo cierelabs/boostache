@@ -16,12 +16,19 @@
 
 namespace boost { namespace boostache { namespace vm { namespace ast
 {
+	// unary functions supported by the vm
+	enum class unary_function_enum {
+		lower
+	};
+
+
    struct literal;
    struct variable;
    struct for_each;
    struct if_then_else;
    struct select_context;
    struct node_list;
+   struct unary_function;
 
    struct undefined {};
 
@@ -48,31 +55,42 @@ namespace boost { namespace boostache { namespace vm { namespace ast
       std::string name;
    };
 
+   struct unary_function
+   {
+	   unary_function_enum function;
+	   variable argument;
+   };
+
    struct node : boost::spirit::extended_variant<
         undefined
       , nop
       , literal
       , variable
       , render
+	  , unary_function
       , boost::recursive_wrapper<for_each>
       , boost::recursive_wrapper<if_then_else>
       , boost::recursive_wrapper<select_context>
       , boost::recursive_wrapper<node_list> >
    {
       node() : base_type() {}
-      node(nop const & rhs) : base_type(rhs) {}
-      node(literal const & rhs) : base_type(rhs) {}
+	  //template<class T>
+   //   node(T const & rhs) : base_type(rhs) {}
+	  node(nop const & rhs) : base_type(rhs) {}
+	  node(literal const & rhs) : base_type(rhs) {}
       node(variable const & rhs) : base_type(rhs) {}
       node(render const & rhs) : base_type(rhs) {}
       node(for_each const & rhs) : base_type(rhs) {}
       node(if_then_else const & rhs) : base_type(rhs) {}
       node(select_context const & rhs) : base_type(rhs) {}
-      node(node_list const & rhs) : base_type(rhs) {}
+	  node(node_list const & rhs) : base_type(rhs) {}
+	  node(unary_function const & rhs) : base_type(rhs) {}
    };
 
    struct for_each
    {
-      std::string name;
+      //node name;
+	  std::string name;
       node value;
    };
 
@@ -102,6 +120,8 @@ namespace boost { namespace boostache { namespace vm { namespace ast
    {
       std::vector<node> nodes;
    };
+
+
 
 }}}}
 

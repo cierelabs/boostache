@@ -32,7 +32,7 @@ using invoice_t = std::map<std::string, item_list_t>;
 // -------------------------------------------------------
 
 
-int main()
+int example2()
 {
    // ------------------------------------------------------------------
    // The template describing an invoice.
@@ -81,4 +81,6 @@ int main()
    // ------------------------------------------------------------------
 
    std::cout << stream.str();
+
+   return 0;
 }

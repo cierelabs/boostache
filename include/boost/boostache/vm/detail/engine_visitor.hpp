@@ -20,9 +20,10 @@
 namespace boost { namespace boostache { namespace extension
 {
    template <typename Stream, typename Object>
-   void render(Stream & stream, Object const & v)
+   bool render(Stream & stream, Object const & v)
    {
       stream << v;
+	  return true;
    }
 
    template <typename T>
@@ -32,7 +33,7 @@ namespace boost { namespace boostache { namespace extension
    bool test(T const & context);
 
    template< typename Stream, typename T >
-   void render(Stream & stream, T const & context, std::string const & name);
+   bool render(Stream & stream, T const & context, std::string const & name);
 }}}
 
 /////////////////////////////////////////////////////
@@ -40,18 +41,23 @@ namespace boost { namespace boostache { namespace extension
 
 namespace boost { namespace boostache { namespace vm { namespace detail
 {
+
+
+
+
+
    template <typename Stream, typename Context>
    class engine_visitor_base
    {
    public:
       typedef void result_type;
 
-      engine_visitor_base(Stream & s, Context const & c)
-         : stream(s)
-         , context(c)
-      {}
+	  engine_visitor_base(Stream & s, Context const & c)
+		  : stream(s)
+		  , context(c)
+	  {}
 
-      void operator()(ast::undefined) const
+	  void operator()(ast::undefined) const
       {}
 
       void operator()(ast::nop) const
@@ -112,7 +118,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
 
    private:
       Stream & stream;
-      Context const & context;
+	  Context const & context;
    };
 
 

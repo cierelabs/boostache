@@ -18,6 +18,8 @@
 
 namespace boost { namespace boostache { namespace extension
 {
+	struct optional_test_tag {};
+
    // --------------------------------------------------------------------------
    // Test
    // --------------------------------------------------------------------------
@@ -68,6 +70,8 @@ namespace boost { namespace boostache { namespace extension
    template <typename T>
    bool test(T const & context, std::string const & tag);
 
+   template <typename T>
+   boost::optional<bool> test(T const & context, std::string const & tag, optional_test_tag);
 
    template <typename T>
    bool test( T const & context, std::string const & tag
@@ -98,7 +102,7 @@ namespace boost { namespace boostache { namespace extension
    }
 
    template <typename T>
-   bool test( T const & context, std::string const & tag
+   boost::optional<bool> test( T const & context, std::string const & tag
             , associative_attribute)
    {
       auto iter = context.find(tag);
@@ -109,10 +113,25 @@ namespace boost { namespace boostache { namespace extension
       }
       else
       {
-         return false;
+         return boost::none;
       }
    }
 
+
+   template <typename T>
+   boost::optional<bool> test(T const & context, std::string const & tag
+	   , stacked_context_attribute)
+   {
+	   auto&& optional_result = test(context.child, tag, optional_test_tag{});
+	   if(optional_result)
+	   {
+		   return *optional_result;
+	   }
+	   else
+	   {
+		   return test(context.parent, tag);
+	   }
+   }
 
    // --------------------------------------------------------------------------
    // --------------------------------------------------------------------------
@@ -120,16 +139,26 @@ namespace boost { namespace boostache { namespace extension
    template <typename T>
    bool test(T const & context)
    {
-      return test( context
-                 , test_category_t<T>{});
+	   return test(context
+		   , test_category_t<T>{});
    }
 
    template <typename T>
    bool test(T const & context, std::string const & tag)
    {
-      return test( context
-                 , tag
-                 , test_category_t<T>{});
+	   return test(context
+		   , tag
+		   , test_category_t<T>{}
+	   ).value_or(false);
+   }
+
+   template <typename T>
+   boost::optional<bool> test(T const & context, std::string const & tag, optional_test_tag)
+   {
+	   return test(context
+		   , tag
+		   , test_category_t<T>{}
+	   );
    }
 
 }}}
