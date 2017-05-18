@@ -16,16 +16,28 @@
 
 namespace boost { namespace boostache { namespace vm { namespace detail
 {
+	template <typename ParentContext, typename ChildContext>
+	struct stacked_context {
+		stacked_context(ParentContext const & parent, ChildContext const & child)
+			: parent(parent)
+			, child(child)
+		{}
+
+		ParentContext const & parent;
+		ChildContext const & child;
+	};
+
+
    template < typename Stream, typename Template
             , typename Context1, typename Context2
             , typename CategoryChild
             >
    void select_context( Stream & stream, Template const & templ
                       , Context1 const & ctx_parent
-                      , Context2 const & /*ctx_child*/
+                      , Context2 const & ctx_child
                       , CategoryChild)
    {
-      generate(stream, templ, ctx_parent);
+      generate(stream, templ, stacked_context<Context1, Context2>{ctx_parent, ctx_child});
    }
 
 
@@ -33,11 +45,11 @@ namespace boost { namespace boostache { namespace vm { namespace detail
             , typename Context1, typename Context2
             >
    void select_context( Stream & stream, Template const & templ
-                      , Context1 const & /*ctx_parent*/
+                      , Context1 const & ctx_parent
                       , Context2 const & ctx_child
                       , extension::associative_attribute)
    {
-      generate(stream, templ, ctx_child);
+      generate(stream, templ, stacked_context<Context1, Context2>{ctx_parent, ctx_child});
    }
 
 
@@ -45,11 +57,11 @@ namespace boost { namespace boostache { namespace vm { namespace detail
             , typename Context1, typename Context2
             >
    void select_context( Stream & stream, Template const & templ
-                      , Context1 const & /*ctx_parent*/
+                      , Context1 const & ctx_parent
                       , Context2 const & ctx_child
                       , extension::sequence_attribute)
    {
-      generate(stream, templ, ctx_child);
+      generate(stream, templ, stacked_context<Context1, Context2>{ctx_parent, ctx_child});
    }
 
 

@@ -11,6 +11,7 @@
 
 #include <boost/boostache/vm/engine_ast.hpp>
 #include <boost/boostache/frontend/parse.hpp>
+#include <boost/boostache/backend/django_compiler.hpp>
 #include <boost/boostache/backend/stache_compiler.hpp>
 #include <boost/boostache/vm/generate.hpp>
 #include <istream>

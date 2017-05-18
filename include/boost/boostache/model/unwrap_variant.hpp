@@ -20,7 +20,7 @@
 namespace boost { namespace boostache { namespace extension
 {
    template <typename T>
-   bool test( T const & context, std::string const & tag
+   boost::optional<bool> test( T const & context, std::string const & tag
             , variant_attribute)
    {
       return boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor<bool>(
@@ -48,16 +48,18 @@ namespace boost { namespace boostache { namespace extension
 
 
    template< typename Stream, typename T >
-   void render( Stream & stream, T const & context, std::string const & name
+   bool render( Stream & stream, T const & context, std::string const & name
               , variant_attribute)
    {
-      return boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor(
+      boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor(
                                       [&stream,&name](auto ctx)
                                       {
                                          render(stream,ctx,name);
                                       }
                                    )
                                  , context);
+
+	  return true;
    }
 
 }}}
