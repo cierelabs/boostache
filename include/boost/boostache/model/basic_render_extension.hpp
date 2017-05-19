@@ -109,6 +109,24 @@ namespace boost { namespace boostache { namespace extension
    }
 
 
+   template< typename Stream
+	   , typename T
+   >
+	   bool render(Stream && stream, T const & context, std::string const & name
+		   , multi_context_attribute)
+   {
+	   if (!render(std::forward<Stream>(stream), context.context, name))
+	   {
+		   return false;
+//		   return render(std::forward<Stream>(stream), context.parent, name);
+	   }
+	   else
+	   {
+		   return true;
+	   }
+   }
+
+
    // --------------------------------------------------------------------------
    // --------------------------------------------------------------------------
 

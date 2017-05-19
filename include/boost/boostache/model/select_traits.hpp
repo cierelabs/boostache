@@ -12,6 +12,8 @@
 #include <boost/optional.hpp>
 #include <boost/boostache/vm/traits.hpp>
 #include <boost/boostache/model/category.hpp>
+#include <boost/boostache/vm/detail/stacked_context.hpp>
+#include <boost/boostache/vm/detail/multi_context.hpp>
 #include <type_traits>
 #include <map>
 #include <vector>
@@ -42,8 +44,16 @@ namespace boost { namespace boostache { namespace extension
       : mpl::identity<optional_attribute> {};
 
    template <typename T>
-   struct select_category<std::map<std::string,T>>
-      : mpl::identity<associative_attribute> {};
+   struct select_category<std::map<std::string, T>>
+	   : mpl::identity<associative_attribute> {};
+
+   template <typename T1, typename T2>
+   struct select_category<vm::detail::stacked_context<T1, T2>>
+	   : mpl::identity<stacked_context_attribute> {};
+
+   template <typename T, typename Stream>
+   struct select_category<vm::detail::multi_context<T, Stream>>
+	   : mpl::identity<multi_context_attribute> {};
 
    template <typename T>
    using select_category_t = typename select_category<T>::type;

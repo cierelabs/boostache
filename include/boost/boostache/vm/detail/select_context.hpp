@@ -14,10 +14,32 @@
 #include <boost/boostache/vm/detail/stacked_context.hpp>
 #include <boost/boostache/model/select_traits.hpp>
 #include <boost/boostache/detail/unwrap_variant_visitor.hpp>
+#include <boost/boostache/model/basic_test_extension.hpp>
 
 
 namespace boost { namespace boostache { namespace vm { namespace detail
 {
+
+	struct extract_variable_visitor {
+		template <typename Template>
+		boost::optional<std::string> operator()(Template const & v) const
+		{
+			return boost::none;
+		}
+
+		boost::optional<std::string> operator()(ast::for_each const & v) const
+		{
+			return v.name;
+		}
+	};
+	template <typename Template>
+	boost::optional<std::string> extract_variable(Template const & templ)
+	{
+		return boost::apply_visitor(extract_variable_visitor(), templ);
+	}
+
+
+
 
    template < typename Stream, typename Template
             , typename Context1, typename Context2
@@ -28,7 +50,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
                       , Context2 const & ctx_child
                       , CategoryChild)
    {
-      generate(stream, templ, stacked_context<Context1, Context2>{ctx_parent, ctx_child});
+      generate(stream, templ, make_stacked_context(ctx_parent, ctx_child, extract_variable(templ)));
    }
 
 
@@ -40,7 +62,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
                       , Context2 const & ctx_child
                       , extension::associative_attribute)
    {
-      generate(stream, templ, stacked_context<Context1, Context2>{ctx_parent, ctx_child});
+      generate(stream, templ, make_stacked_context(ctx_parent, ctx_child, extract_variable(templ)));
    }
 
 
@@ -52,7 +74,7 @@ namespace boost { namespace boostache { namespace vm { namespace detail
                       , Context2 const & ctx_child
                       , extension::sequence_attribute)
    {
-      generate(stream, templ, stacked_context<Context1, Context2>{ctx_parent, ctx_child});
+      generate(stream, templ, make_stacked_context(ctx_parent, ctx_child, extract_variable(templ)));
    }
 
 
@@ -83,6 +105,63 @@ namespace boost { namespace boostache { namespace vm { namespace detail
       generate(stream, templ.body, ctx);
    }
 
+
+   template <typename Stream, typename Context>
+   void select_context_dispatch(Stream & stream
+	   , ast::select_context const & templ
+	   , Context const & ctx
+	   , extension::stacked_context_attribute)
+   {
+	   if(ctx.bound_variable && *ctx.bound_variable == templ.tag)
+	   {
+		   // select local variable
+		   generate(stream, templ.body, ctx.child);
+	   }
+	   else if(test(ctx.child, templ.tag, extension::optional_test_tag{}))
+	   {
+		   if(templ.make_local)
+		   {
+			   generate(stream, templ.body, ctx.child);
+		   }
+		   else
+		   {
+			   generate(stream, templ.body, ctx);
+		   }
+	   }
+	   else
+	   {
+		   select_context_dispatch(stream, templ, ctx.parent);
+		   //std::function<void (Stream &, ast::select_context const &)> callback = [&ctx](Stream & stream, ast::select_context const & templ)
+		   //{
+			  // select_context_dispatch(stream, templ, ctx);
+		   //};
+		   //select_context_dispatch(stream, templ, make_multi_context(ctx.parent, callback));
+	   }
+   }
+
+   template <typename Stream, typename Context>
+   void select_context_dispatch(Stream & stream
+	   , ast::select_context const & templ
+	   , Context const & ctx
+	   , extension::multi_context_attribute)
+   {
+	   if (test(ctx.context, templ.tag, extension::optional_test_tag{}))
+	   {
+		   generate(stream, templ.body, ctx);
+		   //if (templ.make_local)
+		   //{
+			  // generate(stream, templ.body, ctx.context);
+		   //}
+		   //else
+		   //{
+			  // generate(stream, templ.body, ctx);
+		   //}
+	   }
+	   else
+	   {
+		   ctx.fun(stream, templ);
+	   }
+   }
 
    template <typename Stream, typename Context>
    void select_context_dispatch( Stream & stream
@@ -122,11 +201,30 @@ namespace boost { namespace boostache { namespace vm { namespace detail
       }
       else
       {
-         generate(stream, templ.body, ctx);
+		  if(templ.make_local)
+		  {
+			  // generate nothing, since we didn't find the base of the variable
+		  }
+		  else
+		  {
+		      generate(stream, templ.body, ctx);
+		  }
       }
    }
    // ------------------------------------------------------------------
    // ------------------------------------------------------------------
+
+
+   template <typename Stream, typename Context>
+   void select_context_dispatch(Stream & stream
+	   , ast::select_context const & templ
+	   , Context const & ctx
+	//   , std::function<void (Stream &, ast::select_context const &)> callback = {}
+   )
+   {
+	   select_context_dispatch(stream, templ, ctx, /*callback, */extension::select_category_t<Context>{});
+   }
+
 
 }}}}
 

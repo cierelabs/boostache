@@ -42,11 +42,12 @@ namespace boost { namespace boostache { namespace backend { namespace django_com
          vm::ast::node operator()(fe::django::ast::variable const & v) const
          {
             vm::ast::node body = vm::ast::render{v.back()};
-            for(auto iter = --v.rend(); iter != v.rbegin(); --iter)
+            for(auto iter = ++v.rbegin(); iter != v.rend(); ++iter)
             {
                vm::ast::select_context select;
                select.tag = *iter;
                select.body = std::move(body);
+			   select.make_local = true;
                body = std::move(select);
             }
             return body;
@@ -100,7 +101,7 @@ namespace boost { namespace boostache { namespace backend { namespace django_com
 			 }
 
 			 vm::ast::for_each for_each_;
-//			 for_each_.name = (*this)(for_in.set);
+			 for_each_.name = for_in.iterator;
 			 for_each_.value = vm_ast;
 
 			 vm::ast::node body = for_each_;

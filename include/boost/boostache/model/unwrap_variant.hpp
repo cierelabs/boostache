@@ -23,10 +23,10 @@ namespace boost { namespace boostache { namespace extension
    boost::optional<bool> test( T const & context, std::string const & tag
             , variant_attribute)
    {
-      return boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor<bool>(
+      return boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor<boost::optional<bool>>(
                                       [&tag](auto ctx)
                                       {
-                                         return test(ctx, tag);
+                                         return test(ctx, tag, optional_test_tag{});
                                       }
                                    )
                                  , context);

@@ -170,7 +170,8 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
             else
             {
                vm::ast::for_each section_body;
-               section_body.name = sec.name;
+// section_body.name not used in moustache section
+//               section_body.name = sec.name;
                section_body.value = vm_ast;
                
                vm::ast::select_context select;

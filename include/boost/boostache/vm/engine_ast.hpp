@@ -11,6 +11,7 @@
 #define BOOST_BOOSTACHE_VM_ENGINE_AST_HPP
 
 #include <boost/spirit/include/support_extended_variant.hpp>
+#include <boost/optional.hpp>
 #include <string>
 #include <vector>
 
@@ -89,9 +90,8 @@ namespace boost { namespace boostache { namespace vm { namespace ast
 
    struct for_each
    {
-      //node name;
-	  std::string name;
-      node value;
+      boost::optional<std::string> name;	// optional name of variable binding the iterated element
+	  node value;
    };
 
    struct condition
@@ -114,6 +114,7 @@ namespace boost { namespace boostache { namespace vm { namespace ast
    {
       std::string tag;
       node body;
+	  bool make_local={};
    };
 
    struct node_list

@@ -42,17 +42,39 @@ int django()
    // ------------------------------------------------------------------
    // Describe the input template. We are going to use django format.
    std::string input(
-         "My name is {{another.name}}. "
-         "{# This is a comment #}"
-         "I am {{pet}} years old."
-		"{%% for contact in people %%}"
-	   "a contact {{contract.name}}\n"
+	   //"try fifdgrst.sefdshcond.another.name: {{fifdgrst.sefdshcond.another.name}}. \n"
+	   //"try another.name: {{another.name}}.\n"
+	   //"{%% for contact in people %%}"
+	   //"My name is {{fifdgrst.sefdshcond.another.name}}.\n"
+	   //"{%% endfor %%}"
+	   //"-----------------------\n"
+	   //"{%% for contact in people %%}"
+	   //"{{contact.job}}\n"
+	   ////"now from a nested context: people\n"
+	   ////"try fifdgrst.sefdshcond.another.name: {{fifdgrst.sefdshcond.another.name}}. \n"
+	   ////"try another.name: {{another.name}}.\n"
+	   //"{%% endfor %%}"
+	   "{%% for contact in people %%}"
+	   "{%% for more_contact in more_people %%}"
+	   "{{more_contact.job}}\n"
+	   //"now from a nested context: people\n"
+	   //"try fifdgrst.sefdshcond.another.name: {{fifdgrst.sefdshcond.another.name}}. \n"
+	   //"try another.name: {{another.name}}.\n"
 	   "{%% endfor %%}"
-         "{%% if dontshowme %%}"
-         "Yep"
-         "{%% else %%}"
-         "Nope"
-         "{%% endif %%}\n");
+	   "{%% endfor %%}"
+
+	   //       "{# This is a comment #}"
+  //       "I am {{pet}} years old."
+		//"{%% for contact in people %%}"
+	 //  "a contact\n"
+	 //  "My name is still {{another.name}}. \n\n"
+	 //  "{%% endfor %%}"
+  //       "{%% if dontshowme %%}"
+  //       "Yep"
+  //       "{%% else %%}"
+  //       "Nope"
+  //       "{%% endif %%}\n"
+   );
    // ------------------------------------------------------------------
 
    // ------------------------------------------------------------------
@@ -79,6 +101,12 @@ int django()
                             {"ok"     , true },
                             {"not_ok" , false}}
       },
+	  { "more_people"   , list_t{ map_t{ { "name"    , "Peter" },
+	                                    { "job"     , "lazy" } },
+								   map_t{ { "name"    , "Barbara" },
+								   { "job"     , "chef" } }
+							   }
+	  },
    };
    // ------------------------------------------------------------------
 

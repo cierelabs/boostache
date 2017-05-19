@@ -74,28 +74,28 @@ namespace boost { namespace boostache { namespace extension
    boost::optional<bool> test(T const & context, std::string const & tag, optional_test_tag);
 
    template <typename T>
-   bool test( T const & context, std::string const & tag
+   boost::optional<bool> test( T const & context, std::string const & tag
             , unused_attribute)
    {
       return test(context, unused_attribute{});
    }
 
    template <typename T>
-   bool test( T const & context, std::string const & tag
+   boost::optional<bool> test( T const & context, std::string const & tag
             , plain_attribute)
    {
       return test(context, plain_attribute{});
    }
 
    template <typename T>
-   bool test( T const & context, std::string const & tag
+   boost::optional<bool> test( T const & context, std::string const & tag
             , sequence_attribute)
    {
       return test(context, sequence_attribute{});
    }
 
    template <typename T>
-   bool test( T const & context, std::string const & tag
+   boost::optional<bool> test( T const & context, std::string const & tag
             , optional_attribute)
    {
       return test(context, optional_attribute{});
@@ -123,13 +123,29 @@ namespace boost { namespace boostache { namespace extension
 	   , stacked_context_attribute)
    {
 	   auto&& optional_result = test(context.child, tag, optional_test_tag{});
-	   if(optional_result)
+	   if (optional_result)
 	   {
 		   return *optional_result;
 	   }
 	   else
 	   {
 		   return test(context.parent, tag);
+	   }
+   }
+
+   template <typename T>
+   boost::optional<bool> test(T const & context, std::string const & tag
+	   , multi_context_attribute)
+   {
+	   auto&& optional_result = test(context.context, tag, optional_test_tag{});
+	   if (optional_result)
+	   {
+		   return *optional_result;
+	   }
+	   else
+	   {
+		   return boost::none;
+//		   return test(context.parent, tag);
 	   }
    }
 

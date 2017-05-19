@@ -8,8 +8,8 @@ int simple_generate2();
 int main()
 {
 	//example1();
-	example2();
+	//example2();
 	//example3();
-	//django();
+	django();
 	//simple_generate2();
 }

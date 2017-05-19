@@ -60,6 +60,9 @@ namespace boost { namespace boostache { namespace extension
    struct test_category<vm::detail::stacked_context<T1, T2>>
 	   : mpl::identity<stacked_context_attribute> {};
 
+   template <typename T, typename Stream>
+   struct test_category<vm::detail::multi_context<T, Stream>>
+	   : mpl::identity<multi_context_attribute> {};
 
    template <typename T>
    using test_category_t = typename test_category<T>::type;
