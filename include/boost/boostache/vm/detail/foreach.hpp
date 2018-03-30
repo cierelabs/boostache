@@ -31,8 +31,8 @@ namespace boost { namespace boostache { namespace vm
 
    namespace detail
    {
-      template <typename Stream, typename Node, typename Context>
-      void foreach(Stream & stream, Node const & node, Context const & context);
+      template <typename Stream, typename Node, typename Context, typename Stack>
+      void foreach(Stream & stream, Node const & node, Context const & context, Stack const* stack);
    }
 }}}
 
@@ -78,10 +78,10 @@ namespace boost { namespace boostache { namespace extension
    struct foreach_category<std::map<std::string,T>>
       : mpl::identity<associative_attribute> {};
 
-   // returns the category of the child context !!!
-   template <typename ParentContext, typename ChildContext>
-   struct foreach_category<vm::detail::stacked_context<ParentContext, ChildContext>>
-	  : foreach_category<ChildContext> {};
+   //// returns the category of the child context !!!
+   //template <typename ParentContext, typename ChildContext>
+   //struct foreach_category<vm::detail::stacked_context<ParentContext, ChildContext>>
+	  //: foreach_category<ChildContext> {};
 
    template <typename T>
    using foreach_category_t = typename foreach_category<T>::type;
@@ -91,86 +91,90 @@ namespace boost { namespace boostache { namespace extension
 
 namespace boost { namespace boostache { namespace vm { namespace detail
 {
-	template<typename Context>
-	const Context & extract_child_context(const Context & context)
-	{
-		return context;
-	}
+	//template<typename Context>
+	//const Context & extract_child_context(const Context & context)
+	//{
+	//	return context;
+	//}
 
-	template <typename ParentContext, typename ChildContext>
-	const ChildContext & extract_child_context(const stacked_context<ParentContext, ChildContext> & context)
-	{
-		return context.child;
-	}
+	//template <typename ParentContext, typename ChildContext>
+	//const ChildContext & extract_child_context(const stacked_context<ParentContext, ChildContext> & context)
+	//{
+	//	return context.child;
+	//}
 
-	template<typename Context>
-	boost::optional<std::string> extract_bound_variable(const Context & context)
-	{
-		return boost::none;
-	}
+	//template<typename Context>
+	//boost::optional<std::string> extract_bound_variable(const Context & context)
+	//{
+	//	return boost::none;
+	//}
 
-	template <typename ParentContext, typename ChildContext>
-	boost::optional<std::string> extract_bound_variable(const stacked_context<ParentContext, ChildContext> & context)
-	{
-		return context.bound_variable;
-	}
-
-
+	//template <typename ParentContext, typename ChildContext>
+	//boost::optional<std::string> extract_bound_variable(const stacked_context<ParentContext, ChildContext> & context)
+	//{
+	//	return context.bound_variable;
+	//}
 
 
-	template <typename Stream, typename Node, typename Context, typename Category>
+
+
+	template <typename Stream, typename Node, typename Context, typename Stack, typename Category>
    void foreach( Stream & stream
                , Node const & node
                , Context const & context
+       , Stack const* stack
                , Category)
    {
-      generate(stream, node.value, context);
+      generate(stream, node.value, context, stack);
    }
 
 
-   template <typename Stream, typename Node, typename Context>
+   template <typename Stream, typename Node, typename Context, typename Stack>
    void foreach( Stream & stream
                , Node const & node
                , Context const & context
-               , extension::variant_attribute)
+       , Stack const* stack
+       , extension::variant_attribute)
    {
-      boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor(
-                               [&stream,&node,&context](auto ctx)
+       boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor(
+                               [&stream,&node,&stack](auto ctx)
                                {
-                                  vm::detail::foreach(stream, node, merge_contexts(context, ctx, extract_bound_variable(context)));
+                                  vm::detail::foreach(stream, node, ctx, stack);
                                }
                             )
-                          , extract_child_context(context));
+                          , context);
    }
 
 
-   template <typename Stream, typename Node, typename Context>
+   template <typename Stream, typename Node, typename Context, typename Stack>
    void foreach( Stream & stream
                , Node const & node
                , Context const & context
-               , extension::sequence_attribute)
+       , Stack const* stack
+       , extension::sequence_attribute)
    {
-      for(auto const & item : extract_child_context(context))
+       for(auto const & item : context)
       {
-         generate(stream, node.value, merge_contexts(context, item, extract_bound_variable(context)));
+         generate(stream, node.value, item, stack);
       }
    }
 
 
-   template <typename Stream, typename Node, typename Context>
+   template <typename Stream, typename Node, typename Context, typename Stack>
    void foreach( Stream & stream
                , Node const & node
-               , Context const & context
-               , extension::optional_attribute)
+               , Context const & ctx
+       , Stack const* stack
+       , extension::optional_attribute)
    {
-	   auto&& ctx = extract_child_context(context);
       if(ctx)
       {
-         foreach( stream, node, merge_contexts(context, *ctx, extract_bound_variable(context)));
+          foreach(stream, node, *ctx, stack
+              , extension::foreach_category_t<decltype(*ctx)>{});
       }
       else
       {
-         generate(stream, node.value, ctx);
+         generate(stream, node.value, ctx, stack);
       }
    }
 
@@ -179,13 +183,14 @@ namespace boost { namespace boostache { namespace vm { namespace detail
    /**
     *  Entry point for foreach
     */
-   template <typename Stream, typename Node, typename Context>
-   void foreach(Stream & stream, Node const & node, Context const & context)
+   template <typename Stream, typename Node, typename Context, typename Stack>
+   void foreach(Stream & stream, Node const & node, Context const & context, Stack const* stack)
    {
       using boostache::vm::detail::foreach;
       foreach( stream
              , node
              , context
+            , stack
              , extension::foreach_category_t<Context>{});
    }
    

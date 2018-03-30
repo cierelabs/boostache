@@ -26,7 +26,7 @@ namespace boost { namespace boostache { namespace extension
       return boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor<boost::optional<bool>>(
                                       [&tag](auto ctx)
                                       {
-                                         return test(ctx, tag, optional_test_tag{});
+                                         return test_with_stack(ctx, tag/*, optional_test_tag{}*/);
                                       }
                                    )
                                  , context);
@@ -34,32 +34,59 @@ namespace boost { namespace boostache { namespace extension
 
 
    template <typename T>
-   bool test( T const & context
-            , variant_attribute)
+   bool test(T const & context
+       , variant_attribute)
    {
-      return boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor<bool>(
-                                      [](auto ctx)
-                                      {
-                                         return test(ctx);
-                                      }
-                                   )
-                                 , context);
+       return boost::apply_visitor(boostache::detail::make_unwrap_variant_visitor<bool>(
+           [](auto ctx)
+       {
+           return test(ctx);
+       }
+           )
+           , context);
    }
 
 
-   template< typename Stream, typename T >
-   bool render( Stream & stream, T const & context, std::string const & name
-              , variant_attribute)
+   template <typename T>
+   boost::optional<bool> test_tag(T const & context, std::string const & tag
+       , variant_attribute)
    {
-      boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor(
-                                      [&stream,&name](auto ctx)
-                                      {
-                                         render(stream,ctx,name);
-                                      }
-                                   )
-                                 , context);
+       return boost::apply_visitor(boostache::detail::make_unwrap_variant_visitor<boost::optional<bool>>(
+           [&tag](auto ctx)
+       {
+           return test_tag(ctx, tag);
+       }
+           )
+           , context);
+   }
 
-	  return true;
+
+   template< typename Stream, typename T>
+   void render(Stream & stream, T const & context
+       , variant_attribute)
+   {
+       boost::apply_visitor(boostache::detail::make_unwrap_variant_visitor(
+           [&stream](auto ctx)
+       {
+// don't do the following line: it disables user-defined render-overloading
+//           render(stream, ctx, render_category_t<decltype(ctx)>{});
+           render(stream, ctx);
+       }
+           )
+           , context);
+   }
+
+   template< typename Stream, typename T, typename Stack>
+   bool render_name(Stream & stream, T const & context, Stack const* stack, std::string const & name
+       , variant_attribute)
+   {
+       return boost::apply_visitor(boostache::detail::make_unwrap_variant_visitor<bool>(
+           [&stream, &stack, &name](auto ctx)
+       {
+           return render_name(stream, ctx, stack, name, render_category_t<decltype(ctx)>{});
+       }
+           )
+           , context);
    }
 
 }}}

@@ -20,11 +20,9 @@ namespace boost { namespace boostache { namespace extension
    struct plain_attribute : category_attribute {};
    struct sequence_attribute : category_attribute {};
    struct associative_attribute : category_attribute {};
-   struct tuple_attribute : category_attribute {};
+   //struct tuple_attribute : category_attribute {};
    struct variant_attribute : category_attribute {};
    struct optional_attribute : category_attribute {};
-   struct stacked_context_attribute : category_attribute {};
-   struct multi_context_attribute : category_attribute {};
 
 }}}
 

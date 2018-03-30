@@ -10,3 +10,17 @@ Testing
 Makefile
 bin
 examples/company_report/company_report_stache
+/.vs/boostache
+/x64
+/boostache.VC.db
+*.obj
+Debug_Test/boostache.tlog/boostache.lastbuildstate
+.vs/boostache - Copy/v15/.suo
+.vs/boostache - Copy/v15/Browse.VC.db
+*.ipch
+.vs/ProjectSettings.json
+.vs/slnx.sqlite
+.vs/VSWorkspaceState.json
+*.tlog
+boostache.vcxproj.user
+*.pdb

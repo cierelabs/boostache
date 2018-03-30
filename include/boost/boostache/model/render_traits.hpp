@@ -48,15 +48,6 @@ namespace boost { namespace boostache { namespace extension
                          >
       : mpl::identity<sequence_attribute> {};
 
-   template <typename T1, typename T2>
-   struct render_category<vm::detail::stacked_context<T1, T2>>
-      : mpl::identity<stacked_context_attribute> {};
-
-   template <typename T, typename Stream>
-   struct render_category<vm::detail::multi_context<T, Stream>>
-	   : mpl::identity<multi_context_attribute> {};
-
-
    template <typename T>
    using render_category_t = typename render_category<T>::type;
 

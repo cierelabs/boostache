@@ -11,15 +11,21 @@
 
 #include <boost/boostache/vm/detail/engine_visitor.hpp>
 
-namespace boost { namespace boostache { namespace vm
-{
-   template <typename Stream, typename Template, typename Context>
-   void generate( Stream & stream
+namespace boost {
+    namespace boostache {
+        namespace vm
+        {
+            template <typename Stream, typename Template, typename Context, typename Stack>
+            void generate(Stream & stream
                 , Template const & templ
-                , Context const & context)
-   {
-      vm::detail::generate(stream, templ, context);
-   }
-}}}
+                , Context const & context
+                , Stack const* stack
+            )
+            {
+                vm::detail::generate(stream, templ, context, stack);
+            }
+        }
+    }
+}
 
 #endif

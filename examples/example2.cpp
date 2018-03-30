@@ -36,13 +36,24 @@ int example2()
 {
    // ------------------------------------------------------------------
    // The template describing an invoice.
-   std::string input( 
-                      "Invoice"
-                      "\n"
-                      "{{#lines}}"
-                      "  {{item_code}}  {{description}}  {{amount}}\n"
-                      "{{/lines}}"
-      );
+   //std::string input( 
+   //                   "Invoice"
+   //                   "\n"
+   //                   "{{#lines}}"
+   //                   "  {{item_code}}  {{description}}  {{amount}}\n"
+   //                   "{{/lines}}"
+   //   );
+   std::string input(
+       "Invoice"
+       "\n"
+       "{{#lines}}"
+       "inner start\n"
+       "{{#lines}}"
+       "  {{item_code}}  {{description}}  {{amount}}\n"
+       "{{/lines}}"
+       "inner end\n"
+       "{{/lines}}"
+   );
    // ------------------------------------------------------------------
 
 

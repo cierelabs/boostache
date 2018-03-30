@@ -14,6 +14,7 @@
 #include <boost/boostache/backend/django_compiler.hpp>
 #include <boost/boostache/backend/stache_compiler.hpp>
 #include <boost/boostache/vm/generate.hpp>
+#include <boost/boostache/vm/unificator.hpp>
 #include <istream>
 
 
@@ -31,12 +32,31 @@ namespace boost { namespace boostache
       return backend::compile(frontend::parse<Format>(input));
    }
 
+
+
+   template<typename Variant>
+   struct stack_t {
+       template<typename Arg>
+       stack_t(Arg&& arg, stack_t const* parent)
+           : current(std::forward<Arg>(arg))
+           , parent(parent) {
+       }
+
+       Variant current;
+       stack_t const* parent;
+   };
+
    template <typename Stream, typename Context>
    void generate( Stream & stream
                 , vm::ast::node const & templ
-                , Context const & context)
+       , Context const & context
+//       , stack_t const & stack
+   )
    {
-      vm::generate(stream,templ,context);
+        using uniform_data_t = typename vm::uniform_data_t<Context>;
+
+        stack_t<uniform_data_t>* stack = nullptr;
+        vm::generate(stream,templ, context, stack);
    }
 }}
 
