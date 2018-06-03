@@ -27,3 +27,6 @@ boostache.vcxproj.user
 *.sln
 *.vcxproj
 *.vcxproj.*
+/*.vcxproj
+/*.filters
+/*.sln
