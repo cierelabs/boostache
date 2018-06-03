@@ -2,6 +2,7 @@
  *  \file detail/stache_compiler.hpp
  *
  *  Copyright 2014, 2015 Michael Caisse : ciere.com
+ *  Copyright 2017, 2018 Tobias Loew : tobi@die-loews.de
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -175,6 +176,7 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
                section_body.value = vm_ast;
                
                vm::ast::select_context select;
+               select.push_context = true;
                select.tag = sec.name;
                select.body = section_body;
                

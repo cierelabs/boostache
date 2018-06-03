@@ -2,6 +2,7 @@
  *  \file basic_render_extension.hpp
  *
  *  Copyright 2014 Michael Caisse : ciere.com
+ *  Copyright 2017, 2018 Tobias Loew : tobi@die-loews.de
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -127,17 +128,17 @@ namespace boost {
 
 namespace boost { namespace boostache { namespace extension
 {
-    template< typename Stream, typename T, typename Stack>
-    bool render_name(Stream & stream, T const & context, Stack const* stack, std::string const & name);
+    template< typename Stream, typename T, typename Stack, typename Global>
+    bool render_name(Stream & stream, T const & context, Stack const* stack, Global const* global, std::string const & name);
 
 
 
    template< typename Stream
 	   , typename T
-       , typename Stack
+       , typename Stack, typename Global
 	   , typename Enable = typename std::enable_if<!vm::trait::is_variant<T>::value>::type
    >
-	   bool render_name(Stream && stream, T const & context, Stack const* stack, std::string const & name
+	   bool render_name(Stream && stream, T const & context, Stack const* stack, Global const* global, std::string const & name
 		   , plain_attribute) 
    {
 	    //(std::forward<Stream>(stream) << context);
@@ -147,14 +148,14 @@ namespace boost { namespace boostache { namespace extension
 
    template< typename Stream
            , typename T
-       , typename Stack
+       , typename Stack, typename Global
            >
-   bool render_name( Stream && stream, T const & context, Stack const* stack, std::string const & name
+   bool render_name( Stream && stream, T const & context, Stack const* stack, Global const* global, std::string const & name
               , optional_attribute)
    {
 	   //if (context)
 	   //{
-		  // render_name(std::forward<Stream>(stream), *context, stack, name);
+		  // render_name(std::forward<Stream>(stream), *context, stack, global, name);
 	   //}
 	   return false;
    }
@@ -162,9 +163,9 @@ namespace boost { namespace boostache { namespace extension
 
    template< typename Stream
            , typename T
-       , typename Stack
+       , typename Stack, typename Global
            >
-	   bool render_name( Stream && stream, T const & context, Stack const* stack, std::string const & name
+	   bool render_name( Stream && stream, T const & context, Stack const* stack, Global const* global, std::string const & name
               , unused_attribute)
    {
 	   return false;
@@ -173,9 +174,9 @@ namespace boost { namespace boostache { namespace extension
 
    template< typename Stream
            , typename T
-       , typename Stack
+       , typename Stack, typename Global
            >
-	   bool render_name( Stream && stream, T const & context, Stack const* stack, std::string const & name
+	   bool render_name( Stream && stream, T const & context, Stack const* stack, Global const* global, std::string const & name
               , associative_attribute)
    {
       auto iter = context.find(name);
@@ -193,14 +194,14 @@ namespace boost { namespace boostache { namespace extension
 
    template< typename Stream
 	   , typename T
-       , typename Stack
+       , typename Stack, typename Global
    >
-	   bool render_name(Stream && stream, T const & context, Stack const* stack, std::string const & name
+	   bool render_name(Stream && stream, T const & context, Stack const* stack, Global const* global, std::string const & name
 		   , sequence_attribute)
    {
 	   //for (auto const & item : context)
 	   //{
-		  // render_name(std::forward<Stream>(stream), item, stack, name);
+		  // render_name(std::forward<Stream>(stream), item, stack, global, name);
 	   //}
 	   return false;
    }
@@ -210,12 +211,12 @@ namespace boost { namespace boostache { namespace extension
    // --------------------------------------------------------------------------
    // --------------------------------------------------------------------------
 
-   template< typename Stream, typename T, typename Stack>
-   bool render_name(Stream & stream, T const & context, Stack const* stack, std::string const & name)
+   template< typename Stream, typename T, typename Stack, typename Global>
+   bool render_name(Stream & stream, T const & context, Stack const* stack, Global const* global, std::string const & name)
    {
        if (render_name(stream
            , context
-           , stack
+           , stack, global
            , name
            , render_category_t<T>{}))
        {
@@ -229,11 +230,12 @@ namespace boost { namespace boostache { namespace extension
        while (s) {
 
            if (boost::apply_visitor(boostache::detail::make_unwrap_variant_visitor<bool>(
-               [&stream, &s, &name](auto ctx) -> bool
+               [&stream, &s, &name, &global](auto ctx) -> bool
            {
                return render_name(stream
                    , ctx
                    , s->parent
+                   , global
                    , name
                    , render_category_t<decltype(ctx)>{}
                );

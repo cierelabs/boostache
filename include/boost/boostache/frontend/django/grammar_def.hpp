@@ -2,6 +2,7 @@
  *  \file grammar_def.hpp
  *
  *  Copyright 2015 Jeroen Habraken
+ *  Copyright 2017, 2018 Tobias Loew : tobi@die-loews.de
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -44,6 +45,7 @@ namespace boost { namespace boostache { namespace frontend { namespace django
    {
       qi::alnum_type alnum;
       qi::alpha_type alpha;
+      qi::digit_type digit;
       qi::attr_type attr;
       qi::char_type char_;
       qi::lexeme_type lexeme;
@@ -74,7 +76,7 @@ namespace boost { namespace boostache { namespace frontend { namespace django
          ;
 
       identifier =
-         alpha >> *(alnum | char_('_'))
+         (alpha >> *(alnum | char_('_'))) | +digit
          ;
 
       variable =

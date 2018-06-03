@@ -5,6 +5,7 @@
  *  to the contained data type. This is a helper to do that for us.
  *
  *  Copyright 2014 Michael Caisse : ciere.com
+ *  Copyright 2017, 2018 Tobias Loew : tobi@die-loews.de
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -76,14 +77,14 @@ namespace boost { namespace boostache { namespace extension
            , context);
    }
 
-   template< typename Stream, typename T, typename Stack>
-   bool render_name(Stream & stream, T const & context, Stack const* stack, std::string const & name
+   template< typename Stream, typename T, typename Stack, typename Global>
+   bool render_name(Stream & stream, T const & context, Stack const* stack, Global const* global, std::string const & name
        , variant_attribute)
    {
        return boost::apply_visitor(boostache::detail::make_unwrap_variant_visitor<bool>(
-           [&stream, &stack, &name](auto ctx)
+           [&stream, &stack, &global, &name](auto ctx)
        {
-           return render_name(stream, ctx, stack, name, render_category_t<decltype(ctx)>{});
+           return render_name(stream, ctx, stack, global, name, render_category_t<decltype(ctx)>{});
        }
            )
            , context);

@@ -2,6 +2,7 @@
  *  \file boostache.hpp
  *
  *  Copyright 2014 Michael Caisse : ciere.com
+ *  Copyright 2017, 2018 Tobias Loew : tobi@die-loews.de
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -36,27 +37,46 @@ namespace boost { namespace boostache
 
    template<typename Variant>
    struct stack_t {
+       using variant_t = Variant;
+
        template<typename Arg>
-       stack_t(Arg&& arg, stack_t const* parent)
+       stack_t(Arg&& arg, boost::optional<std::string> const& name, stack_t const* parent)
            : current(std::forward<Arg>(arg))
-           , parent(parent) {
+           , parent(parent)
+           , name(name) 
+       {
        }
 
        Variant current;
+       boost::optional<std::string> name;
        stack_t const* parent;
+   };
+
+   template<typename Variant>
+   struct global_t {
+       using variant_t = Variant;
+
+       template<typename Arg>
+       global_t(Arg&& arg)
+           : context(std::forward<Arg>(arg))
+       {
+       }
+
+       Variant context;
    };
 
    template <typename Stream, typename Context>
    void generate( Stream & stream
                 , vm::ast::node const & templ
        , Context const & context
-//       , stack_t const & stack
    )
    {
         using uniform_data_t = typename vm::uniform_data_t<Context>;
 
-        stack_t<uniform_data_t>* stack = nullptr;
-        vm::generate(stream,templ, context, stack);
+        stack_t<uniform_data_t>* stack = {};
+        global_t<uniform_data_t> global{context};
+
+        vm::generate(stream, templ, context, stack, &global);
    }
 }}
 

@@ -2,7 +2,7 @@
  *  \file detail/django_compiler.hpp
  *
  *  Copyright 2014 Michael Caisse : ciere.com
- *  Copyright 2017 Tobias Loew : die-loews.de
+ *  Copyright 2017, 2018 Tobias Loew : tobi@die-loews.de
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -47,7 +47,7 @@ namespace boost { namespace boostache { namespace backend { namespace django_com
                vm::ast::select_context select;
                select.tag = *iter;
                select.body = std::move(body);
-			   select.make_local = true;
+			   select.is_context_local = std::next(iter) != v.rend();
                body = std::move(select);
             }
             return body;
@@ -77,7 +77,7 @@ namespace boost { namespace boostache { namespace backend { namespace django_com
             }
 
             vm::ast::if_then_else if_then_else;
-            if_then_else.condition_.name = if_elif_else.if_.condition_.front();
+            if_then_else.condition_.name = if_elif_else.if_.condition_.back();
             if_then_else.then_ = std::move(then_);
             if(static_cast<bool>(if_elif_else.else_))
             {
@@ -105,12 +105,13 @@ namespace boost { namespace boostache { namespace backend { namespace django_com
 			 for_each_.value = vm_ast;
 
 			 vm::ast::node body = for_each_;
-			 for (auto iter = for_in.set.begin(); iter != for_in.set.end(); ++iter)
+			 for (auto iter = for_in.set.rbegin(); iter != for_in.set.rend(); ++iter)
 			 {
 				 vm::ast::select_context select;
 				 select.tag = *iter;
 				 select.body = std::move(body);
-				 body = std::move(select);
+                 select.is_context_local = std::next(iter) != for_in.set.rend();
+                 body = std::move(select);
 			 }
 			 return body;
 

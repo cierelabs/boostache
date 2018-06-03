@@ -27,9 +27,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="examples\django.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="examples\django.cpp" />
+    <ClCompile Include="examples\django_input.cpp" />
     <ClCompile Include="examples\example1.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -128,13 +127,11 @@
     <ClInclude Include="include\boost\boostache\vm\detail\environment.hpp" />
     <ClInclude Include="include\boost\boostache\vm\detail\foreach.hpp" />
     <ClInclude Include="include\boost\boostache\vm\detail\select_context.hpp" />
-    <ClInclude Include="include\boost\boostache\vm\detail\stacked_context.hpp" />
     <ClInclude Include="include\boost\boostache\vm\engine_ast.hpp" />
     <ClInclude Include="include\boost\boostache\vm\generate.hpp" />
     <ClInclude Include="include\boost\boostache\vm\printer.hpp" />
     <ClInclude Include="include\boost\boostache\vm\traits.hpp" />
     <ClInclude Include="include\boost\boostache\vm\unificator.hpp" />
-    <ClInclude Include="include\boost\boostache\vm\uniform.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Demo.txt" />

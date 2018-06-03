@@ -2,6 +2,7 @@
  *  \file engine_ast.hpp
  *
  *  Copyright 2014, 2015 Michael Caisse : ciere.com
+ *  Copyright 2017, 2018 Tobias Loew : tobi@die-loews.de
  *
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -114,7 +115,8 @@ namespace boost { namespace boostache { namespace vm { namespace ast
    {
       std::string tag;
       node body;
-	  bool make_local={};
+      bool push_context = {};
+      bool is_context_local = {};
    };
 
    struct node_list

@@ -2,6 +2,7 @@
  *  \file basic_test_extension.hpp
  *
  *  Copyright 2014 Michael Caisse : ciere.com
+ *  Copyright 2017, 2018 Tobias Loew : tobi@die-loews.de
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -115,8 +116,8 @@ namespace boost { namespace boostache { namespace extension
 // Test with tag
 // --------------------------------------------------------------------------
 
-   template <typename T, typename Stack>
-   std::pair<bool, Stack const*> test_with_stack(T const & context, Stack const* stack, std::string const & tag);
+   template <typename T, typename Stack, typename Global>
+   std::pair<bool, Stack const*> test_with_stack(T const & context, Stack const* stack, Global const* global, std::string const & tag);
 
 
    template <typename T>
@@ -198,8 +199,8 @@ namespace boost { namespace boostache { namespace extension
 	   ).value_or(false);
    }
 
-   template <typename T, typename Stack>
-   std::pair<bool,Stack const*> test_with_stack(T const & context, Stack const* stack, std::string const & tag)
+   template <typename T, typename Stack, typename Global>
+   std::pair<bool,Stack const*> test_with_stack(T const & context, Stack const* stack, Global const* global, std::string const & tag)
    {
        auto&& result = test_tag(context
            , tag

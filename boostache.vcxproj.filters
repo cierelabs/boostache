@@ -69,6 +69,9 @@
     <ClCompile Include="examples\example4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="examples\django_input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\boost\boostache\backend\compiler.hpp">
@@ -182,9 +185,6 @@
     <ClInclude Include="include\boost\boostache\vm\detail\select_context.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\boost\boostache\vm\detail\stacked_context.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\boost\boostache\vm\engine_ast.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -195,9 +195,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\boost\boostache\vm\traits.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\boost\boostache\vm\uniform.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\boost\boostache\vm\unificator.hpp">

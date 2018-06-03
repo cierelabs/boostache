@@ -24,3 +24,6 @@ Debug_Test/boostache.tlog/boostache.lastbuildstate
 *.tlog
 boostache.vcxproj.user
 *.pdb
+*.sln
+*.vcxproj
+*.vcxproj.*

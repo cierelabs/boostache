@@ -5,6 +5,7 @@
  *  clean things up with a variant.
  *
  *  Copyright 2015 Michael Caisse : ciere.com
+ *  Copyright 2017, 2018 Tobias Loew : tobi@die-loews.de
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -92,8 +93,8 @@ namespace boost {
             }
 
             // inner rendering of name in user_rendered_t 
-            template< typename Stream, typename Stack>
-            bool render_name(Stream & stream, user_rendered_t const & context, Stack const* stack, std::string const & name) {
+            template< typename Stream, typename Stack, typename Global>
+            bool render_name(Stream & stream, user_rendered_t const & context, Stack const* stack, Global const* global, std::string const & name) {
                 stream << "user_rendered_t rendering of: " << name;
                 return true;
             }
