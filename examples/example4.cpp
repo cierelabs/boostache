@@ -4,7 +4,6 @@
  *  A simple example of how to use boostache.
  *
  *  Copyright 2015 Michael Caisse : ciere.com
- *  Copyright 2017, 2018 Tobias Loew : tobi@die-loews.de
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -25,11 +24,32 @@ namespace boostache = boost::boostache;
 using map_t = std::map<std::string, std::string>;
 
 
-int example1()
+int example4()
 {
    // ------------------------------------------------------------------
    // Describe the input template. We are going to use mustache format.
-   std::string input("My name is {{name}}. I am {{age}} years old.\n");
+   std::string input("\
+       <h1>{{header}}< / h1>\n\
+   {{#bug}}\n\
+   {{ / bug}}\n\
+\n\
+   {{#items}}\n\
+   {{#first}}\n\
+   {{#tag}}\n\
+   {{#items2}}\n\
+   <li><strong>{{name}}< / strong>< / li>\n\
+   {{ / items2}}\n\
+   {{ / tag}}\n\
+   {{ / first}}\n\
+   {{#link}}\n\
+   <li><a href = \n\"{{url}}\n\">{{name}}< / a>< / li>\n\
+   {{ / link}}\n\
+   {{ / items}}\n\
+\n\
+   {{#empty}}\n\
+   <p>The list is empty.< / p>\n\
+   {{ / empty}}\
+");
    // ------------------------------------------------------------------
 
    // ------------------------------------------------------------------

@@ -4,6 +4,7 @@
  *  A slightly more complex example.
  *
  *  Copyright 2015 Michael Caisse : ciere.com
+ *  Copyright 2017, 2018 Tobias Loew : tobi@die-loews.de
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -32,17 +33,28 @@ using invoice_t = std::map<std::string, item_list_t>;
 // -------------------------------------------------------
 
 
-int main()
+int example2()
 {
    // ------------------------------------------------------------------
    // The template describing an invoice.
-   std::string input( 
-                      "Invoice"
-                      "\n"
-                      "{{#lines}}"
-                      "  {{item_code}}  {{description}}  {{amount}}\n"
-                      "{{/lines}}"
-      );
+   //std::string input( 
+   //                   "Invoice"
+   //                   "\n"
+   //                   "{{#lines}}"
+   //                   "  {{item_code}}  {{description}}  {{amount}}\n"
+   //                   "{{/lines}}"
+   //   );
+   std::string input(
+       "Invoice"
+       "\n"
+       "{{#lines}}"
+       "inner start\n"
+       "{{#lines}}"
+       "  {{item_codes}}  {{description}}  {{amount}}\n"
+       "{{/lines}}"
+       "inner end\n"
+       "{{/lines}}"
+   );
    // ------------------------------------------------------------------
 
 
@@ -81,4 +93,6 @@ int main()
    // ------------------------------------------------------------------
 
    std::cout << stream.str();
+
+   return 0;
 }

@@ -2,6 +2,7 @@
  *  \file engine_ast.hpp
  *
  *  Copyright 2014, 2015 Michael Caisse : ciere.com
+ *  Copyright 2017, 2018 Tobias Loew : tobi@die-loews.de
  *
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -11,17 +12,25 @@
 #define BOOST_BOOSTACHE_VM_ENGINE_AST_HPP
 
 #include <boost/spirit/include/support_extended_variant.hpp>
+#include <boost/optional.hpp>
 #include <string>
 #include <vector>
 
 namespace boost { namespace boostache { namespace vm { namespace ast
 {
+	// unary functions supported by the vm
+	enum class unary_function_enum {
+		lower
+	};
+
+
    struct literal;
    struct variable;
    struct for_each;
    struct if_then_else;
    struct select_context;
    struct node_list;
+   struct unary_function;
 
    struct undefined {};
 
@@ -48,32 +57,42 @@ namespace boost { namespace boostache { namespace vm { namespace ast
       std::string name;
    };
 
+   struct unary_function
+   {
+	   unary_function_enum function;
+	   variable argument;
+   };
+
    struct node : boost::spirit::extended_variant<
         undefined
       , nop
       , literal
       , variable
       , render
+	  , unary_function
       , boost::recursive_wrapper<for_each>
       , boost::recursive_wrapper<if_then_else>
       , boost::recursive_wrapper<select_context>
       , boost::recursive_wrapper<node_list> >
    {
       node() : base_type() {}
-      node(nop const & rhs) : base_type(rhs) {}
-      node(literal const & rhs) : base_type(rhs) {}
+	  //template<class T>
+   //   node(T const & rhs) : base_type(rhs) {}
+	  node(nop const & rhs) : base_type(rhs) {}
+	  node(literal const & rhs) : base_type(rhs) {}
       node(variable const & rhs) : base_type(rhs) {}
       node(render const & rhs) : base_type(rhs) {}
       node(for_each const & rhs) : base_type(rhs) {}
       node(if_then_else const & rhs) : base_type(rhs) {}
       node(select_context const & rhs) : base_type(rhs) {}
-      node(node_list const & rhs) : base_type(rhs) {}
+	  node(node_list const & rhs) : base_type(rhs) {}
+	  node(unary_function const & rhs) : base_type(rhs) {}
    };
 
    struct for_each
    {
-      std::string name;
-      node value;
+      boost::optional<std::string> name;	// optional name of variable binding the iterated element
+	  node value;
    };
 
    struct condition
@@ -96,12 +115,16 @@ namespace boost { namespace boostache { namespace vm { namespace ast
    {
       std::string tag;
       node body;
+      bool push_context = {};
+      bool is_context_local = {};
    };
 
    struct node_list
    {
       std::vector<node> nodes;
    };
+
+
 
 }}}}
 

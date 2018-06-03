@@ -2,6 +2,7 @@
  *  \file detail/stache_compiler.hpp
  *
  *  Copyright 2014, 2015 Michael Caisse : ciere.com
+ *  Copyright 2017, 2018 Tobias Loew : tobi@die-loews.de
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -23,7 +24,7 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
       /**
        *  Check if the string simply contains white-space.
        */
-      bool is_blank(std::string const & s)
+      inline bool is_blank(std::string const & s)
       {
          return( s.find_first_not_of(std::string{" \t\r\n"})
                  ==  std::string::npos );
@@ -170,10 +171,12 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
             else
             {
                vm::ast::for_each section_body;
-               section_body.name = sec.name;
+// section_body.name not used in moustache section
+//               section_body.name = sec.name;
                section_body.value = vm_ast;
                
                vm::ast::select_context select;
+               select.push_context = true;
                select.tag = sec.name;
                select.body = section_body;
                

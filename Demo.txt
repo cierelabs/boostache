@@ -1,0 +1,59 @@
+https://mustache.github.io/#demo
+
+
+// Mustache 
+
+<h1>{{header}}</h1>
+{{#bug}}
+{{/bug}}
+
+{{#items}}
+  {{#first}}
+    {{#tag}}
+    {{#items2}}
+      <li><strong>{{name}}</strong></li>
+    {{/items2}}
+    {{/tag}}
+  {{/first}}
+  {{#link}}
+    <li><a href="{{url}}">{{name}}</a></li>
+  {{/link}}
+{{/items}}
+
+{{#empty}}
+  <p>The list is empty.</p>
+{{/empty}}
+
+
+
+// JSON
+
+{
+  "header": "Colors",
+  "name": "outer_color",
+  "items": [
+      {"name": "red", "first": true, "url": "#Red"},
+      {"name": "green", "link": true, "url": "#Green"},
+      {"name": "blue", "link": true, "url": "#Blue"}
+  ],
+  "tag":{
+  "name3":"inner_color",
+  "items2": [
+      {"name2": "red2", "first": true, "url": "#Red"},
+      {"name": "green2", "link": true, "url": "#Green"},
+      {"name": "blue2", "link": true, "url": "#Blue"}
+  ] },
+  "empty": false
+}
+
+
+// Rendered
+
+<h1>Colors</h1>
+<li><strong>red</strong></li>
+<li><strong>green2</strong></li>
+<li><strong>blue2</strong></li>
+<li><a href="#Green">green</a></li>
+<li><a href="#Blue">blue</a></li>
+
+

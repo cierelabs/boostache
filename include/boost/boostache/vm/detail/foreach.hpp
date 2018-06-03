@@ -2,6 +2,7 @@
  *  \file detail/foreach.hpp
  *
  *  Copyright 2014, 2015 Michael Caisse : ciere.com
+ *  Copyright 2017, 2018 Tobias Loew : tobi@die-loews.de
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -29,8 +30,8 @@ namespace boost { namespace boostache { namespace vm
 
    namespace detail
    {
-      template <typename Stream, typename Node, typename Context>
-      void foreach(Stream & stream, Node const & node, Context const & context);
+      template <typename Stream, typename Node, typename Context, typename Stack, typename Global>
+      void foreach(Stream & stream, Node const & node, Context const & context, Stack const* stack, Global const* global);
    }
 }}}
 
@@ -84,73 +85,90 @@ namespace boost { namespace boostache { namespace extension
 
 namespace boost { namespace boostache { namespace vm { namespace detail
 {
-   template <typename Stream, typename Node, typename Context, typename Category>
+
+	template <typename Stream, typename Node, typename Context, typename Stack, typename Global, typename Category>
    void foreach( Stream & stream
                , Node const & node
                , Context const & context
+       , Stack const* stack, Global const* global
                , Category)
    {
-      generate(stream, node.value, context);
+      generate(stream, node.value, context, stack, global);
    }
 
 
-   template <typename Stream, typename Node, typename Context>
+   template <typename Stream, typename Node, typename Context, typename Stack, typename Global>
    void foreach( Stream & stream
                , Node const & node
                , Context const & context
-               , extension::variant_attribute)
+       , Stack const* stack, Global const* global
+       , extension::variant_attribute)
    {
-      boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor(
-                               [&stream,&node](auto ctx)
+       boost::apply_visitor( boostache::detail::make_unwrap_variant_visitor(
+                               [&stream,&node,&stack,&global](auto ctx)
                                {
-                                  vm::detail::foreach(stream, node, ctx);
+                                  vm::detail::foreach(stream, node, ctx, stack, global);
                                }
                             )
                           , context);
    }
 
 
-   template <typename Stream, typename Node, typename Context>
+   template <typename Stream, typename Node, typename Context, typename Stack, typename Global>
    void foreach( Stream & stream
                , Node const & node
                , Context const & context
-               , extension::sequence_attribute)
+       , Stack const* stack, Global const* global
+       , extension::sequence_attribute)
    {
-      for(auto const & item : context)
+       for(auto const & item : context)
       {
-         generate(stream, node.value, item);
+
+           if (node.name) {
+               Stack local(item, node.name, stack);
+
+               generate(stream, node.value, item/*context*/, &local, global);
+           }
+           else {
+               generate(stream, node.value, item, stack, global);
+           }
+
+
       }
    }
 
 
-   template <typename Stream, typename Node, typename Context>
+   template <typename Stream, typename Node, typename Context, typename Stack, typename Global>
    void foreach( Stream & stream
                , Node const & node
                , Context const & ctx
-               , extension::optional_attribute)
+       , Stack const* stack, Global const* global
+       , extension::optional_attribute)
    {
       if(ctx)
       {
-         foreach( stream, node, *ctx
-                , extension::foreach_category_t<decltype(*ctx)>{});
+          foreach(stream, node, *ctx, stack, global
+              , extension::foreach_category_t<decltype(*ctx)>{});
       }
       else
       {
-         generate(stream, node.value, ctx);
+         generate(stream, node.value, ctx, stack, global);
       }
    }
+
 
 
    /**
     *  Entry point for foreach
     */
-   template <typename Stream, typename Node, typename Context>
-   void foreach(Stream & stream, Node const & node, Context const & context)
+   template <typename Stream, typename Node, typename Context, typename Stack, typename Global>
+   void foreach(Stream & stream, Node const & node, Context const & context, Stack const* stack, Global const* global)
    {
       using boostache::vm::detail::foreach;
       foreach( stream
              , node
              , context
+            , stack, global
              , extension::foreach_category_t<Context>{});
    }
    

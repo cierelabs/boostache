@@ -2,6 +2,7 @@
  *  \file select_traits.hpp
  *
  *  Copyright 2014, 2015 Michael Caisse : ciere.com
+ *  Copyright 2017, 2018 Tobias Loew : tobi@die-loews.de
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -12,6 +13,7 @@
 #include <boost/optional.hpp>
 #include <boost/boostache/vm/traits.hpp>
 #include <boost/boostache/model/category.hpp>
+#include <boost/boostache/vm/detail/multi_context.hpp>
 #include <type_traits>
 #include <map>
 #include <vector>
@@ -42,8 +44,8 @@ namespace boost { namespace boostache { namespace extension
       : mpl::identity<optional_attribute> {};
 
    template <typename T>
-   struct select_category<std::map<std::string,T>>
-      : mpl::identity<associative_attribute> {};
+   struct select_category<std::map<std::string, T>>
+	   : mpl::identity<associative_attribute> {};
 
    template <typename T>
    using select_category_t = typename select_category<T>::type;

@@ -5,6 +5,7 @@
  *  clean things up with a variant.
  *
  *  Copyright 2015 Michael Caisse : ciere.com
+ *  Copyright 2017, 2018 Tobias Loew : tobi@die-loews.de
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -21,7 +22,9 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <variant>
 
+using vv = std::variant<int>;
 
 namespace boostache = boost::boostache;
 
@@ -42,9 +45,15 @@ struct value_t;
 using object_t = std::map<std::string, value_t>;
 using list_t = std::vector<value_t>;
 
-struct value_t : boost::spirit::extended_variant< std::string
+struct user_rendered_t {
+    std::string some_variable;
+};
+
+struct value_t : boost::spirit::extended_variant< double, std::string
                                                 , object_t
                                                 , list_t
+                                                , user_rendered_t
+
                                                 >
 {
    value_t() : base_type() {}
@@ -52,11 +61,50 @@ struct value_t : boost::spirit::extended_variant< std::string
    value_t(char const * rhs) : base_type(std::string{rhs}) {}
    value_t(object_t const & rhs) : base_type(rhs) {}
    value_t(list_t const & rhs) : base_type(rhs) {}
+   value_t(double const & rhs) : base_type(rhs) {}
+   value_t(user_rendered_t const & rhs) : base_type(rhs) {}
 };
 // -------------------------------------------------------
 
+// test for user-defined rendering
+namespace boost {
+    namespace boostache {
+        namespace extension
+        {
+            // renders the whole type
+            template< typename Stream>
+            void render(Stream & stream, user_rendered_t const & context) {
+                stream << "user_defined rendering";
+            }
 
-int main()
+            // outer test of type (#"user_rendered_t")
+            bool test(user_rendered_t const & context){
+                // the result of a #-test
+                return true;
+            }
+
+            // inner test of name in user_rendered_t (#-test)
+            boost::optional<bool> test_tag(user_rendered_t const & context, std::string const & tag) {
+                if (tag == "invoice_number") {
+                    return boost::none;
+                }
+                return tag == "invoice_number";
+                //return tag == "invoice_number";
+            }
+
+            // inner rendering of name in user_rendered_t 
+            template< typename Stream, typename Stack, typename Global>
+            bool render_name(Stream & stream, user_rendered_t const & context, Stack const* stack, Global const* global, std::string const & name) {
+                stream << "user_rendered_t rendering of: " << name;
+                return true;
+            }
+
+        }
+    }
+}
+
+
+int example3()
 {
    // ------------------------------------------------------------------
    // The template describing an invoice.
@@ -65,12 +113,38 @@ int main()
                       "\n"
                       "{{# company}}"
                       "Company: {{name}}\n"
-                      "         {{street}}\n"
+					   "Invoice again: {{invoice_number}}\n"
+					   "{{#invoice_number}}\n"
+					   "has invoice\n"
+					   "{{/invoice_number}}\n"
+					   "{{#paied}}\n"
+					   "has paied\n"
+					   "{{/paied}}\n"
+					   "{{^paied}}\n"
+					   "has not paied\n"
+					   "{{/paied}}\n"
+					   "         {{street}}\n"
                       "         {{city}}, {{state}}  {{zip}}\n"
                       "{{/ company}}"
                       "------------------------------------------------\n"
                       "{{#lines}}"
+                      "  just to be sure that we mentioned the invoice number: {{invoice_number}}\n"
                       "  {{item_code}}  {{description}}  {{amount}}\n"
+                      "  content of add_lines ...\n"
+                      "  {{add_lines}}\n "
+                      "  ... and the invoice_number for each element of add_lines\n"
+                      "{{#add_lines}} "
+       "{{#invoice_number}}\n"
+       "first has invoice\n"
+       "{{/invoice_number}}\n"
+       "{{#invoice_number_opt}}\n"
+       "second has invoice\n"
+       "{{/invoice_number_opt}}\n"
+       "{{#innvoice_number}}\n"
+       "third has invoice\n"
+       "{{/innvoice_number}}\n"
+       "just rendering invoice_number: {{invoice_number}} "
+                      " {{/add_lines}}\n"
                       "{{/lines}}"
       );
    // ------------------------------------------------------------------
@@ -80,20 +154,27 @@ int main()
    // The data description.
 
    object_t invoice = 
-      {{"invoice_number", "1234"},
-       {"company"       , object_t{{"name"   , "FizSoft"},
-                                   {"street" , "42 Level St."},
-                                   {"city"   , "Ytic"},
-                                   {"state"  , "CA"},
-                                   {"zip"    , "98765"} }},
-       {"lines"         , list_t{ object_t{{"item_code"    , "1234-2"},
-                                           {"description"  , "Jolt Case"},
-                                           {"amount"       , "$23"}},
-                                  object_t{{"item_code"    , "1235-1"},
-                                           {"description"  , "Computer"},
-                                           {"amount"       , "$9"}}   }}
+   { {"invoice_number",4.425},
+       //{"company"       , object_t{{"name"   , "FizSoft"},
+       //                            {"street" , "42 Level St."},
+       //                            {"city"   , "Ytic"},
+       //                            {"state"  , "CA"},
+       //                            {"zip"    , "98765"} }},
+       {"lines"         , list_t{ 
+                                  //object_t{{"item_code"    , "1234-2"},
+                                  //         {"description"  , "Jolt Case"},
+                                  //         {"amount"       , "$23"}},
+                                  //object_t{{"item_code"    , "1235-1"},
+                                  //         {"description"  , "Computer"},
+                                  //         {"amount"       , "$9"}},
+                                  //object_t{{"add_lines"    , list_t {1,2,3,4} }},
+                                  object_t{{"add_lines"    , user_rendered_t {"some-value"} }}
+
+
+   }}
    };
-                                                      
+                      
+   invoice["test"] = value_t{ 42.425 };
    // ------------------------------------------------------------------
 
    // ------------------------------------------------------------------
@@ -114,4 +195,6 @@ int main()
    // ------------------------------------------------------------------
 
    std::cout << stream.str();
+
+   return 0;
 }
