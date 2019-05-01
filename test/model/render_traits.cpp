@@ -14,6 +14,7 @@
 #include <boost/boostache/model/category.hpp>
 #include <boost/boostache/model/render_traits.hpp>
 #include <map>
+#include <unordered_map>
 #include <string>
 
 #define BOOST_TEST_MAIN
@@ -89,6 +90,8 @@ struct foo
 
 using map1_t = std::map<std::string,foo>;
 using map2_t = std::map<std::string,std::string>;
+using map3_t = std::unordered_map<std::string,foo>;
+using map4_t = std::unordered_map<std::string,std::string>;
 
 
 
@@ -146,5 +149,63 @@ BOOST_AUTO_TEST_CASE(map2_render_trait)
    BOOST_CHECK(
       ! is_sequence_attribute(
          boostache::extension::render_category<map2_t>::type{} )
+      );
+}
+
+
+BOOST_AUTO_TEST_CASE(map3_render_trait)
+{
+   BOOST_CHECK(
+      ! is_plain_attribute(
+         boostache::extension::render_category<map3_t>::type{} )
+      );
+
+   BOOST_CHECK(
+      ! is_variant_attribute(
+         boostache::extension::render_category<map3_t>::type{} )
+      );
+
+   BOOST_CHECK(
+      ! is_optional_attribute(
+         boostache::extension::render_category<map3_t>::type{} )
+      );
+
+   BOOST_CHECK(
+      is_associative_attribute(
+         boostache::extension::render_category<map3_t>::type{} )
+      );
+
+   BOOST_CHECK(
+      ! is_sequence_attribute(
+         boostache::extension::render_category<map3_t>::type{} )
+      );
+}
+
+
+BOOST_AUTO_TEST_CASE(map4_render_trait)
+{
+   BOOST_CHECK(
+      ! is_plain_attribute(
+         boostache::extension::render_category<map4_t>::type{} )
+      );
+
+   BOOST_CHECK(
+      ! is_variant_attribute(
+         boostache::extension::render_category<map4_t>::type{} )
+      );
+
+   BOOST_CHECK(
+      ! is_optional_attribute(
+         boostache::extension::render_category<map4_t>::type{} )
+      );
+
+   BOOST_CHECK(
+      is_associative_attribute(
+         boostache::extension::render_category<map4_t>::type{} )
+      );
+
+   BOOST_CHECK(
+      ! is_sequence_attribute(
+         boostache::extension::render_category<map4_t>::type{} )
       );
 }
