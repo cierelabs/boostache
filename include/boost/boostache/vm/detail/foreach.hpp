@@ -16,6 +16,7 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/optional.hpp>
 #include <map>
+#include <unordered_map>
 #include <vector>
 #include <string>
 
@@ -74,6 +75,10 @@ namespace boost { namespace boostache { namespace extension
 
    template <typename T>
    struct foreach_category<std::map<std::string,T>>
+      : mpl::identity<associative_attribute> {};
+
+   template <typename T>
+   struct foreach_category<std::unordered_map<std::string,T>>
       : mpl::identity<associative_attribute> {};
 
    template <typename T>

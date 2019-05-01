@@ -9,16 +9,15 @@
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 #include <boost/test/unit_test.hpp>
-#include <boost/spirit/include/support_extended_variant.hpp>
 
 #include <boost/boostache/boostache.hpp>
 #include <boost/boostache/frontend/stache/grammar_def.hpp> // need to work out header only syntax
 #include <boost/boostache/stache.hpp>
-#include <boost/boostache/model/stache_model.hpp>
 #include <boost/boostache/model/helper.hpp>
+#include <boost/spirit/include/support_extended_variant.hpp>
 #include <sstream>
 #include <fstream>
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 namespace boostache = boost::boostache;
@@ -26,7 +25,7 @@ namespace fe = boost::boostache::frontend;
 
 
 struct my_node_t;
-using map_t = std::map<std::string,my_node_t>;
+using map_t = std::unordered_map<std::string,my_node_t>;
 using list_t = std::vector<my_node_t>;
 struct my_node_t : boost::spirit::extended_variant<
      bool

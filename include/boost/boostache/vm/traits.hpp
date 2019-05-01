@@ -12,6 +12,7 @@
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/variant/variant.hpp>
 #include <map>
+#include <unordered_map>
 #include <type_traits>
 
 
@@ -73,6 +74,11 @@ namespace boost { namespace boostache { namespace vm { namespace trait
 
    template<class T1,class T2>
    struct is_map<std::map<T1,T2>>
+      : std::true_type
+   {};
+
+   template<class T1,class T2>
+   struct is_map<std::unordered_map<T1,T2>>
       : std::true_type
    {};
 
