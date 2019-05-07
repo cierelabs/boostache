@@ -1,3 +1,4 @@
-add_boost_test( mustache_parser mustache_parser.cpp     ../shared/parser_test.cpp )
-add_boost_test( mustache_compiler mustache_compiler.cpp ../shared/parser_test.cpp )
-add_boost_test( mustache_end2end mustache_end2end.cpp   ../shared/parser_test.cpp )
+foreach( ex mustache_parser mustache_compiler mustache_end2end )
+    add_boost_test( ${ex} ${ex}.cpp ../shared/parser_test.cpp )
+    target_link_libraries( ${ex} Boost::filesystem )
+endforeach()
