@@ -15,6 +15,7 @@
 #include <boost/boostache/stache.hpp>
 #include <boost/boostache/model/helper.hpp>
 #include <boost/spirit/include/support_extended_variant.hpp>
+#include <boost/variant/recursive_wrapper.hpp>
 #include <sstream>
 #include <fstream>
 #include <unordered_map>
@@ -30,8 +31,8 @@ using list_t = std::vector<my_node_t>;
 struct my_node_t : boost::spirit::extended_variant<
      bool
    , std::string
-   , map_t
-   , list_t
+   , boost::recursive_wrapper<map_t>
+   , boost::recursive_wrapper<list_t>
    >
 {
    my_node_t() : base_type() {}
