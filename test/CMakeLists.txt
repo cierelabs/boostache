@@ -7,7 +7,12 @@ macro(add_boost_test name source)
    set_source_files_properties( ${source} PROPERTIES COMPILE_DEFINITIONS BOOST_TEST_DYN_LINK )
 
    # link setup
-   target_link_libraries(${name} ${Boost_LIBRARIES})
+   target_link_libraries(
+     ${name}
+     ${Boost_LIBRARIES}
+     ${Boost_SYSTEM_LIBRARY}
+     ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+     )
 
    # unit test configuration
    add_test(NAME ${name} COMMAND ${name})
