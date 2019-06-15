@@ -15,8 +15,8 @@ The CI status:
 
 Platform     | Master          | Develop
 ------------ | -------------   | -------------
-Linux Clang  | ![clang build result](https://bamboo.cierecloud.com/plugins/servlet/buildStatusImage/BSTCH-FMC) | ![clang build result](https://bamboo.cierecloud.com/plugins/servlet/buildStatusImage/BSTCH-FMC0)
-Linux GCC    | ![gcc build result](https://bamboo.cierecloud.com/plugins/servlet/buildStatusImage/BSTCH-MAS) | ![gcc build result](https://bamboo.cierecloud.com/plugins/servlet/buildStatusImage/BSTCH-MAS0)
+Linux Clang  | ![clang build result](https://bamboo.cierecloud.com/plugins/servlet/wittified/build-status/BSTCH-FMC) | ![clang build result](https://bamboo.cierecloud.com/plugins/servlet/wittified/build-status/BSTCH-FMC0)
+Linux GCC    | ![gcc build result](https://bamboo.cierecloud.com/plugins/servlet/wittified/build-status/BSTCH-MAS) | ![gcc build result](https://bamboo.cierecloud.com/plugins/servlet/wittified/build-status/BSTCH-MAS0)
 
 
 History

@@ -5,7 +5,7 @@ enable_testing()
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost 1.53 COMPONENTS unit_test_framework system filesystem)
+find_package(Boost 1.67 COMPONENTS unit_test_framework system filesystem)
 
 add_definitions( -DBOOST_SPIRIT_USE_PHOENIX_V3=1 )
 set( CMAKE_CXX_STANDARD 14 )
