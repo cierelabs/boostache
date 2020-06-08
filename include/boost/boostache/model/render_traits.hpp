@@ -11,6 +11,8 @@
 
 #include <boost/optional.hpp>
 #include <boost/boostache/vm/traits.hpp>
+#include <boost/boostache/vm/detail/stacked_context.hpp>
+#include <boost/boostache/vm/detail/multi_context.hpp>
 #include <boost/boostache/model/category.hpp>
 #include <type_traits>
 #include <map>
@@ -49,6 +51,15 @@ namespace boost { namespace boostache { namespace extension
                          , vm::trait::enable_if_sequence_not_map_t<T>
                          >
       : mpl::identity<sequence_attribute> {};
+
+   template <typename T1, typename T2>
+   struct render_category<vm::detail::stacked_context<T1, T2>>
+      : mpl::identity<stacked_context_attribute> {};
+
+   template <typename T, typename Stream>
+   struct render_category<vm::detail::multi_context<T, Stream>>
+	   : mpl::identity<multi_context_attribute> {};
+
 
    template <typename T>
    using render_category_t = typename render_category<T>::type;

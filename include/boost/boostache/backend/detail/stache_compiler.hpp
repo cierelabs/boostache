@@ -23,7 +23,7 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
       /**
        *  Check if the string simply contains white-space.
        */
-      bool is_blank(std::string const & s)
+      inline bool is_blank(std::string const & s)
       {
          return( s.find_first_not_of(std::string{" \t\r\n"})
                  ==  std::string::npos );
@@ -170,7 +170,8 @@ namespace boost { namespace boostache { namespace backend { namespace stache_com
             else
             {
                vm::ast::for_each section_body;
-               section_body.name = sec.name;
+// section_body.name not used in moustache section
+//               section_body.name = sec.name;
                section_body.value = vm_ast;
                
                vm::ast::select_context select;

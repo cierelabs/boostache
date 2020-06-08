@@ -24,7 +24,7 @@ namespace boostache = boost::boostache;
 using map_t = std::map<std::string, std::string>;
 
 
-int main()
+int example1()
 {
    // ------------------------------------------------------------------
    // Describe the input template. We are going to use mustache format.
@@ -57,4 +57,6 @@ int main()
 
    // print the result
    std::cout << stream.str();
+
+   return 0;
 }
