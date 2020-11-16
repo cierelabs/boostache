@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 2.8)
-
 macro(add_boost_test name source)
    add_executable( ${ARGV} )
 
@@ -9,9 +7,9 @@ macro(add_boost_test name source)
    # link setup
    target_link_libraries(
      ${name}
-     ${Boost_LIBRARIES}
-     ${Boost_SYSTEM_LIBRARY}
-     ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+     Boost::system
+     Boost::filesystem
+     Boost::unit_test_framework
      )
 
    # unit test configuration
