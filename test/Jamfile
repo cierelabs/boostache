@@ -50,4 +50,11 @@ project boostache_test
 	: --log_level=message
 	]
    ;
+
+   test-suite boostache/django :
+      [ run django/django_parser.cpp
+	    shared/parser_test.cpp
+	]
+   ;
+
 }

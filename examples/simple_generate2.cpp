@@ -64,7 +64,7 @@ namespace extn =  bstache::extension;
 
 
 
-int main()
+int simple_generate2()
 {
    // ------------------------------------------------------------------
    // The input template

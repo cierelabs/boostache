@@ -27,13 +27,13 @@ namespace boost { namespace boostache { namespace frontend
       typename Format::template grammar_t<Iterator> grammar;
       
       // TODO mjc : should throw with parse error location
-      // if(!boost::spirit::qi::phrase_parse( begin, end
-      //                                    , grammar
-      //                                    , typename Format::skipper_t{}
-      //                                    , ast ))
-      if(!boost::spirit::qi::parse( begin, end
-                                  , grammar
-                                  , ast ))
+       if(!boost::spirit::qi::phrase_parse( begin, end
+                                          , grammar
+                                          , typename Format::skipper_t{}
+                                          , ast ))
+      //if(!boost::spirit::qi::parse( begin, end
+      //                            , grammar
+      //                            , ast ))
       {
          ast = typename Format::ast_t{};
       }

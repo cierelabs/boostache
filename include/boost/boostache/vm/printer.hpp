@@ -50,14 +50,19 @@ namespace boost { namespace boostache { namespace vm { namespace ast
             out << "[<render> : " << v.name << "]";
          }
 
-         void operator()(for_each const & v) const
-         {
-            out << "[<for_each> :" << std::endl;
-            boost::apply_visitor(*this, v.value);
-            out << "\n</for_each>]" << std::endl;
-         }
+		 void operator()(for_each const & v) const
+		 {
+			 out << "[<for_each> :" << std::endl;
+			 boost::apply_visitor(*this, v.value);
+			 out << "\n</for_each>]" << std::endl;
+		 }
 
-         void operator()(condition const & v) const
+		 void operator()(node const & v) const
+		 {
+			 boost::apply_visitor(*this, v);
+		 }
+
+		 void operator()(condition const & v) const
          {}
 
          void operator()(select_context const & v) const

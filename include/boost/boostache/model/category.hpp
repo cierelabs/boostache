@@ -2,6 +2,7 @@
  *  \file category.hpp
  *
  *  Copyright 2014, 2015 Michael Caisse : ciere.com
+ *  Copyright 2017 Tobias Loew : die-loews.de
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -22,6 +23,8 @@ namespace boost { namespace boostache { namespace extension
    struct tuple_attribute : category_attribute {};
    struct variant_attribute : category_attribute {};
    struct optional_attribute : category_attribute {};
+   struct stacked_context_attribute : category_attribute {};
+   struct multi_context_attribute : category_attribute {};
 
 }}}
 
